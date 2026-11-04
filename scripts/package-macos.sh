@@ -25,6 +25,8 @@ from pathlib import Path
 folder,version,arch=sys.argv[1:]
 root=ET.Element('installer-gui-script',{'minSpecVersion':'2'})
 ET.SubElement(root,'title').text='CrabCut · Althera Solutions'
+for tag in ('background', 'background-darkAqua'):
+    ET.SubElement(root,tag,{'file':'sidebar.png','alignment':'bottomleft','scaling':'none'})
 ET.SubElement(root,'welcome',{'file':'welcome.html','mime-type':'text/html'})
 ET.SubElement(root,'license',{'file':'LICENSE.txt','mime-type':'text/plain'})
 ET.SubElement(root,'conclusion',{'file':'conclusion.html','mime-type':'text/html'})
