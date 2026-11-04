@@ -299,6 +299,7 @@ impl Studio {
         // occupied one, minted at the top when there is none. A drop onto a
         // lane names its track and is placed there regardless.
         let add = Command::AddTextClip {
+            pop_in: false,
             track_id,
             start,
             style: Some(style),

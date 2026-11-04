@@ -467,6 +467,7 @@ mod tests {
         let track_id = Some(editor.project().timelines[0].tracks[0].id.clone());
         editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id,
                 above: false,
                 start: 0.0,

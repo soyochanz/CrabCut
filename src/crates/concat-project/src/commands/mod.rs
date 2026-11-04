@@ -350,6 +350,9 @@ pub enum Command {
     /// Places a title: a clip with no media behind it, named after the
     /// text's first line, minting a "c" id.
     AddTextClip {
+        /// A brief scale entrance for social captions. Defaults off for existing callers.
+        #[serde(default)]
+        pop_in: bool,
         /// The lane to place it on. None picks the first free track like
         /// [`Command::AddClipAtFirstFree`]; naming a vanished track errs.
         track_id: Option<String>,

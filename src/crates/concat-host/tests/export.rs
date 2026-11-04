@@ -1734,6 +1734,7 @@ fn every_edit_still_exports() {
         exported.expect_length(end);
     }
     studio.apply(Command::AddTextClip {
+        pop_in: false,
         above: false,
         track_id: None,
         start: 3.0,

@@ -692,6 +692,7 @@ mod tests {
         let mut editor = Editor::new();
         let id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 0.0,
@@ -740,6 +741,7 @@ mod tests {
         let mut editor = Editor::new();
         let id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 0.0,
@@ -788,6 +790,7 @@ mod tests {
         let mut editor = Editor::new();
         let id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 0.0,
@@ -845,6 +848,7 @@ mod tests {
         let mut editor = Editor::new();
         let id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 2.0,
@@ -939,6 +943,7 @@ mod tests {
         };
         editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 0.0,

@@ -642,6 +642,7 @@ impl Studio {
     ) -> Option<String> {
         let drawn = match source.kind {
             model::ClipKind::Text => Some(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: Some(track_id.to_owned()),
                 start,

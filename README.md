@@ -9,6 +9,8 @@ A local video editor for short-form creators, forked from [Concat](https://githu
 - CrabCut identity, crab icon and separate application data directory.
 - Caption formats: original, one word, Reels (up to 3 words), short (up to 5 words).
 - Sentence-aware grouping for voice captions, scripts and imported SRT subtitles.
+- Short captions get bold text, an outline and a brief scale entrance.
+- Nine original CC0 sound effects and music loops in the Audio library.
 - English and Spanish interface text for the new controls.
 
 Short caption timing is estimated within the original phrase, not forced word alignment.

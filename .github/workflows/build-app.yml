@@ -417,6 +417,13 @@ jobs:
       # Bash on every platform, teed to a log: raw job logs need a login to
       # read, but the step summary is public - so on failure the tail of the
       # build goes there, and a red run explains itself to anyone.
+      - name: Caption and project checks
+        working-directory: src
+        run: |
+          cargo fmt --all --check
+          rustc --edition=2024 --test crates/concat/src/panes/caption_chunks.rs -o /tmp/crabcut-caption-tests
+          /tmp/crabcut-caption-tests
+          cargo test -p concat-project
       - name: Build
         # An Intel Mac runner is the slow one: its release build ran past
         # sixty minutes in v0.2.7-rc.1.

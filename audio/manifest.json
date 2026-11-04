@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "sounds": [
+    {
+      "id": "quick-whoosh",
+      "name": "Quick Whoosh",
+      "category": "Whoosh",
+      "file": "quick-whoosh.wav",
+      "duration": 0.35,
+      "bytes": 16844,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "753c14c58adbb07baae423dd07f68819d73871b8afe05ba7b930876f2bcb25bc"
+    },
+    {
+      "id": "soft-sweep",
+      "name": "Soft Sweep",
+      "category": "Whoosh",
+      "file": "soft-sweep.wav",
+      "duration": 0.7,
+      "bytes": 33644,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "3a964e225aef19caf9ab344daa33fee1bddba29a65e3b99da40afb2c114dbaeb"
+    },
+    {
+      "id": "rising-sweep",
+      "name": "Rising Sweep",
+      "category": "Riser",
+      "file": "rising-sweep.wav",
+      "duration": 1.2,
+      "bytes": 57644,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "4ab534a4cf41d6ffddb65aca575cc1a41822de94e4497fb9c777bef20dad724b"
+    },
+    {
+      "id": "deep-impact",
+      "name": "Deep Impact",
+      "category": "Impact",
+      "file": "deep-impact.wav",
+      "duration": 0.6,
+      "bytes": 28844,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "1025455173c0677ddfb0aef4281053d31656e9b39c99af25efa99a67797cf0bb"
+    },
+    {
+      "id": "pop-click",
+      "name": "Pop Click",
+      "category": "Impact",
+      "file": "pop-click.wav",
+      "duration": 0.12,
+      "bytes": 5804,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "3f3f31a2d4fdf19a580bc57a1e4c501cc16f6ac7ed6218443b9132408331b1ee"
+    },
+    {
+      "id": "bright-tick",
+      "name": "Bright Tick",
+      "category": "Impact",
+      "file": "bright-tick.wav",
+      "duration": 0.09,
+      "bytes": 4364,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "f1dbb1f7ff50c864ba6be761b657e373ebcb4e31d04466e533dc3793c08f2d80"
+    },
+    {
+      "id": "soft-hit",
+      "name": "Soft Hit",
+      "category": "Impact",
+      "file": "soft-hit.wav",
+      "duration": 0.3,
+      "bytes": 14444,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "d43fa2572b83de21c4252f78659b30376cd1a9c7d6409530851e301d433ade2f"
+    },
+    {
+      "id": "coral-groove",
+      "name": "Coral Groove",
+      "category": "Music",
+      "file": "coral-groove.wav",
+      "duration": 19.2,
+      "bytes": 921644,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "0820a0d510e301d2efca27c56499913635017d8e77a742b22497727f082026d3"
+    },
+    {
+      "id": "midnight-pulse",
+      "name": "Midnight Pulse",
+      "category": "Music",
+      "file": "midnight-pulse.wav",
+      "duration": 16.0,
+      "bytes": 768044,
+      "license": "CC0-1.0",
+      "source": "https://github.com/soyochanz/CrabCut/blob/main/scripts/crabcut-audio.py",
+      "author": "CrabCut procedural sound pack",
+      "sha256": "9ce10e5bd03dc80e09202da3b94693b508642ea7c6580629a13d0659bfc18668"
+    }
+  ]
+}

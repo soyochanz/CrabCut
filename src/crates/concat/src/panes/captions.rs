@@ -237,6 +237,7 @@ impl CaptionsPane {
                                 })
                             })
                             .collect();
+                        let commands = social_style(commands, subject.format);
                         let count = commands.len();
                         self.open = false;
                         if count == 0 {
@@ -316,6 +317,7 @@ impl CaptionsPane {
             self.message = t("captions.noSubtitlesInFile");
             return;
         }
+        let commands = social_style(commands, self.format);
         let count = commands.len();
         self.open = false;
         studio.apply(Command::Batch { commands });
@@ -522,6 +524,7 @@ impl CaptionsPane {
                 command
             })
             .collect();
+        let commands = social_style(commands, self.format);
         let count = commands.len();
         self.open = false;
         studio.apply(Command::Batch { commands });
@@ -892,6 +895,7 @@ fn caption_clip(
         },
     };
     Command::AddTextClip {
+        pop_in: false,
         track_id: None,
         above: true,
         start,
@@ -1131,6 +1135,30 @@ fn split_segments(segments: Vec<Segment>, format: usize) -> Vec<Segment> {
             caption_chunks::split(&s.text, s.start, s.end, words)
                 .into_iter()
                 .map(|(text, start, end)| Segment { text, start, end })
+        })
+        .collect()
+}
+
+/// Short caption modes get a readable bold treatment and a brief scale entrance.
+fn social_style(commands: Vec<Command>, format: usize) -> Vec<Command> {
+    commands
+        .into_iter()
+        .map(|mut command| {
+            if format > 0 {
+                if let Command::AddTextClip {
+                    pop_in,
+                    style: Some(style),
+                    ..
+                } = &mut command
+                {
+                    *pop_in = true;
+                    style.font_weight = 800.0;
+                    style.stroke_width = 0.002;
+                    style.stroke_color = "#101426".into();
+                    style.max_width = 0.85;
+                }
+            }
+            command
         })
         .collect()
 }

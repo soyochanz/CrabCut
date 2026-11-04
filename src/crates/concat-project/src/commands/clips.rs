@@ -120,6 +120,7 @@ pub(super) fn apply(
         }
 
         Command::AddTextClip {
+            pop_in,
             track_id,
             start,
             style,
@@ -154,6 +155,23 @@ pub(super) fn apply(
             );
             clip.offset_y = offset_y.unwrap_or(0.0).clamp(-MAX_OFFSET, MAX_OFFSET);
             clip.text = Some(style);
+            if pop_in {
+                let at = (0.12 / duration).min(0.45);
+                clip.keys = vec![
+                    crate::model::ClipKey {
+                        property: crate::model::KeyProperty::Scale,
+                        at: 0.0,
+                        value: 0.82,
+                        ease: crate::model::KeyEase::OUT,
+                    },
+                    crate::model::ClipKey {
+                        property: crate::model::KeyProperty::Scale,
+                        at,
+                        value: 1.0,
+                        ease: crate::model::KeyEase::OUT,
+                    },
+                ];
+            }
             timeline.clips.push(Arc::new(clip));
             Ok(Outcome {
                 created_id: Some(id),

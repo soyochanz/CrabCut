@@ -15,6 +15,9 @@ The crab logo was generated using the built-in image generation tool. Prompt: a 
 geometric coral crab with raised cutting pincers on a midnight rounded-square app tile,
 centered, readable at small sizes, no lettering or watermark.
 
-Pending product work: forced word alignment, karaoke word highlighting, automatic motion
-presets and a curated licensed music collection. Existing upstream transitions and sounds
+Short caption modes now apply bold outlined type and an undoable scale entrance.
+The Audio shelf uses this repository’s nine procedural CC0 sounds (seven effects and two music loops).
+
+Pending product work: forced word alignment, karaoke word highlighting and more motion
+presets. Existing upstream transitions and sounds
 remain available; no access to proprietary Instagram or CapCut libraries is bundled.

@@ -354,6 +354,7 @@ mod tests {
         let mut title = |start: f64, words: &str| {
             let id = editor
                 .apply(Command::AddTextClip {
+                    pop_in: false,
                     track_id: None,
                     above: true,
                     start,

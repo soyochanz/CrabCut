@@ -80,6 +80,7 @@ mod tests {
         let mut editor = Editor::new();
         let id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id: None,
                 above: true,
                 start: 0.0,
@@ -1046,6 +1047,7 @@ mod tests {
     fn text_at(editor: &mut Editor, start: f64, duration: f64) -> String {
         editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id: None,
                 above: true,
                 start,
@@ -4224,6 +4226,7 @@ mod tests {
         let mut editor = Editor::new();
         let clip_id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 2.0,
@@ -4252,6 +4255,7 @@ mod tests {
         assert!(matches!(
             bare,
             Command::AddTextClip {
+                pop_in: false,
                 duration: None,
                 offset_y: None,
                 ..
@@ -4283,6 +4287,7 @@ mod tests {
 
         let caption_id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id: None,
                 above: true,
                 start: 0.0,
@@ -4544,6 +4549,7 @@ mod tests {
         let mut editor = Editor::new();
         let caption_id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id: None,
                 above: true,
                 start: 0.0,
@@ -4590,6 +4596,7 @@ mod tests {
 
         let title_id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id: None,
                 above: false,
                 start: 0.0,
@@ -4644,6 +4651,7 @@ mod tests {
 
         let caption_id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 track_id: None,
                 above: true,
                 start: 0.0,
@@ -5239,6 +5247,7 @@ mod tests {
 
         let clip_id = editor
             .apply(Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: None,
                 start: 0.0,
@@ -5310,6 +5319,7 @@ mod tests {
                 start: 2.0,
             },
             Command::AddTextClip {
+                pop_in: false,
                 above: false,
                 track_id: Some("T1".to_owned()),
                 start: 0.0,
@@ -6019,5 +6029,43 @@ mod tests {
         assert!(
             crate::delete_to_playhead(timeline, &gone, 5.0, PlayheadSide::Left, false).is_none()
         );
+    }
+}
+
+#[cfg(test)]
+mod crabcut_caption_tests {
+    use crate::model::KeyProperty;
+    use crate::{Command, Editor};
+
+    #[test]
+    fn pop_caption_keys_are_bounded_and_undoable() {
+        let mut editor = Editor::new();
+        let command: Command = serde_json::from_value(serde_json::json!({
+            "op": "addTextClip", "start": 0.0, "above": true,
+            "duration": 0.1, "popIn": true
+        }))
+        .unwrap();
+        editor.apply(command).unwrap();
+        let clip = &editor.project().active().clips[0];
+        assert_eq!(clip.keys.len(), 2);
+        assert_eq!(clip.keys[0].property, KeyProperty::Scale);
+        assert_eq!(clip.keys[0].value, 0.82);
+        assert_eq!(clip.keys[1].value, 1.0);
+        assert!(clip.keys[1].at <= 0.45);
+        assert!(editor.undo());
+        assert!(editor.project().active().clips.is_empty());
+        assert!(editor.redo());
+        assert_eq!(editor.project().active().clips[0].keys.len(), 2);
+    }
+
+    #[test]
+    fn old_caption_requests_stay_static() {
+        let mut editor = Editor::new();
+        let command: Command = serde_json::from_value(serde_json::json!({
+            "op": "addTextClip", "start": 0.0, "duration": 2.0
+        }))
+        .unwrap();
+        editor.apply(command).unwrap();
+        assert!(editor.project().active().clips[0].keys.is_empty());
     }
 }
