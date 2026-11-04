@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip 자막",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "이 클립의 음성 받아쓰기",
   "captions.transcribing": "받아쓰는 중",
   "captions.typeWordsPutScreen": "Type the words to put on screen…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0} 설치 프로그램이 열렸습니다. 설치를 마칠 수 있도록 CrabCut을 종료합니다.",
   "settings.language": "언어",
   "settings.light": "라이트",
-  "settings.lime": "라임",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "트랙을 가로질러 현재 시간을 표시하는 선입니다. 원하는 색을 고르거나, 첫 번째 점을 눌러 테마 본래의 색으로 돌아갑니다.",
   "settings.listeningOnConnected": "{0}에서 수신 중 · {1}개 연결됨",
   "settings.logDebug": "디버그",
@@ -949,5 +949,6 @@
   "voices.styles": "스타일",
   "voices.stylesHint": "스타일은 효과가 걸린 목소리입니다. 하나를 고르면 그 목소리로 씁니다. 효과는 음성 클립에 들어가며 거기서 바꿀 수 있습니다.",
   "voices.voices": "목소리",
-  "voices.yours": "내 목소리"
+  "voices.yours": "내 목소리",
+  "captions.template": "Template"
 }

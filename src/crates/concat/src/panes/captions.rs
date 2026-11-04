@@ -66,6 +66,7 @@ pub enum CaptionsMsg {
     PlacementChanged(i32),
     SizeChanged(i32),
     FormatChanged(i32),
+    TemplateChanged(i32),
     /// Run the pass the sheet describes.
     Begin,
     Cancel,
@@ -92,6 +93,7 @@ struct Subject {
     /// The look chosen when the run began.
     look: (f64, f64),
     format: usize,
+    template: usize,
     /// The transcriber model, and the thirty-second windows whisper reads
     /// the sound in: what the run's timing is kept by.
     model: String,
@@ -133,6 +135,7 @@ pub struct CaptionsPane {
     /// 0 small, 1 medium, 2 large.
     pub size: usize,
     pub format: usize,
+    pub template: usize,
     pub running: bool,
     /// How far the running transcription looks.
     pub pace: Pace,
@@ -193,6 +196,7 @@ impl CaptionsPane {
                 self.placement = (index.max(0) as usize).min(2);
             }
             CaptionsMsg::FormatChanged(index) => self.format = index.clamp(0, 3) as usize,
+            CaptionsMsg::TemplateChanged(index) => self.template = index.clamp(0, 15) as usize,
             CaptionsMsg::SizeChanged(index) => self.size = (index.max(0) as usize).min(2),
             CaptionsMsg::Begin => {
                 if self.from_voice {
@@ -221,23 +225,28 @@ impl CaptionsPane {
                         };
                         let look = subject.look;
                         let base = studio.prefs.title_style.clone();
-                        let segments = split_segments(segments, subject.format);
-                        let commands: Vec<Command> = segments
+                        let groups = voice_groups(segments, subject.format);
+                        let commands: Vec<Command> = groups
                             .into_iter()
-                            .filter_map(|segment| {
-                                let text = segment.text.trim().to_owned();
-                                (!text.is_empty()).then(|| {
-                                    caption_clip(
-                                        text,
-                                        subject.start + segment.start / subject.speed,
-                                        (segment.end - segment.start) / subject.speed,
-                                        look,
-                                        base.as_ref(),
-                                    )
-                                })
+                            .flat_map(|(segment, starts)| {
+                                let command = caption_clip(
+                                    segment.text,
+                                    subject.start + segment.start / subject.speed,
+                                    (segment.end - segment.start) / subject.speed,
+                                    look,
+                                    base.as_ref(),
+                                );
+                                let starts: Vec<f64> = starts
+                                    .into_iter()
+                                    .map(|at| subject.start + at / subject.speed)
+                                    .collect();
+                                concat_project::caption_templates::apply(
+                                    command,
+                                    subject.template,
+                                    &starts,
+                                )
                             })
                             .collect();
-                        let commands = social_style(commands, subject.format);
                         let count = commands.len();
                         self.open = false;
                         if count == 0 {
@@ -317,7 +326,7 @@ impl CaptionsPane {
             self.message = t("captions.noSubtitlesInFile");
             return;
         }
-        let commands = social_style(commands, self.format);
+        let commands = social_style(commands, self.format, self.template);
         let count = commands.len();
         self.open = false;
         studio.apply(Command::Batch { commands });
@@ -461,6 +470,7 @@ impl CaptionsPane {
             placement: 0,
             size: 1,
             format: 2,
+            template: 1,
             timings: std::mem::take(&mut self.timings),
             ..CaptionsPane::default()
         };
@@ -524,7 +534,7 @@ impl CaptionsPane {
                 command
             })
             .collect();
-        let commands = social_style(commands, self.format);
+        let commands = social_style(commands, self.format, self.template);
         let count = commands.len();
         self.open = false;
         studio.apply(Command::Batch { commands });
@@ -555,6 +565,7 @@ impl CaptionsPane {
             return;
         };
         let request = concat_speech::transcribe::TranscribeRequest {
+            word_timestamps: self.format > 0,
             path: media.path.clone(),
             audio_stream: clip.audio_stream,
             source_start: clip.source_start,
@@ -591,6 +602,7 @@ impl CaptionsPane {
             speed: clip.speed,
             look: self.look(),
             format: self.format,
+            template: self.template,
             model,
             windows,
         });
@@ -668,6 +680,7 @@ impl CaptionsPane {
             placement: self.placement as i32,
             size: self.size as i32,
             format: self.format as i32,
+            template: self.template as i32,
             running: self.running,
             progress: self.pace.floor,
             ceiling: self.pace.ceiling,
@@ -1139,25 +1152,48 @@ fn split_segments(segments: Vec<Segment>, format: usize) -> Vec<Segment> {
         .collect()
 }
 
-/// Short caption modes get a readable bold treatment and a brief scale entrance.
-fn social_style(commands: Vec<Command>, format: usize) -> Vec<Command> {
+/// Style script/SRT cues with estimated word timings.
+fn social_style(commands: Vec<Command>, _format: usize, template: usize) -> Vec<Command> {
     commands
         .into_iter()
-        .map(|mut command| {
-            if format > 0
-                && let Command::AddTextClip {
-                    pop_in,
-                    style: Some(style),
-                    ..
-                } = &mut command
-            {
-                *pop_in = true;
-                style.font_weight = 800.0;
-                style.stroke_width = 0.002;
-                style.stroke_color = "#101426".into();
-                style.max_width = 0.85;
-            }
-            command
-        })
+        .flat_map(|command| concat_project::caption_templates::apply(command, template, &[]))
         .collect()
+}
+
+/// Reassemble Whisper's word-sized segments into short phrases, retaining
+/// word starts. Scripts and imported SRT instead use proportional timing.
+fn voice_groups(segments: Vec<Segment>, format: usize) -> Vec<(Segment, Vec<f64>)> {
+    if format == 0 {
+        return segments.into_iter().map(|s| (s, Vec::new())).collect();
+    }
+    let limit = [usize::MAX, 1, 3, 5][format.min(3)];
+    let mut groups: Vec<(Segment, Vec<f64>)> = Vec::new();
+    for segment in segments {
+        for (word, start, end) in
+            caption_chunks::split(&segment.text, segment.start, segment.end, 1)
+        {
+            let append = groups.last().is_some_and(|(last, starts)| {
+                starts.len() < limit
+                    && start - last.end < 0.5
+                    && !last.text.ends_with(['.', '!', '?', '。', '！', '？'])
+            });
+            if append {
+                let (last, starts) = groups.last_mut().unwrap();
+                last.text.push(' ');
+                last.text.push_str(&word);
+                last.end = end;
+                starts.push(start);
+            } else {
+                groups.push((
+                    Segment {
+                        text: word,
+                        start,
+                        end,
+                    },
+                    vec![start],
+                ));
+            }
+        }
+    }
+    groups
 }

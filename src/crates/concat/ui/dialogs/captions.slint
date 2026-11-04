@@ -52,6 +52,7 @@ export struct CaptionsSheetData {
     /// 0 Small, 1 Medium, 2 Large
     size: int,
     format: int,
+    template: int,
     running: bool,
     /// 0..1: where the transcription surely is.
     progress: float,
@@ -86,11 +87,19 @@ export component CaptionsDialog inherits Modal {
     callback placement-changed(index: int);
     callback size-changed(index: int);
     callback format-changed(index: int);
+    callback template-changed(index: int);
     callback begin();
     callback cancel();
     callback import-srt();
     callback export-srt();
 
+    property <int> preview-word: 0;
+    property <[color]> template-colors: [#ffffff, #ff784f, #ffe45c, #55dfff, #ff75bc, #c9a5ff, #ffd15c, #ff784f, #ffb36b, #9fffe8, #b7441e, #ff9a76, #ffe45c, #ffffff, #ffffff, #ff784f];
+    Timer {
+        interval: 550ms;
+        running: root.data.open && !root.data.running;
+        triggered => { root.preview-word = Math.mod(root.preview-word + 1, 3); }
+    }
     property <bool> from-voice: root.data.from-voice;
 
     open: root.data.open;
@@ -247,6 +256,33 @@ export component CaptionsDialog inherits Modal {
                     options: [I18n.t("captions.original"), I18n.t("captions.oneWord"), I18n.t("captions.reels"), I18n.t("captions.shortPhrase")];
                     current: root.data.format;
                     changed(index) => { root.format-changed(index); }
+                }
+            }
+            DialogRow {
+                label: I18n.t("captions.template");
+                Select {
+                    options: ["Classic", "Crab Karaoke", "Sunshine", "Electric Blue", "Bubblegum", "Lavender", "Golden Progress", "Coral Progress", "Underline", "Neon", "Paper", "Midnight", "Comic", "Typewriter", "Spotlight", "Mono Pop"];
+                    current: root.data.template;
+                    changed(index) => { root.template-changed(index); }
+                }
+            }
+            Rectangle {
+                height: 64px;
+                border-radius: 10px;
+                background: root.data.template == 10 ? #fff1d6 : #131a2a;
+                HorizontalLayout {
+                    alignment: center;
+                    spacing: 7px;
+                    for word[index] in ["Create", "with", "CrabCut"]: Text {
+                        text: root.data.template == 12 ? ["CREATE", "WITH", "CRABCUT"][index] : word;
+                        color: root.data.template == 0 ? #ffffff : (index == root.preview-word || ((root.data.template == 6 || root.data.template == 7 || root.data.template == 13) && index <= root.preview-word)) ? root.template-colors[root.data.template] : root.data.template == 10 ? #29201b : #a1a8b5;
+                        opacity: (root.data.template == 13 && index > root.preview-word) || (root.data.template == 15 && index != root.preview-word) ? 0 : 1;
+                        font-size: 23px;
+                        font-weight: 800;
+                        font-family: root.data.template == 15 ? "Menlo" : Theme.font;
+                        font-italic: root.data.template == 12;
+                        vertical-alignment: center;
+                    }
                 }
             }
             DialogRow {

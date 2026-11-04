@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip titlovi",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Prepiši glas ovog isječka",
   "captions.transcribing": "Transkripcija",
   "captions.typeWordsPutScreen": "Upišite riječi za prikaz na zaslonu…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "Instalacijski program za CrabCut {0} je otvoren. CrabCut se sada zatvara kako bi mogao završiti.",
   "settings.language": "Jezik",
   "settings.light": "Svijetlo",
-  "settings.lime": "Limeta",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "Crta preko traka koja označava trenutno vrijeme. Odaberite bilo koju boju za nju, ili prvu točku za povratak na boju teme.",
   "settings.listeningOnConnected": "Sluša na {0} · {1} povezano",
   "settings.logDebug": "Otklanjanje grešaka",
@@ -949,5 +949,6 @@
   "voices.styles": "Stilovi",
   "voices.stylesHint": "Stil je glas s efektima. Odaberite jedan da biste njime pisali: efekti idu na govorni isječak, gdje ih možete mijenjati.",
   "voices.voices": "Glasovi",
-  "voices.yours": "Vaši glasovi"
+  "voices.yours": "Vaši glasovi",
+  "captions.template": "Template"
 }

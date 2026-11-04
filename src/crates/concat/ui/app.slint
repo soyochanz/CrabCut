@@ -183,7 +183,7 @@ export {
     NewVoiceData,
 }
 export component App inherits Window {
-    title: "CrabCut";
+    title: "CrabCut · developed by altherasolutions";
     // The taskbar's and Alt-Tab's picture on Windows, and the window
     // list's on X11. A Mac takes its Dock icon from the bundle and ignores
     // this; the .exe's own, for Explorer, is embedded by build.rs.
@@ -438,6 +438,7 @@ export component App inherits Window {
     callback captions-placement-changed(index: int);
     callback captions-size-changed(index: int);
     callback captions-format-changed(index: int);
+    callback captions-template-changed(index: int);
     callback captions-begin();
     callback captions-cancel();
     callback captions-import-srt();
@@ -860,6 +861,7 @@ export component App inherits Window {
             language-changed(index) => { root.captions-language-changed(index); }
             placement-changed(index) => { root.captions-placement-changed(index); }
             size-changed(index) => { root.captions-size-changed(index); }
+            template-changed(index) => { root.captions-template-changed(index); }
             format-changed(index) => { root.captions-format-changed(index); }
             begin => { root.captions-begin(); }
             cancel => { root.captions-cancel(); }

@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "زیرنویس‌های SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "پیاده‌سازی متن صدای این کلیپ",
   "captions.transcribing": "در حال رونویسی",
   "captions.typeWordsPutScreen": "متنی را که باید روی صفحه نمایش داده شود وارد کنید…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "نصب‌کنندهٔ CrabCut {0} باز است. CrabCut اکنون بسته می‌شود تا نصب تمام شود.",
   "settings.language": "زبان",
   "settings.light": "روشن",
-  "settings.lime": "لیمویی",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "خطی که از روی ترک‌ها می‌گذرد و زمان فعلی را نشان می‌دهد. هر رنگی را برای آن انتخاب کنید، یا نقطهٔ اول را برای بازگشت به رنگ خود تم.",
   "settings.listeningOnConnected": "در حال Listening روی {0} · {1} متصل",
   "settings.logDebug": "اشکال‌زدایی",
@@ -949,5 +949,6 @@
   "voices.styles": "سبک‌ها",
   "voices.stylesHint": "سبک، صدایی با افکت است. یکی را برای نوشتن انتخاب کنید: افکت‌ها روی کلیپ گفتار می‌نشینند و آنجا قابل تغییرند.",
   "voices.voices": "صداهای گوینده",
-  "voices.yours": "صداهای شما"
+  "voices.yours": "صداهای شما",
+  "captions.template": "Template"
 }

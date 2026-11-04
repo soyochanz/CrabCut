@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Legendas SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Transcrever a voz deste clipe",
   "captions.transcribing": "Transcrevendo",
   "captions.typeWordsPutScreen": "Digite as palavras que vão aparecer na tela…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "O instalador do CrabCut {0} está aberto. O CrabCut fecha agora para que ele possa terminar.",
   "settings.language": "Idioma",
   "settings.light": "Claro",
-  "settings.lime": "Limão",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "A linha que cruza as faixas e marca o tempo atual. Escolha qualquer cor para ela, ou o primeiro ponto para voltar à cor do tema.",
   "settings.listeningOnConnected": "Ouvindo em {0} · {1} conectado(s)",
   "settings.logDebug": "Depuração",
@@ -949,5 +949,6 @@
   "voices.styles": "Estilos",
   "voices.stylesHint": "Um estilo é uma voz com efeitos. Escolha um para escrever com ele: os efeitos vão para o clipe de fala, onde você pode mudá-los.",
   "voices.voices": "Vozes",
-  "voices.yours": "Suas vozes"
+  "voices.yours": "Suas vozes",
+  "captions.template": "Template"
 }

@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip سب ٹائٹلز",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "اس کلپ کی آواز کی تحریر بنائیں",
   "captions.transcribing": "ٹرانسکرائب ہو رہا ہے",
   "captions.typeWordsPutScreen": "اسکرین پر دکھانے کے لیے الفاظ لکھیں…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0} کا انسٹالر کھلا ہے۔ CrabCut اب بند ہو رہا ہے تاکہ وہ مکمل ہو سکے۔",
   "settings.language": "زبان",
   "settings.light": "ہلکا",
-  "settings.lime": "لیموں",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "لینوں کے آر پار لکیر جو موجودہ وقت دکھاتی ہے۔ اس کے لیے کوئی بھی رنگ چنیں، یا تھیم کے اپنے رنگ پر واپس جانے کے لیے پہلا نقطہ۔",
   "settings.listeningOnConnected": "{0} پر سن رہا ہے · {1} منسلک",
   "settings.logDebug": "ڈیبگ",
@@ -949,5 +949,6 @@
   "voices.styles": "انداز",
   "voices.stylesHint": "انداز ایفیکٹس والی صوت ہے۔ اس میں لکھنے کے لیے کوئی ایک چنیں: ایفیکٹس تقریر کی کلپ پر لگتے ہیں، جہاں آپ انہیں بدل سکتے ہیں۔",
   "voices.voices": "صوتیں",
-  "voices.yours": "آپ کی صوتیں"
+  "voices.yours": "آپ کی صوتیں",
+  "captions.template": "Template"
 }

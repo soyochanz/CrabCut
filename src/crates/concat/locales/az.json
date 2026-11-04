@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip subtitrləri",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Bu klipdəki səsi mətnə çevir",
   "captions.transcribing": "Mətnə çevrilir",
   "captions.typeWordsPutScreen": "Ekranda görünəcək sözləri yazın…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0} quraşdırıcısı açıqdır. Quraşdırma bitsin deyə CrabCut indi bağlanır.",
   "settings.language": "Dil",
   "settings.light": "Açıq",
-  "settings.lime": "Laym",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "Zolaqların üzərindən keçən və cari vaxtı göstərən xətt. Ona istədiyiniz rəngi seçin, ya da mövzunun öz rənginə qayıtmaq üçün ilk nöqtəni seçin.",
   "settings.listeningOnConnected": "{0} dinlənilir · {1} qoşulub",
   "settings.logDebug": "Sazlama",
@@ -949,5 +949,6 @@
   "voices.styles": "Üslublar",
   "voices.stylesHint": "Üslub üzərinə effektlər qoyulmuş səsdir. Onunla yazmaq üçün birini seçin: effektlər nitq klipinə tətbiq olunur və orada onları dəyişə bilərsiniz.",
   "voices.voices": "Səslər",
-  "voices.yours": "Sizin səsləriniz"
+  "voices.yours": "Sizin səsləriniz",
+  "captions.template": "Template"
 }

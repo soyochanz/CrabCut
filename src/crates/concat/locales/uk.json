@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Субтитри SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Розшифрувати голос цього кліпу",
   "captions.transcribing": "Розпізнавання",
   "captions.typeWordsPutScreen": "Введіть слова, які з’являться на екрані…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "Інсталятор CrabCut {0} відкрито. CrabCut зараз закриється, щоб він міг завершити роботу.",
   "settings.language": "Мова",
   "settings.light": "Світла",
-  "settings.lime": "Лайм",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "Лінія через доріжки, що позначає поточний час. Виберіть для неї будь-який колір або першу точку, щоб повернути колір теми.",
   "settings.listeningOnConnected": "Прослуховування {0} · підключено: {1}",
   "settings.logDebug": "Налагодження",
@@ -949,5 +949,6 @@
   "voices.styles": "Стилі",
   "voices.stylesHint": "Стиль — це голос з ефектами. Виберіть стиль, щоб писати ним: ефекти ляжуть на мовний кліп, де їх можна змінити.",
   "voices.voices": "Голоси",
-  "voices.yours": "Ваші голоси"
+  "voices.yours": "Ваші голоси",
+  "captions.template": "Template"
 }

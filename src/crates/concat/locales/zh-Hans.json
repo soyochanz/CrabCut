@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip 字幕",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "转写此片段的语音",
   "captions.transcribing": "正在转录",
   "captions.typeWordsPutScreen": "输入要显示在屏幕上的文字…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0} 的安装程序已打开。CrabCut 现在将关闭，以便安装完成。",
   "settings.language": "语言",
   "settings.light": "光",
-  "settings.lime": "青柠",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "横跨轨道、标记当前时间的那条线。可为它选择任意颜色，或点第一个圆点回到主题自带的颜色。",
   "settings.listeningOnConnected": "正在监听 {0} · 已连接 {1} 个",
   "settings.logDebug": "调试",
@@ -949,5 +949,6 @@
   "voices.styles": "风格",
   "voices.stylesHint": "风格就是加了效果的嗓音。选一个用它来写：效果会加在语音片段上，之后可以修改。",
   "voices.voices": "嗓音",
-  "voices.yours": "你的嗓音"
+  "voices.yours": "你的嗓音",
+  "captions.template": "Template"
 }

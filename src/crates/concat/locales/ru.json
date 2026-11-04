@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Субтитры SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Расшифровать голос этого клипа",
   "captions.transcribing": "Распознавание",
   "captions.typeWordsPutScreen": "Введите слова, которые появятся на экране…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "Установщик CrabCut {0} открыт. CrabCut сейчас закроется, чтобы установка могла завершиться.",
   "settings.language": "Язык",
   "settings.light": "Светлая",
-  "settings.lime": "Лайм",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "Линия поперёк дорожек, отмечающая текущее время. Выберите для неё любой цвет или первую точку, чтобы вернуть цвет темы.",
   "settings.listeningOnConnected": "Слушает {0} · подключено: {1}",
   "settings.logDebug": "Отладка",
@@ -949,5 +949,6 @@
   "voices.styles": "Стили",
   "voices.stylesHint": "Стиль — это голос с эффектами. Выберите стиль, чтобы писать им: эффекты лягут на речевой клип, где их можно изменить.",
   "voices.voices": "Голоса",
-  "voices.yours": "Ваши голоса"
+  "voices.yours": "Ваши голоса",
+  "captions.template": "Template"
 }

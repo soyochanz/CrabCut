@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Subtitel SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Transkripsikan suara klip ini",
   "captions.transcribing": "Mentranskripsi",
   "captions.typeWordsPutScreen": "Ketik kata-kata yang akan tampil di layar…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "Penginstal CrabCut {0} sudah terbuka. CrabCut ditutup sekarang agar penginstalan bisa selesai.",
   "settings.language": "Bahasa",
   "settings.light": "Terang",
-  "settings.lime": "Limau",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "Garis melintang di lajur yang menandai waktu saat ini. Pilih warna apa pun untuknya, atau titik pertama untuk kembali ke warna bawaan tema.",
   "settings.listeningOnConnected": "Mendengarkan di {0} · {1} terhubung",
   "settings.logDebug": "Debug",
@@ -949,5 +949,6 @@
   "voices.styles": "Gaya",
   "voices.stylesHint": "Gaya adalah suara dengan efek. Pilih satu untuk menulis dengannya: efeknya dipasang di klip ucapan, tempat kamu bisa mengubahnya.",
   "voices.voices": "Suara narator",
-  "voices.yours": "Suaramu"
+  "voices.yours": "Suaramu",
+  "captions.template": "Template"
 }

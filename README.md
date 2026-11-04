@@ -6,14 +6,18 @@ A local video editor for short-form creators, forked from [Concat](https://githu
 
 ## Added in this fork
 
-- CrabCut identity, crab icon and separate application data directory.
+- CrabCut identity, coral-orange interface, crab icon and separate application data directory.
+- developed by altherasolutions (independent fork; upstream credits retained).
+- 16 caption templates with animated previews: karaoke, progressive colour, underline, neon, paper, comic, typewriter and more.
 - Caption formats: original, one word, Reels (up to 3 words), short (up to 5 words).
 - Sentence-aware grouping for voice captions, scripts and imported SRT subtitles.
 - Short captions get bold text, an outline and a brief scale entrance.
 - Nine original CC0 sound effects and music loops, importable into the Audio library.
 - English and Spanish interface text for the new controls.
 
-Short caption timing is estimated within the original phrase, not forced word alignment.
+Voice captions request Whisper word timestamps. These remain estimates, not guaranteed forced alignment.
+Scripts and imported SRT use character-weighted timing within each phrase.
+Animated captions are saved as successive editable text clips, one per word state.
 Existing timeline tools allow further manual adjustment. Original mode preserves cue timing.
 
 The underlying editor includes transitions, effects, local transcription and a sounds panel.

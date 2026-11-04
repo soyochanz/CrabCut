@@ -575,6 +575,9 @@ pub struct Segment {
 #[derive(Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TranscribeRequest {
+    /// Request word-sized segments with Whisper token timestamps.
+    #[serde(default)]
+    pub word_timestamps: bool,
     /// The media file to transcribe.
     pub path: String,
     /// Which of the file's audio streams, by index; `None` is the first -
@@ -951,6 +954,11 @@ impl Transcriber {
         params.set_print_progress(false);
         params.set_print_realtime(false);
         params.set_print_timestamps(false);
+        if request.word_timestamps {
+            params.set_token_timestamps(true);
+            params.set_split_on_word(true);
+            params.set_max_len(1);
+        }
         params.set_suppress_blank(true);
         // Non-speech tokens are left to whisper: "[Music]", "(tepuk
         // tangan)" and "♪" are how it says what it hears is not words,
@@ -1009,7 +1017,7 @@ impl Transcriber {
 
         let eot = context.token_eot();
         let lines = state.as_iter().filter_map(|segment| {
-            if recipe.prune && made_up(&segment, eot) {
+            if recipe.prune && !request.word_timestamps && made_up(&segment, eot) {
                 log::debug!(
                     "transcribe: dropped as made up of silence: {:?}",
                     segment.to_str_lossy().unwrap_or_default()
@@ -1027,7 +1035,7 @@ impl Transcriber {
             keep_segment(start, end, text)
         });
         let lines: Vec<Segment> = lines.collect();
-        Ok(if recipe.prune {
+        Ok(if recipe.prune && !request.word_timestamps {
             drop_repeats(lines)
         } else {
             lines
@@ -1273,6 +1281,7 @@ mod tests {
             .transcribe(
                 &dirs,
                 &TranscribeRequest {
+                    word_timestamps: false,
                     path,
                     audio_stream: None,
                     source_start: 0.0,
@@ -1614,6 +1623,7 @@ mod accuracy {
                 for (name, recipe, language) in runs {
                     eprintln!("{model} / {} / {name}", if gpu { "GPU" } else { "CPU" });
                     let request = TranscribeRequest {
+                        word_timestamps: false,
                         path: audio.clone(),
                         audio_stream: None,
                         source_start: 0.0,
@@ -1705,6 +1715,7 @@ mod real_audio {
         let dirs = AppDirs::locate().expect("the app's directories");
         let transcriber = Transcriber::new();
         let request = TranscribeRequest {
+            word_timestamps: false,
             path: audio,
             audio_stream: None,
             source_start: 0.0,

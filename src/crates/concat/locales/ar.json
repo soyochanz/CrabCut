@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "ترجمات SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "تفريغ صوت هذا المقطع",
   "captions.transcribing": "جارٍ التفريغ النصي",
   "captions.typeWordsPutScreen": "اكتب الكلمات التي ستظهر على الشاشة…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "مثبّت CrabCut {0} مفتوح. سيُغلق CrabCut الآن ليتمكن من الإنهاء.",
   "settings.language": "اللغة",
   "settings.light": "فاتح",
-  "settings.lime": "ليموني",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "الخط الممتد عبر المسارات الذي يحدّد الوقت الحالي. اختر له أي لون، أو النقطة الأولى للعودة إلى لون السمة.",
   "settings.listeningOnConnected": "يستمع على {0} · {1} متصل",
   "settings.logDebug": "تصحيح الأخطاء",
@@ -949,5 +949,6 @@
   "voices.styles": "الأنماط",
   "voices.stylesHint": "النمط صوت عليه مؤثرات. اختر واحدًا لتكتب به: توضع المؤثرات على مقطع الكلام، حيث يمكنك تغييرها.",
   "voices.voices": "الأصوات البشرية",
-  "voices.yours": "أصواتك"
+  "voices.yours": "أصواتك",
+  "captions.template": "Template"
 }

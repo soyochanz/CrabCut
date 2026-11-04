@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip সাবটাইটেল",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "এই ক্লিপের কণ্ঠ লিখে নিন",
   "captions.transcribing": "ট্রান্সক্রাইব করা হচ্ছে",
   "captions.typeWordsPutScreen": "স্ক্রিনে দেখানোর শব্দগুলো লিখুন…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0}-এর ইনস্টলার খোলা আছে। শেষ করতে CrabCut এখন বন্ধ হচ্ছে।",
   "settings.language": "ভাষা",
   "settings.light": "হালকা",
-  "settings.lime": "লাইম",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "লেনগুলোর উপর দিয়ে যাওয়া রেখাটি বর্তমান সময় চিহ্নিত করে। এর জন্য যেকোনো রং বেছে নিন, অথবা থিমের নিজস্ব রঙে ফিরতে প্রথম ডটটি।",
   "settings.listeningOnConnected": "{0}-এ শুনছে · {1} সংযুক্ত",
   "settings.logDebug": "ডিবাগ",
@@ -949,5 +949,6 @@
   "voices.styles": "স্টাইল",
   "voices.stylesHint": "স্টাইল মানে ইফেক্টসহ একটি কণ্ঠ। কোনোটি দিয়ে লিখতে সেটি বেছে নিন: ইফেক্টগুলো স্পিচ ক্লিপে যায়, সেখানে বদলানো যায়।",
   "voices.voices": "কণ্ঠ",
-  "voices.yours": "আপনার কণ্ঠ"
+  "voices.yours": "আপনার কণ্ঠ",
+  "captions.template": "Template"
 }

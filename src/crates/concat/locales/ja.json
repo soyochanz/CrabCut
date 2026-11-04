@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip 字幕",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "このクリップの声を文字起こし",
   "captions.transcribing": "文字起こし中",
   "captions.typeWordsPutScreen": "画面に表示する言葉を入力…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0} のインストーラーが開きました。完了できるように CrabCut を終了します。",
   "settings.language": "言語",
   "settings.light": "ライト",
-  "settings.lime": "ライム",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "トラックを横切って現在の時間を示す線です。好きな色を選ぶか、最初の点でテーマ本来の色に戻します。",
   "settings.listeningOnConnected": "{0} で待ち受け中 · {1} 接続",
   "settings.logDebug": "デバッグ",
@@ -949,5 +949,6 @@
   "voices.styles": "スタイル",
   "voices.stylesHint": "スタイルはエフェクト付きのボイスです。選ぶとその声で書けます。エフェクトは音声クリップに付き、あとから変更できます。",
   "voices.voices": "ボイス",
-  "voices.yours": "あなたのボイス"
+  "voices.yours": "あなたのボイス",
+  "captions.template": "Template"
 }

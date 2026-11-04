@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip-ondertitels",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Stem van deze clip uitschrijven",
   "captions.transcribing": "Transcriberen",
   "captions.typeWordsPutScreen": "Typ de woorden die in beeld moeten komen…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "Het installatieprogramma voor CrabCut {0} is geopend. CrabCut sluit nu zodat het kan afronden.",
   "settings.language": "Taal",
   "settings.light": "Licht",
-  "settings.lime": "Limoen",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "De lijn over de sporen die de huidige tijd markeert. Kies er een kleur voor, of de eerste stip om terug te gaan naar die van het thema.",
   "settings.listeningOnConnected": "Luistert op {0} · {1} verbonden",
   "settings.logDebug": "Foutopsporing",
@@ -949,5 +949,6 @@
   "voices.styles": "Stijlen",
   "voices.stylesHint": "Een stijl is een stem met effecten. Kies er een om erin te schrijven: de effecten komen op de spraakclip, waar je ze kunt aanpassen.",
   "voices.voices": "Stemmen",
-  "voices.yours": "Jouw stemmen"
+  "voices.yours": "Jouw stemmen",
+  "captions.template": "Template"
 }

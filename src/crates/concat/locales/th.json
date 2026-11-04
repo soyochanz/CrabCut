@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "คำบรรยาย SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "ถอดเสียงพูดของคลิปนี้",
   "captions.transcribing": "กำลังถอดเสียง",
   "captions.typeWordsPutScreen": "พิมพ์ข้อความที่จะแสดงบนจอ…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "ตัวติดตั้ง CrabCut {0} เปิดอยู่ CrabCut จะปิดตอนนี้เพื่อให้ติดตั้งเสร็จ",
   "settings.language": "ภาษา",
   "settings.light": "สว่าง",
-  "settings.lime": "มะนาว",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "เส้นที่พาดผ่านเลนเพื่อบอกเวลาปัจจุบัน เลือกสีใดก็ได้ หรือเลือกจุดแรกเพื่อกลับไปใช้สีของธีม",
   "settings.listeningOnConnected": "กำลังรอฟังที่ {0} · เชื่อมต่อ {1} รายการ",
   "settings.logDebug": "ดีบัก",
@@ -949,5 +949,6 @@
   "voices.styles": "สไตล์",
   "voices.stylesHint": "สไตล์คือเสียงพูดที่ใส่เอฟเฟกต์ เลือกหนึ่งสไตล์เพื่อเขียนด้วยเสียงนั้น เอฟเฟกต์จะอยู่บนคลิปเสียงพูด ซึ่งคุณเปลี่ยนได้",
   "voices.voices": "เสียงพูด",
-  "voices.yours": "เสียงพูดของคุณ"
+  "voices.yours": "เสียงพูดของคุณ",
+  "captions.template": "Template"
 }

@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "כתוביות SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "תמלול הקול של הקליפ הזה",
   "captions.transcribing": "מתמלל",
   "captions.typeWordsPutScreen": "יש להקליד את המילים שיופיעו על המסך…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "תוכנית ההתקנה של CrabCut {0} פתוחה. CrabCut נסגר עכשיו כדי שתוכל להסתיים.",
   "settings.language": "שפה",
   "settings.light": "בהיר",
-  "settings.lime": "ליים",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "הקו שחוצה את הערוצים ומסמן את הזמן הנוכחי. אפשר לבחור לו כל צבע, או את הנקודה הראשונה כדי לחזור לצבע של ערכת הנושא.",
   "settings.listeningOnConnected": "מאזין ב-{0} · {1} מחוברים",
   "settings.logDebug": "ניפוי באגים",
@@ -949,5 +949,6 @@
   "voices.styles": "סגנונות",
   "voices.stylesHint": "סגנון הוא קול עם אפקטים. בחרו אחד כדי לכתוב בו: האפקטים נוספים לקליפ הדיבור, ושם אפשר לשנות אותם.",
   "voices.voices": "קולות",
-  "voices.yours": "הקולות שלכם"
+  "voices.yours": "הקולות שלכם",
+  "captions.template": "Template"
 }

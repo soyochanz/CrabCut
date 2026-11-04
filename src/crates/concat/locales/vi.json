@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Phụ đề SubRip",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Chép lời giọng nói của clip này",
   "captions.transcribing": "Đang chuyển đổi",
   "captions.typeWordsPutScreen": "Nhập các từ muốn hiển thị trên màn hình…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "Trình cài đặt CrabCut {0} đã mở. CrabCut sẽ đóng để quá trình cài đặt hoàn tất.",
   "settings.language": "Ngôn ngữ",
   "settings.light": "Sáng",
-  "settings.lime": "Xanh chanh",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "Đường chạy ngang các làn đánh dấu thời gian hiện tại. Chọn màu bất kỳ hoặc chấm đầu tiên để dùng lại màu của giao diện.",
   "settings.listeningOnConnected": "Đang lắng nghe tại {0} · {1} kết nối",
   "settings.logDebug": "Gỡ lỗi",
@@ -949,5 +949,6 @@
   "voices.styles": "Phong cách",
   "voices.stylesHint": "Phong cách là một giọng có hiệu ứng. Chọn một phong cách để viết bằng nó: hiệu ứng được đặt lên clip giọng nói, nơi bạn có thể thay đổi.",
   "voices.voices": "Giọng nói",
-  "voices.yours": "Giọng của bạn"
+  "voices.yours": "Giọng của bạn",
+  "captions.template": "Template"
 }

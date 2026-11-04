@@ -33,7 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip सबटाइटल",
-  "captions.timingHint": "Short captions use estimated timing within each phrase. You can adjust each clip on the timeline.",
+  "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "इस क्लिप की आवाज़ लिखें",
   "captions.transcribing": "ट्रांसक्राइब हो रहा है",
   "captions.typeWordsPutScreen": "स्क्रीन पर दिखाने के लिए शब्द लिखें…",
@@ -477,7 +477,7 @@
   "settings.installerOpened": "CrabCut {0} का इंस्टॉलर खुला है। इंस्टॉलेशन पूरा हो सके, इसलिए CrabCut अब बंद हो रहा है।",
   "settings.language": "भाषा",
   "settings.light": "लाइट",
-  "settings.lime": "नींबू",
+  "settings.lime": "Coral",
   "settings.lineAcrossLanesMarks": "लेन के आर-पार की वह रेखा जो मौजूदा समय दिखाती है। इसके लिए कोई भी रंग चुनें, या थीम के अपने रंग पर लौटने के लिए पहला बिंदु।",
   "settings.listeningOnConnected": "{0} पर सुन रहा है · {1} जुड़े",
   "settings.logDebug": "डीबग",
@@ -949,5 +949,6 @@
   "voices.styles": "स्टाइल",
   "voices.stylesHint": "स्टाइल यानी इफ़ेक्ट वाली आवाज़। उसमें लिखने के लिए कोई एक चुनें: इफ़ेक्ट स्पीच क्लिप पर लगते हैं, जहाँ आप उन्हें बदल सकते हैं।",
   "voices.voices": "आवाज़ें",
-  "voices.yours": "आपकी आवाज़ें"
+  "voices.yours": "आपकी आवाज़ें",
+  "captions.template": "Template"
 }
