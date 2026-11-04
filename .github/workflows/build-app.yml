@@ -422,7 +422,6 @@ jobs:
           workspaces: src
           cache-on-failure: true
           cache-workspace-crates: true
-          cache-on-failure: true
           key: ${{ matrix.target }}
           env-vars: CARGO CC CFLAGS CXX CMAKE RUST GGML ORT
 
