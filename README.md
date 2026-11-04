@@ -31,12 +31,6 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 - The offer expires after 3.5 seconds; Escape, another edit, selection change or seeking dismisses it. Doing nothing keeps the piece. Undo restores it.
 - Shift combinations and typing in fields do not cut.
 
-## 🪟 ¿Usas Windows?
-
-**[Descargar CrabCut para Windows · instalador EXE](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-windows-x86_64-setup.exe)**
-
-Windows de 64 bits (x64). Abre el archivo descargado y sigue el asistente de Althera Solutions. Para instalaciones administradas: [instalador MSI](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-windows-x86_64.msi).
-
 ## 🍎 ¿Usas Mac?
 
 **[Descargar CrabCut para Mac · instalador PKG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-macos-arm64.pkg)**
@@ -58,7 +52,11 @@ Esta versión aún no está notarizada por Apple. Si has descargado el instalado
 
 Es una excepción para esta aplicación; no desactives la protección general del Mac. [Instrucciones oficiales de Apple](https://support.apple.com/es-es/102445).
 
-Guarda tus proyectos y cierra CrabCut antes de actualizar. Los instaladores todavía no llevan certificados comerciales de firma de Althera Solutions; Windows también puede mostrar un aviso de editor no verificado. **No descargues “Source code” para instalar:** elige el enlace de tu sistema arriba.
+Guarda tus proyectos y cierra CrabCut antes de actualizar. El instalador de Mac todavía no lleva un certificado comercial de firma de Althera Solutions ni notarización de Apple. **No descargues “Source code” para instalar:** elige el enlace de tu sistema arriba.
+
+## 🪟 Windows
+
+**Pendiente.** La preparación del instalador de Windows está pausada. Esta release ofrece únicamente la versión de Mac; todavía no hay un EXE o MSI verificado para descargar.
 
 ## Build
 
