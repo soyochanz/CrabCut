@@ -446,7 +446,7 @@ jobs:
         working-directory: src
         run: |
           set -o pipefail
-          cargo build --profile quick -p concat --target ${{ matrix.target }} 2>&1 | tee build.log
+          cargo build --verbose --profile quick -p concat --target ${{ matrix.target }} 2>&1 | tee build.log
 
       - name: Build log to the summary (failure only)
         if: failure()
