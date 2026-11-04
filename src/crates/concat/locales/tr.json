@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip altyazıları",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Bu klibin sesini yazıya dök",
   "captions.transcribing": "Yazıya dökülüyor",
@@ -664,7 +665,7 @@
   "start.noMatches": "“{0}” ile eşleşen proje yok.",
   "start.noProjectsNote": "Oluşturduğunuz veya açtığınız her şey burada görünür. Düzenlemede yeni misiniz? “İlk düzenlemeniz” rehberi boş bir zaman çizelgesinden dışa aktarılmış bir videoya beş adımda götürür.",
   "start.noProjectsYet": "Henüz proje yok",
-  "start.notConcatProjectFolder": "{0} bir CrabCut proje klasörü değil",
+  "start.notCrabCutProjectFolder": "{0} bir CrabCut proje klasörü değil",
   "start.openAProject": "Bir proje aç",
   "start.openProject": "Proje aç",
   "start.openProjectNote": "Bu makineden bir proje klasörü",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Bu proje başka bir CrabCut'te açık (işlem {0}). Önce orada kapatın, sonra burada açın.",
   "studio.projectOpenThroughRemote": "Bu proje Uzak API üzerinden açık",
   "studio.projectSaved": "Proje kaydedildi",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Çık",
   "studio.reattachAudio": "Sesi yeniden bağla",
   "studio.redo": "Yinele",
@@ -949,6 +953,5 @@
   "voices.styles": "Stiller",
   "voices.stylesHint": "Stil, efekt uygulanmış bir sestir. Onunla yazmak için birini seçin: efektler konuşma klibine eklenir, orada değiştirebilirsiniz.",
   "voices.voices": "Ses tonları",
-  "voices.yours": "Sizin sesleriniz",
-  "captions.template": "Template"
+  "voices.yours": "Sizin sesleriniz"
 }

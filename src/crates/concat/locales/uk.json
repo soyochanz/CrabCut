@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Субтитри SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Розшифрувати голос цього кліпу",
   "captions.transcribing": "Розпізнавання",
@@ -664,7 +665,7 @@
   "start.noMatches": "Немає проєктів за запитом «{0}».",
   "start.noProjectsNote": "Тут з’явиться все, що ви створите або відкриєте. Вперше монтуєте? Посібник «Ваш перший монтаж» за п’ять кроків проведе від порожньої часової шкали до експортованого відео.",
   "start.noProjectsYet": "Ще немає проєктів",
-  "start.notConcatProjectFolder": "{0} — не папка проєкту CrabCut",
+  "start.notCrabCutProjectFolder": "{0} — не папка проєкту CrabCut",
   "start.openAProject": "Відкрити проєкт",
   "start.openProject": "Відкрити проєкт",
   "start.openProjectNote": "Папка проєкту з цього комп’ютера",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Цей проєкт відкрито в іншому CrabCut (процес {0}). Закрийте його там, а потім відкрийте тут.",
   "studio.projectOpenThroughRemote": "Цей проєкт відкрито через Remote API",
   "studio.projectSaved": "Проєкт збережено",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Вийти",
   "studio.reattachAudio": "Повернути аудіо",
   "studio.redo": "Повторити",
@@ -949,6 +953,5 @@
   "voices.styles": "Стилі",
   "voices.stylesHint": "Стиль — це голос з ефектами. Виберіть стиль, щоб писати ним: ефекти ляжуть на мовний кліп, де їх можна змінити.",
   "voices.voices": "Голоси",
-  "voices.yours": "Ваші голоси",
-  "captions.template": "Template"
+  "voices.yours": "Ваші голоси"
 }

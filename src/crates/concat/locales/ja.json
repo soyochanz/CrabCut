@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip 字幕",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "このクリップの声を文字起こし",
   "captions.transcribing": "文字起こし中",
@@ -664,7 +665,7 @@
   "start.noMatches": "「{0}」に一致するプロジェクトはありません。",
   "start.noProjectsNote": "作成したり開いたりしたものはすべてここに表示されます。編集が初めてなら、ガイド「はじめての編集」で空のタイムラインから書き出したビデオまで 5 ステップで進められます。",
   "start.noProjectsYet": "プロジェクトはまだありません",
-  "start.notConcatProjectFolder": "{0} は CrabCut のプロジェクトフォルダーではありません",
+  "start.notCrabCutProjectFolder": "{0} は CrabCut のプロジェクトフォルダーではありません",
   "start.openAProject": "プロジェクトを開く",
   "start.openProject": "プロジェクトを開く",
   "start.openProjectNote": "このマシン上のプロジェクトフォルダー",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "このプロジェクトは別の CrabCut で開かれています（プロセス {0}）。そちらで閉じてから、ここで開いてください。",
   "studio.projectOpenThroughRemote": "このプロジェクトはリモート API で開かれています",
   "studio.projectSaved": "プロジェクトを保存しました",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "終了",
   "studio.reattachAudio": "音声を再結合",
   "studio.redo": "やり直す",
@@ -949,6 +953,5 @@
   "voices.styles": "スタイル",
   "voices.stylesHint": "スタイルはエフェクト付きのボイスです。選ぶとその声で書けます。エフェクトは音声クリップに付き、あとから変更できます。",
   "voices.voices": "ボイス",
-  "voices.yours": "あなたのボイス",
-  "captions.template": "Template"
+  "voices.yours": "あなたのボイス"
 }

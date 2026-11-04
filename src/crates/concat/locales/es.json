@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 palabras",
   "captions.shortPhrase": "Corto · 5 palabras",
   "captions.subRipSubtitles": "Subtítulos SubRip",
+  "captions.template": "Plantilla",
   "captions.timingHint": "Voz: tiempos por palabra estimados por Whisper. Guion/SRT: tiempos proporcionales. Cada cambio de palabra se puede editar en la línea de tiempo.",
   "captions.transcribeClipVoice": "Transcribir la voz de este clip",
   "captions.transcribing": "Transcribiendo",
@@ -664,7 +665,7 @@
   "start.noMatches": "Ningún proyecto coincide con «{0}».",
   "start.noProjectsNote": "Todo lo que crees o abras aparece aquí. ¿Nuevo en la edición? La guía «Tu primera edición» va de una línea de tiempo vacía a un vídeo exportado en cinco pasos.",
   "start.noProjectsYet": "Aún no hay proyectos",
-  "start.notConcatProjectFolder": "{0} no es una carpeta de proyecto de CrabCut",
+  "start.notCrabCutProjectFolder": "{0} no es una carpeta de proyecto de CrabCut",
   "start.openAProject": "Abrir un proyecto",
   "start.openProject": "Abrir proyecto",
   "start.openProjectNote": "Una carpeta de proyecto de este equipo",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Este proyecto está abierto en otro CrabCut (proceso {0}). Ciérralo allí y luego ábrelo aquí.",
   "studio.projectOpenThroughRemote": "Este proyecto está abierto a través de la API remota",
   "studio.projectSaved": "Proyecto guardado",
+  "studio.quickCutRemove": "Return: eliminar este tramo y cerrar el hueco · Esc: conservar",
+  "studio.quickCutRemoved": "Tramo eliminado; hueco cerrado. Puedes deshacerlo.",
+  "studio.quickCutSelect": "Selecciona un clip bajo el cabezal para cortar.",
   "studio.quit": "Salir",
   "studio.reattachAudio": "Volver a unir el audio",
   "studio.redo": "Rehacer",
@@ -949,6 +953,5 @@
   "voices.styles": "Estilos",
   "voices.stylesHint": "Un estilo es una voz con efectos. Elige uno para escribir con él: los efectos van al clip de voz, donde puedes cambiarlos.",
   "voices.voices": "Voces",
-  "voices.yours": "Tus voces",
-  "captions.template": "Plantilla"
+  "voices.yours": "Tus voces"
 }

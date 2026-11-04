@@ -975,6 +975,11 @@ pub struct Studio {
     /// about a track that the document does not.
     pub lanes: crate::panes::timeline::TimelinePane,
     pub selection: Vec<String>,
+    /// Last Shift cut: left/right ids, boundary and document revision.
+    pub shift_cut_snapshot: Option<(Vec<String>, f32, u64)>,
+    quick_cut_anchor: Option<concat_project::quick_cut::Anchor>,
+    /// Optional middle piece; never removed without Return while the hint is live.
+    quick_cut_pending: Option<(String, u64, f32, std::time::Instant)>,
     pub playhead: f32,
     pub playing: bool,
     transport: slint::Timer,
@@ -2588,6 +2593,9 @@ impl Studio {
             waves: RefCell::new(HashMap::new()),
             lanes: crate::panes::timeline::TimelinePane::default(),
             selection: Vec::new(),
+            shift_cut_snapshot: None,
+            quick_cut_anchor: None,
+            quick_cut_pending: None,
             playhead: 0.0,
             // ~20px a second: a ten-second cut fits a pane at its default width.
             playing: false,

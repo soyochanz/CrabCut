@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Sottotitoli SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Trascrivi la voce di questa clip",
   "captions.transcribing": "Trascrizione in corso",
@@ -664,7 +665,7 @@
   "start.noMatches": "Nessun progetto corrisponde a «{0}».",
   "start.noProjectsNote": "Tutto ciò che crei o apri compare qui. Nuovo al montaggio? La guida «Il tuo primo montaggio» porta da una timeline vuota a un video esportato in cinque passaggi.",
   "start.noProjectsYet": "Ancora nessun progetto",
-  "start.notConcatProjectFolder": "{0} non è una cartella di progetto CrabCut",
+  "start.notCrabCutProjectFolder": "{0} non è una cartella di progetto CrabCut",
   "start.openAProject": "Apri un progetto",
   "start.openProject": "Apri progetto",
   "start.openProjectNote": "Una cartella di progetto da questo computer",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Questo progetto è aperto in un altro CrabCut (processo {0}). Chiudilo lì, poi aprilo qui.",
   "studio.projectOpenThroughRemote": "Questo progetto è aperto tramite l’API remota",
   "studio.projectSaved": "Progetto salvato",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Esci",
   "studio.reattachAudio": "Ricollega l'audio",
   "studio.redo": "Ripeti",
@@ -949,6 +953,5 @@
   "voices.styles": "Stili",
   "voices.stylesHint": "Uno stile è una voce con effetti. Scegline uno per scrivere con esso: gli effetti vanno sulla clip vocale, dove puoi cambiarli.",
   "voices.voices": "Voci",
-  "voices.yours": "Le tue voci",
-  "captions.template": "Template"
+  "voices.yours": "Le tue voci"
 }

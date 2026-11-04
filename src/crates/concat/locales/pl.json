@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Napisy SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Transkrybuj głos z tego klipu",
   "captions.transcribing": "Transkrypcja",
@@ -664,7 +665,7 @@
   "start.noMatches": "Żaden projekt nie pasuje do „{0}”.",
   "start.noProjectsNote": "Wszystko, co utworzysz lub otworzysz, pojawi się tutaj. Pierwszy raz montujesz? Przewodnik „Twój pierwszy montaż” w pięciu krokach prowadzi od pustej osi czasu do wyeksportowanego filmu.",
   "start.noProjectsYet": "Brak projektów",
-  "start.notConcatProjectFolder": "{0} nie jest folderem projektu CrabCut",
+  "start.notCrabCutProjectFolder": "{0} nie jest folderem projektu CrabCut",
   "start.openAProject": "Otwórz projekt",
   "start.openProject": "Otwórz projekt",
   "start.openProjectNote": "Folder projektu z tego komputera",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Ten projekt jest otwarty w innym CrabCut (proces {0}). Zamknij go tam, a potem otwórz tutaj.",
   "studio.projectOpenThroughRemote": "Ten projekt jest otwarty przez Remote API",
   "studio.projectSaved": "Projekt zapisany",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Zakończ",
   "studio.reattachAudio": "Dołącz dźwięk ponownie",
   "studio.redo": "Ponów",
@@ -949,6 +953,5 @@
   "voices.styles": "Style",
   "voices.stylesHint": "Styl to głos z efektami. Wybierz jeden, aby nim pisać: efekty trafią na klip mowy, gdzie możesz je zmienić.",
   "voices.voices": "Głosy",
-  "voices.yours": "Twoje głosy",
-  "captions.template": "Template"
+  "voices.yours": "Twoje głosy"
 }

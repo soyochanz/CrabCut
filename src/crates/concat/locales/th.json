@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "คำบรรยาย SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "ถอดเสียงพูดของคลิปนี้",
   "captions.transcribing": "กำลังถอดเสียง",
@@ -664,7 +665,7 @@
   "start.noMatches": "ไม่มีโปรเจกต์ที่ตรงกับ “{0}”",
   "start.noProjectsNote": "ทุกอย่างที่คุณสร้างหรือเปิดจะแสดงที่นี่ เพิ่งเริ่มตัดต่อใช่ไหม คู่มือ “การตัดต่อครั้งแรกของคุณ” จะพาจากไทม์ไลน์ว่างไปจนถึงวิดีโอที่ส่งออกแล้วใน 5 ขั้นตอน",
   "start.noProjectsYet": "ยังไม่มีโปรเจกต์",
-  "start.notConcatProjectFolder": "{0} ไม่ใช่โฟลเดอร์โปรเจกต์ CrabCut",
+  "start.notCrabCutProjectFolder": "{0} ไม่ใช่โฟลเดอร์โปรเจกต์ CrabCut",
   "start.openAProject": "เปิดโปรเจกต์",
   "start.openProject": "เปิดโปรเจกต์",
   "start.openProjectNote": "โฟลเดอร์โปรเจกต์จากเครื่องนี้",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "โปรเจกต์นี้เปิดอยู่ใน CrabCut อีกตัวหนึ่ง (โพรเซส {0}) ปิดที่นั่นก่อน แล้วค่อยเปิดที่นี่",
   "studio.projectOpenThroughRemote": "โปรเจกต์นี้เปิดผ่าน API ระยะไกล",
   "studio.projectSaved": "บันทึกโปรเจกต์แล้ว",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "ออกจากโปรแกรม",
   "studio.reattachAudio": "รวมเสียงกลับ",
   "studio.redo": "ทำซ้ำ",
@@ -949,6 +953,5 @@
   "voices.styles": "สไตล์",
   "voices.stylesHint": "สไตล์คือเสียงพูดที่ใส่เอฟเฟกต์ เลือกหนึ่งสไตล์เพื่อเขียนด้วยเสียงนั้น เอฟเฟกต์จะอยู่บนคลิปเสียงพูด ซึ่งคุณเปลี่ยนได้",
   "voices.voices": "เสียงพูด",
-  "voices.yours": "เสียงพูดของคุณ",
-  "captions.template": "Template"
+  "voices.yours": "เสียงพูดของคุณ"
 }

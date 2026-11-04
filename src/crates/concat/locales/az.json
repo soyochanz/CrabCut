@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip subtitrləri",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Bu klipdəki səsi mətnə çevir",
   "captions.transcribing": "Mətnə çevrilir",
@@ -664,7 +665,7 @@
   "start.noMatches": "“{0}” ilə uyğun layihə yoxdur.",
   "start.noProjectsNote": "Yaratdığınız və ya açdığınız hər şey burada görünəcək. Montajda yenisiniz? İlk montaj bələdçisi boş zaman xəttindən ixrac olunmuş videoya qədər beş addımda aparır.",
   "start.noProjectsYet": "Hələ layihə yoxdur",
-  "start.notConcatProjectFolder": "{0} CrabCut layihə qovluğu deyil",
+  "start.notCrabCutProjectFolder": "{0} CrabCut layihə qovluğu deyil",
   "start.openAProject": "Layihə açın",
   "start.openProject": "Layihəni aç",
   "start.openProjectNote": "Bu kompüterdəki layihə qovluğu",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Bu layihə başqa bir CrabCut-da açıqdır (proses {0}). Onu orada bağlayın, sonra burada açın.",
   "studio.projectOpenThroughRemote": "Bu layihə Remote API vasitəsilə açıqdır",
   "studio.projectSaved": "Layihə yadda saxlanıldı",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Çıx",
   "studio.reattachAudio": "Səsi geri birləşdir",
   "studio.redo": "Təkrarla",
@@ -949,6 +953,5 @@
   "voices.styles": "Üslublar",
   "voices.stylesHint": "Üslub üzərinə effektlər qoyulmuş səsdir. Onunla yazmaq üçün birini seçin: effektlər nitq klipinə tətbiq olunur və orada onları dəyişə bilərsiniz.",
   "voices.voices": "Səslər",
-  "voices.yours": "Sizin səsləriniz",
-  "captions.template": "Template"
+  "voices.yours": "Sizin səsləriniz"
 }

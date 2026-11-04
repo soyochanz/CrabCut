@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip سب ٹائٹلز",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "اس کلپ کی آواز کی تحریر بنائیں",
   "captions.transcribing": "ٹرانسکرائب ہو رہا ہے",
@@ -664,7 +665,7 @@
   "start.noMatches": "«{0}» سے کوئی پروجیکٹ میل نہیں کھاتا۔",
   "start.noProjectsNote": "آپ جو کچھ بنائیں یا کھولیں وہ یہاں دکھائی دیتا ہے۔ ایڈیٹنگ میں نئے ہیں؟ «آپ کا پہلا ایڈٹ» گائیڈ پانچ مراحل میں خالی ٹائم لائن سے ایکسپورٹ شدہ ویڈیو تک لے جاتی ہے۔",
   "start.noProjectsYet": "ابھی کوئی پروجیکٹ نہیں",
-  "start.notConcatProjectFolder": "{0} CrabCut پروجیکٹ فولڈر نہیں ہے",
+  "start.notCrabCutProjectFolder": "{0} CrabCut پروجیکٹ فولڈر نہیں ہے",
   "start.openAProject": "پروجیکٹ کھولیں",
   "start.openProject": "پروجیکٹ کھولیں",
   "start.openProjectNote": "اس مشین سے ایک پروجیکٹ فولڈر",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "یہ پروجیکٹ کسی دوسرے CrabCut میں کھلا ہے (پروسیس {0})۔ اسے وہاں بند کریں، پھر یہاں کھولیں۔",
   "studio.projectOpenThroughRemote": "یہ پروجیکٹ Remote API کے ذریعے کھلا ہے",
   "studio.projectSaved": "پروجیکٹ محفوظ ہو گیا",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "بند کریں",
   "studio.reattachAudio": "آڈیو دوبارہ جوڑیں",
   "studio.redo": "دوبارہ کریں",
@@ -949,6 +953,5 @@
   "voices.styles": "انداز",
   "voices.stylesHint": "انداز ایفیکٹس والی صوت ہے۔ اس میں لکھنے کے لیے کوئی ایک چنیں: ایفیکٹس تقریر کی کلپ پر لگتے ہیں، جہاں آپ انہیں بدل سکتے ہیں۔",
   "voices.voices": "صوتیں",
-  "voices.yours": "آپ کی صوتیں",
-  "captions.template": "Template"
+  "voices.yours": "آپ کی صوتیں"
 }

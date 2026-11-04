@@ -23,6 +23,14 @@ Existing timeline tools allow further manual adjustment. Original mode preserves
 The underlying editor includes transitions, effects, local transcription and a sounds panel.
 Instagram and CapCut music catalogues are not included or claimed as licensed for reuse.
 
+## Fast cutting
+
+- Delete / Backspace closes the removed clip’s gap (ripple delete). Linked lanes follow the main video lane.
+- Tap and release Shift alone at the playhead to cut the selected clip; without a selection under it, the main video is preferred.
+- Two Shift cuts in the same clip offer **Return** to remove the middle piece and close the gap.
+- The offer expires after 3.5 seconds; Escape, another edit, selection change or seeking dismisses it. Doing nothing keeps the piece. Undo restores it.
+- Shift combinations and typing in fields do not cut.
+
 ## Install and sounds
 
 Download the Apple Silicon DMG from [Releases](https://github.com/soyochanz/CrabCut/releases).

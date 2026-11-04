@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Subtitel SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Transkripsikan suara klip ini",
   "captions.transcribing": "Mentranskripsi",
@@ -664,7 +665,7 @@
   "start.noMatches": "Tidak ada proyek yang cocok dengan “{0}”.",
   "start.noProjectsNote": "Semua yang Anda buat atau buka muncul di sini. Baru mengenal penyuntingan? Panduan “Suntingan pertama Anda” membawa Anda dari linimasa kosong ke video yang diekspor dalam lima langkah.",
   "start.noProjectsYet": "Belum ada proyek",
-  "start.notConcatProjectFolder": "{0} bukan folder proyek CrabCut",
+  "start.notCrabCutProjectFolder": "{0} bukan folder proyek CrabCut",
   "start.openAProject": "Buka sebuah proyek",
   "start.openProject": "Buka proyek",
   "start.openProjectNote": "Folder proyek dari mesin ini",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Proyek ini terbuka di CrabCut lain (proses {0}). Tutup di sana, lalu buka di sini.",
   "studio.projectOpenThroughRemote": "Proyek ini terbuka melalui API Jarak Jauh",
   "studio.projectSaved": "Proyek disimpan",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Keluar",
   "studio.reattachAudio": "Pasang kembali audio",
   "studio.redo": "Ulangi",
@@ -949,6 +953,5 @@
   "voices.styles": "Gaya",
   "voices.stylesHint": "Gaya adalah suara dengan efek. Pilih satu untuk menulis dengannya: efeknya dipasang di klip ucapan, tempat kamu bisa mengubahnya.",
   "voices.voices": "Suara narator",
-  "voices.yours": "Suaramu",
-  "captions.template": "Template"
+  "voices.yours": "Suaramu"
 }

@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip titlovi",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Prepiši glas ovog isječka",
   "captions.transcribing": "Transkripcija",
@@ -664,7 +665,7 @@
   "start.noMatches": "Nijedan projekt ne odgovara “{0}”.",
   "start.noProjectsNote": "Sve što napravite ili otvorite pojavit će se ovdje. Prvi put montirate? Vodič “Vaša prva montaža” u pet koraka vodi od prazne vremenske linije do izvezenog videa.",
   "start.noProjectsYet": "Još nema projekata",
-  "start.notConcatProjectFolder": "{0} nije mapa CrabCut projekta",
+  "start.notCrabCutProjectFolder": "{0} nije mapa CrabCut projekta",
   "start.openAProject": "Otvori projekt",
   "start.openProject": "Otvori projekt",
   "start.openProjectNote": "Mapa projekta s ovog računala",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Ovaj je projekt otvoren u drugom CrabCutu (proces {0}). Zatvorite ga ondje, a zatim ga otvorite ovdje.",
   "studio.projectOpenThroughRemote": "Ovaj je projekt otvoren putem udaljenog API-ja",
   "studio.projectSaved": "Projekt spremljen",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Izađi",
   "studio.reattachAudio": "Ponovno spoji zvuk",
   "studio.redo": "Ponovi",
@@ -949,6 +953,5 @@
   "voices.styles": "Stilovi",
   "voices.stylesHint": "Stil je glas s efektima. Odaberite jedan da biste njime pisali: efekti idu na govorni isječak, gdje ih možete mijenjati.",
   "voices.voices": "Glasovi",
-  "voices.yours": "Vaši glasovi",
-  "captions.template": "Template"
+  "voices.yours": "Vaši glasovi"
 }

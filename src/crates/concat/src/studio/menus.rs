@@ -32,6 +32,116 @@ impl Studio {
         }
     }
 
+    pub fn arm_quick_cut(&mut self) {
+        self.shift_cut_snapshot = Some((self.selection.clone(), self.playhead, self.revision));
+    }
+
+    pub fn release_quick_cut(&mut self) {
+        let Some((selection, at, revision)) = self.shift_cut_snapshot.take() else {
+            return;
+        };
+        if selection == self.selection && at == self.playhead && revision == self.revision {
+            self.quick_cut();
+        }
+    }
+
+    /// A tap of Shift cuts the selected clip at the playhead. With no
+    /// selected clip there, prefer the main video lane, never every overlay.
+    pub fn quick_cut(&mut self) {
+        self.pause();
+        self.quick_cut_pending = None;
+        let fps = f64::from(self.frame_rate().max(1.0));
+        let at = (f64::from(self.playhead) * fps).round() / fps;
+        let edge = f64::from(MIN_DURATION);
+        let main = self.timeline().background_lane();
+        let under: Vec<Clip> = self
+            .timeline()
+            .clips
+            .iter()
+            .filter(|c| {
+                c.start + edge < at && at < c.start + c.duration - edge && !self.locked(&c.track_id)
+            })
+            .cloned()
+            .collect();
+        let selected: Vec<&Clip> = under
+            .iter()
+            .filter(|c| self.selection.contains(&c.id))
+            .collect();
+        let target = if selected.len() == 1 {
+            selected.first().copied()
+        } else if selected.len() > 1 {
+            None
+        } else {
+            under
+                .iter()
+                .find(|c| main == Some(c.track_id.as_str()))
+                .or_else(|| (under.len() == 1).then(|| &under[0]))
+        };
+        let Some(clip) = target.cloned() else {
+            self.quick_cut_anchor = None;
+            self.notify(&t("studio.quickCutSelect"), false);
+            return;
+        };
+        let previous = self.quick_cut_anchor.take();
+        let before = self.revision;
+        self.split_clip_at(&clip.id, at as f32);
+        if self.revision == before {
+            return;
+        }
+        let Some(right) = self
+            .timeline()
+            .clips
+            .iter()
+            .find(|c| {
+                c.id != clip.id
+                    && c.track_id == clip.track_id
+                    && c.media_id == clip.media_id
+                    && (c.start - at).abs() < 0.5 / fps
+            })
+            .map(|c| c.id.clone())
+        else {
+            return;
+        };
+        let middle = previous.and_then(|anchor| anchor.middle(&clip.id, &right, at, before));
+        if let Some(id) = middle {
+            self.selection = vec![id.clone()];
+            self.quick_cut_pending =
+                Some((id, self.revision, self.playhead, std::time::Instant::now()));
+            self.notify(&t("studio.quickCutRemove"), false);
+        } else {
+            self.selection = vec![right.clone()];
+            self.quick_cut_anchor = Some(concat_project::quick_cut::Anchor {
+                left: clip.id,
+                right,
+                at,
+                revision: self.revision,
+            });
+        }
+    }
+
+    /// Return only removes the exact middle piece offered by the current
+    /// hint. An edit, selection change, seek or timeout invalidates it.
+    pub fn confirm_quick_cut(&mut self) -> bool {
+        let Some((id, revision, at, since)) = self.quick_cut_pending.take() else {
+            return false;
+        };
+        if revision != self.revision
+            || since.elapsed().as_millis() >= 3500
+            || (self.playhead - at).abs() > 0.0001
+            || self.selection != [id.clone()]
+            || self.clip(&id).is_none()
+        {
+            return false;
+        }
+        self.ripple_delete_selected();
+        self.notify(&t("studio.quickCutRemoved"), false);
+        true
+    }
+
+    pub fn dismiss_quick_cut(&mut self) {
+        self.quick_cut_pending = None;
+    }
+
     /// Delete Left / Delete Right, CapCut's Q and W: the selected clips the
     /// playhead runs through lose everything before it, or everything
     /// after it, as one undo step. With nothing selected, the one clip
@@ -297,16 +407,14 @@ impl Studio {
         });
     }
 
-    /// Delete: the selection goes, and the hole stays unless the timeline
-    /// is magnetic.
+    /// Delete closes the gap, matching CrabCut's rapid rough-cut workflow.
     pub fn delete_selected(&mut self) {
         // A selected transition goes on its own, leaving a plain cut.
         if self.selected_transition().is_some() {
             self.remove_transition();
             return;
         }
-        let magnetic = self.closes_gap(&self.selection);
-        self.remove_selected(magnetic);
+        self.remove_selected(true);
     }
 
     /// Whether removing these clips closes the gap they leave: always with

@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "כתוביות SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "תמלול הקול של הקליפ הזה",
   "captions.transcribing": "מתמלל",
@@ -664,7 +665,7 @@
   "start.noMatches": "אף פרויקט לא תואם את ״{0}״.",
   "start.noProjectsNote": "כל מה שיוצרים או פותחים מופיע כאן. חדשים בעריכה? המדריך ״העריכה הראשונה שלך״ מוביל מציר זמן ריק לסרטון מיוצא בחמישה שלבים.",
   "start.noProjectsYet": "אין עדיין פרויקטים",
-  "start.notConcatProjectFolder": "{0} אינה תיקיית פרויקט של CrabCut",
+  "start.notCrabCutProjectFolder": "{0} אינה תיקיית פרויקט של CrabCut",
   "start.openAProject": "פתיחת פרויקט",
   "start.openProject": "פתיחת פרויקט",
   "start.openProjectNote": "תיקיית פרויקט מהמחשב הזה",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "הפרויקט הזה פתוח ב-CrabCut אחר (תהליך {0}). סגרו אותו שם ואז פתחו אותו כאן.",
   "studio.projectOpenThroughRemote": "הפרויקט הזה פתוח דרך ה-Remote API",
   "studio.projectSaved": "הפרויקט נשמר",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "יציאה",
   "studio.reattachAudio": "חיבור השמע מחדש",
   "studio.redo": "ביצוע מחדש",
@@ -949,6 +953,5 @@
   "voices.styles": "סגנונות",
   "voices.stylesHint": "סגנון הוא קול עם אפקטים. בחרו אחד כדי לכתוב בו: האפקטים נוספים לקליפ הדיבור, ושם אפשר לשנות אותם.",
   "voices.voices": "קולות",
-  "voices.yours": "הקולות שלכם",
-  "captions.template": "Template"
+  "voices.yours": "הקולות שלכם"
 }

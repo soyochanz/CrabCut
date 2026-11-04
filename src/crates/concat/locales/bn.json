@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip সাবটাইটেল",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "এই ক্লিপের কণ্ঠ লিখে নিন",
   "captions.transcribing": "ট্রান্সক্রাইব করা হচ্ছে",
@@ -664,7 +665,7 @@
   "start.noMatches": "“{0}”-এর সাথে কোনো প্রকল্প মেলে না।",
   "start.noProjectsNote": "আপনি যা তৈরি করেন বা খোলেন সব এখানে দেখা যায়। এডিটিংয়ে নতুন? “আপনার প্রথম এডিট” গাইড পাঁচ ধাপে একটি ফাঁকা টাইমলাইন থেকে এক্সপোর্ট করা ভিডিও পর্যন্ত নিয়ে যায়।",
   "start.noProjectsYet": "এখনো কোনো প্রকল্প নেই",
-  "start.notConcatProjectFolder": "{0} একটি CrabCut প্রকল্প ফোল্ডার নয়",
+  "start.notCrabCutProjectFolder": "{0} একটি CrabCut প্রকল্প ফোল্ডার নয়",
   "start.openAProject": "একটি প্রকল্প খুলুন",
   "start.openProject": "প্রকল্প খুলুন",
   "start.openProjectNote": "এই মেশিনের একটি প্রকল্প ফোল্ডার",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "এই প্রজেক্টটি আরেকটি CrabCut-এ খোলা আছে (প্রসেস {0})। সেখানে বন্ধ করুন, তারপর এখানে খুলুন।",
   "studio.projectOpenThroughRemote": "এই প্রজেক্টটি রিমোট API-এর মাধ্যমে খোলা",
   "studio.projectSaved": "প্রজেক্ট সংরক্ষিত",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "বন্ধ করুন",
   "studio.reattachAudio": "অডিও পুনরায় যুক্ত করুন",
   "studio.redo": "রিডু",
@@ -949,6 +953,5 @@
   "voices.styles": "স্টাইল",
   "voices.stylesHint": "স্টাইল মানে ইফেক্টসহ একটি কণ্ঠ। কোনোটি দিয়ে লিখতে সেটি বেছে নিন: ইফেক্টগুলো স্পিচ ক্লিপে যায়, সেখানে বদলানো যায়।",
   "voices.voices": "কণ্ঠ",
-  "voices.yours": "আপনার কণ্ঠ",
-  "captions.template": "Template"
+  "voices.yours": "আপনার কণ্ঠ"
 }

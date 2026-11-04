@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "Legendas SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Transcrever a voz deste clipe",
   "captions.transcribing": "Transcrevendo",
@@ -664,7 +665,7 @@
   "start.noMatches": "Nenhum projeto corresponde a “{0}”.",
   "start.noProjectsNote": "Tudo que você cria ou abre aparece aqui. Novo em edição? O guia “Sua primeira edição” vai de uma linha do tempo vazia a um vídeo exportado em cinco passos.",
   "start.noProjectsYet": "Nenhum projeto ainda",
-  "start.notConcatProjectFolder": "{0} não é uma pasta de projeto do CrabCut",
+  "start.notCrabCutProjectFolder": "{0} não é uma pasta de projeto do CrabCut",
   "start.openAProject": "Abrir um projeto",
   "start.openProject": "Abrir projeto",
   "start.openProjectNote": "Uma pasta de projeto desta máquina",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Este projeto está aberto em outro CrabCut (processo {0}). Feche-o lá e depois abra-o aqui.",
   "studio.projectOpenThroughRemote": "Este projeto está aberto pela API remota",
   "studio.projectSaved": "Projeto salvo",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Sair",
   "studio.reattachAudio": "Reanexar áudio",
   "studio.redo": "Refazer",
@@ -949,6 +953,5 @@
   "voices.styles": "Estilos",
   "voices.stylesHint": "Um estilo é uma voz com efeitos. Escolha um para escrever com ele: os efeitos vão para o clipe de fala, onde você pode mudá-los.",
   "voices.voices": "Vozes",
-  "voices.yours": "Suas vozes",
-  "captions.template": "Template"
+  "voices.yours": "Suas vozes"
 }

@@ -439,6 +439,15 @@ export component App inherits Window {
     callback captions-size-changed(index: int);
     callback captions-format-changed(index: int);
     callback captions-template-changed(index: int);
+    callback quick-cut();
+    callback quick-cut-arm();
+    property <bool> shift-cut-armed;
+    property <int> shift-cut-age;
+    Timer {
+        interval: 100ms;
+        running: root.shift-cut-armed;
+        triggered => { root.shift-cut-age += 1; if (root.shift-cut-age > 5) { root.shift-cut-armed = false; } }
+    }
     callback captions-begin();
     callback captions-cancel();
     callback captions-import-srt();
@@ -633,7 +642,22 @@ export component App inherits Window {
         // and the capture field in Settings > Shortcuts listens on this
         // same callback. False lets the key go on up, so Escape still
         // closes a popup and Tab still moves focus.
+        key-released(event) => {
+            if (event.text == Key.Shift || event.text == Key.ShiftR) {
+                let cut = root.shift-cut-armed;
+                root.shift-cut-armed = false;
+                if (cut && !event.modifiers.alt && !event.modifiers.control && !event.modifiers.meta) { root.quick-cut(); return accept; }
+            }
+            return reject;
+        }
         key-pressed(event) => {
+            if (event.text == Key.Shift || event.text == Key.ShiftR) {
+                root.shift-cut-armed = !root.on-start && !event.modifiers.alt && !event.modifiers.control && !event.modifiers.meta;
+                root.shift-cut-age = 0;
+                if (root.shift-cut-armed) { root.quick-cut-arm(); }
+                return reject;
+            }
+            root.shift-cut-armed = false;
             // Escape closes the sheet on top, as its × does. A sheet busy
             // with a job keeps itself - its × is gone then too - and the
             // key is spent on it, not passed to the editor underneath.

@@ -1822,6 +1822,16 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
                 // is handled above, so its keys work there too.
                 return;
             }
+            if !typing(&app) && !shell.studio.borrow().sheet_open() {
+                if chord == "return" && shell.studio.borrow_mut().confirm_quick_cut() {
+                    handled = true;
+                    shell.studio.borrow().publish(&app, &shell.models);
+                    return;
+                }
+                if chord != "return" {
+                    shell.studio.borrow_mut().dismiss_quick_cut();
+                }
+            }
             let action = {
                 let state = shell.studio.borrow();
                 keymap::resolve(&state.prefs, &chord)
@@ -2273,6 +2283,30 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
     app.on_captions_size_changed(on_window!(|state, index: i32| {
         state.handle(Msg::Captions(CaptionsMsg::SizeChanged(index)));
     }));
+    app.on_quick_cut_arm(|| {
+        Shell::with(|shell, app| {
+            let mut state = shell.studio.borrow_mut();
+            if !typing(&app) && state.session.is_some() && !state.sheet_open() {
+                state.arm_quick_cut();
+            } else {
+                state.shift_cut_snapshot = None;
+            }
+        });
+    });
+    app.on_quick_cut(|| {
+        Shell::with(|shell, app| {
+            {
+                let mut state = shell.studio.borrow_mut();
+                if !typing(&app) && state.session.is_some() && !state.sheet_open() {
+                    state.release_quick_cut();
+                } else {
+                    state.shift_cut_snapshot = None;
+                }
+            }
+            shell.studio.borrow_mut().refresh_art();
+            shell.studio.borrow().publish(&app, &shell.models);
+        });
+    });
     app.on_captions_template_changed(on_window!(|state, index: i32| {
         state.handle(Msg::Captions(CaptionsMsg::TemplateChanged(index)));
     }));

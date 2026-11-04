@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip 字幕",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "转写此片段的语音",
   "captions.transcribing": "正在转录",
@@ -664,7 +665,7 @@
   "start.noMatches": "没有与“{0}”匹配的项目。",
   "start.noProjectsNote": "你创建或打开的所有内容都会显示在这里。初次剪辑？“你的第一次剪辑”指南用五个步骤带你从空时间线到导出视频。",
   "start.noProjectsYet": "还没有项目",
-  "start.notConcatProjectFolder": "{0} 不是 CrabCut 项目文件夹",
+  "start.notCrabCutProjectFolder": "{0} 不是 CrabCut 项目文件夹",
   "start.openAProject": "打开项目",
   "start.openProject": "打开项目",
   "start.openProjectNote": "这台电脑上的项目文件夹",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "此项目已在另一个 CrabCut 中打开（进程 {0}）。请先在那里关闭，再在这里打开。",
   "studio.projectOpenThroughRemote": "此项目正通过远程 API 打开",
   "studio.projectSaved": "项目已保存",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "退出",
   "studio.reattachAudio": "重新附加音频",
   "studio.redo": "重做",
@@ -949,6 +953,5 @@
   "voices.styles": "风格",
   "voices.stylesHint": "风格就是加了效果的嗓音。选一个用它来写：效果会加在语音片段上，之后可以修改。",
   "voices.voices": "嗓音",
-  "voices.yours": "你的嗓音",
-  "captions.template": "Template"
+  "voices.yours": "你的嗓音"
 }

@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip-ondertitels",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Stem van deze clip uitschrijven",
   "captions.transcribing": "Transcriberen",
@@ -664,7 +665,7 @@
   "start.noMatches": "Geen project komt overeen met ‘{0}’.",
   "start.noProjectsNote": "Alles wat je maakt of opent verschijnt hier. Nieuw met monteren? De gids ‘Je eerste montage’ gaat in vijf stappen van een lege tijdlijn naar een geëxporteerde video.",
   "start.noProjectsYet": "Nog geen projecten",
-  "start.notConcatProjectFolder": "{0} is geen CrabCut-projectmap",
+  "start.notCrabCutProjectFolder": "{0} is geen CrabCut-projectmap",
   "start.openAProject": "Een project openen",
   "start.openProject": "Project openen",
   "start.openProjectNote": "Een projectmap op deze computer",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "Dit project is geopend in een andere CrabCut (proces {0}). Sluit het daar en open het dan hier.",
   "studio.projectOpenThroughRemote": "Dit project is geopend via de Remote API",
   "studio.projectSaved": "Project opgeslagen",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Stoppen",
   "studio.reattachAudio": "Audio opnieuw koppelen",
   "studio.redo": "Opnieuw",
@@ -949,6 +953,5 @@
   "voices.styles": "Stijlen",
   "voices.stylesHint": "Een stijl is een stem met effecten. Kies er een om erin te schrijven: de effecten komen op de spraakclip, waar je ze kunt aanpassen.",
   "voices.voices": "Stemmen",
-  "voices.yours": "Jouw stemmen",
-  "captions.template": "Template"
+  "voices.yours": "Jouw stemmen"
 }

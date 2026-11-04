@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip सबटाइटल",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "इस क्लिप की आवाज़ लिखें",
   "captions.transcribing": "ट्रांसक्राइब हो रहा है",
@@ -664,7 +665,7 @@
   "start.noMatches": "“{0}” से कोई प्रोजेक्ट मेल नहीं खाता।",
   "start.noProjectsNote": "आप जो कुछ बनाते या खोलते हैं, वह यहां दिखता है। एडिटिंग में नए हैं? “आपका पहला एडिट” गाइड पांच चरणों में खाली टाइमलाइन से एक्सपोर्ट किए गए वीडियो तक ले जाती है।",
   "start.noProjectsYet": "अभी कोई प्रोजेक्ट नहीं",
-  "start.notConcatProjectFolder": "{0} CrabCut प्रोजेक्ट फ़ोल्डर नहीं है",
+  "start.notCrabCutProjectFolder": "{0} CrabCut प्रोजेक्ट फ़ोल्डर नहीं है",
   "start.openAProject": "कोई प्रोजेक्ट खोलें",
   "start.openProject": "प्रोजेक्ट खोलें",
   "start.openProjectNote": "इस मशीन से कोई प्रोजेक्ट फ़ोल्डर",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "यह प्रोजेक्ट किसी दूसरे CrabCut में खुला है (प्रोसेस {0})। उसे वहाँ बंद करें, फिर यहाँ खोलें।",
   "studio.projectOpenThroughRemote": "यह प्रोजेक्ट रिमोट API के ज़रिए खुला है",
   "studio.projectSaved": "प्रोजेक्ट सेव हो गया",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "बंद करें",
   "studio.reattachAudio": "ऑडियो फिर से जोड़ें",
   "studio.redo": "फिर से करें",
@@ -949,6 +953,5 @@
   "voices.styles": "स्टाइल",
   "voices.stylesHint": "स्टाइल यानी इफ़ेक्ट वाली आवाज़। उसमें लिखने के लिए कोई एक चुनें: इफ़ेक्ट स्पीच क्लिप पर लगते हैं, जहाँ आप उन्हें बदल सकते हैं।",
   "voices.voices": "आवाज़ें",
-  "voices.yours": "आपकी आवाज़ें",
-  "captions.template": "Template"
+  "voices.yours": "आपकी आवाज़ें"
 }

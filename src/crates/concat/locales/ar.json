@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "ترجمات SubRip",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "تفريغ صوت هذا المقطع",
   "captions.transcribing": "جارٍ التفريغ النصي",
@@ -664,7 +665,7 @@
   "start.noMatches": "لا يوجد مشروع يطابق «{0}».",
   "start.noProjectsNote": "يظهر هنا كل ما تُنشئه أو تفتحه. جديد على التحرير؟ ينقلك دليل «تحريرك الأول» من مخطط زمني فارغ إلى فيديو مُصدَّر في خمس خطوات.",
   "start.noProjectsYet": "لا توجد مشاريع بعد",
-  "start.notConcatProjectFolder": "{0} ليس مجلد مشروع CrabCut",
+  "start.notCrabCutProjectFolder": "{0} ليس مجلد مشروع CrabCut",
   "start.openAProject": "فتح مشروع",
   "start.openProject": "فتح مشروع",
   "start.openProjectNote": "مجلد مشروع من هذا الجهاز",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "هذا المشروع مفتوح في نسخة أخرى من CrabCut (العملية {0}). أغلقه هناك، ثم افتحه هنا.",
   "studio.projectOpenThroughRemote": "هذا المشروع مفتوح عبر واجهة Remote API",
   "studio.projectSaved": "تم حفظ المشروع",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "إنهاء",
   "studio.reattachAudio": "إعادة إرفاق الصوت",
   "studio.redo": "إعادة",
@@ -949,6 +953,5 @@
   "voices.styles": "الأنماط",
   "voices.stylesHint": "النمط صوت عليه مؤثرات. اختر واحدًا لتكتب به: توضع المؤثرات على مقطع الكلام، حيث يمكنك تغييرها.",
   "voices.voices": "الأصوات البشرية",
-  "voices.yours": "أصواتك",
-  "captions.template": "Template"
+  "voices.yours": "أصواتك"
 }

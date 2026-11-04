@@ -33,6 +33,7 @@
   "captions.reels": "Reels · 3 words",
   "captions.shortPhrase": "Short · 5 words",
   "captions.subRipSubtitles": "SubRip subtitles",
+  "captions.template": "Template",
   "captions.timingHint": "Voice: Whisper-estimated word timestamps. Script/SRT: proportional timing. Each word state is editable on the timeline.",
   "captions.transcribeClipVoice": "Transcribe this clip's voice",
   "captions.transcribing": "Transcribing",
@@ -664,7 +665,7 @@
   "start.noMatches": "No project matches “{0}”.",
   "start.noProjectsNote": "Everything you make or open shows up here. New to editing? The first-edit guide goes from an empty timeline to an exported video in five steps.",
   "start.noProjectsYet": "No projects yet",
-  "start.notConcatProjectFolder": "{0} is not a CrabCut project folder",
+  "start.notCrabCutProjectFolder": "{0} is not a CrabCut project folder",
   "start.openAProject": "Open a project",
   "start.openProject": "Open project",
   "start.openProjectNote": "A project folder from this machine",
@@ -765,6 +766,9 @@
   "studio.projectOpenElsewhere": "This project is open in another CrabCut (process {0}). Close it there, then open it here.",
   "studio.projectOpenThroughRemote": "This project is open through the Remote API",
   "studio.projectSaved": "Project saved",
+  "studio.quickCutRemove": "Return: remove this section and close the gap · Esc: keep",
+  "studio.quickCutRemoved": "Section removed; gap closed. Undo is available.",
+  "studio.quickCutSelect": "Select a clip under the playhead to cut.",
   "studio.quit": "Quit",
   "studio.reattachAudio": "Reattach audio",
   "studio.redo": "Redo",
@@ -949,6 +953,5 @@
   "voices.styles": "Styles",
   "voices.stylesHint": "A style is a voice with effects on it. Pick one to write in it: the effects go on the speech clip, where you can change them.",
   "voices.voices": "Voices",
-  "voices.yours": "Your voices",
-  "captions.template": "Template"
+  "voices.yours": "Your voices"
 }
