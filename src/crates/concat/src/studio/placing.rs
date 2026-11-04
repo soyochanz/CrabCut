@@ -49,6 +49,17 @@ impl Studio {
             // A figure from the Stickers page: the shape's name rides
             // where a file's media id would, and the label is what the
             // lane will call it.
+            "sticker" => {
+                let sticker = crate::stickers::ITEMS.iter().find(|item| item.id == id)?;
+                Some(DropPlan {
+                    kind: ClipKind::Image,
+                    label: sticker.name.to_owned(),
+                    media: format!("sticker:{id}"),
+                    start: 0.0,
+                    duration: 3.0,
+                    row: 0,
+                })
+            }
             "shape" => Some(DropPlan {
                 kind: ClipKind::Shape,
                 label: label.to_owned(),
@@ -157,6 +168,10 @@ impl Studio {
         let Some(track_id) = self.row_track(plan.row).map(|track| track.id.clone()) else {
             return;
         };
+        if let Some(id) = plan.media.strip_prefix("sticker:") {
+            self.place_sticker(id, Some(track_id), f64::from(plan.start));
+            return;
+        }
         if let Some(card) = plan.media.strip_prefix("sound:") {
             self.place_card(card, Some(track_id), f64::from(plan.start));
             return;
@@ -228,6 +243,10 @@ impl Studio {
             return;
         };
         let start = f64::from(self.playhead.max(0.0));
+        if let Some(id) = plan.media.strip_prefix("sticker:") {
+            self.place_sticker(id, None, start);
+            return;
+        }
         if let Some(card) = plan.media.strip_prefix("sound:") {
             self.place_card(card, None, start);
             return;
@@ -286,20 +305,21 @@ impl Studio {
         duration: f64,
         preset: &str,
     ) -> Option<String> {
-        let (style, offset_y, font) = match self.text_presets.iter().find(|held| held.id == preset)
-        {
-            Some(found) => (
-                found.style.clone(),
-                found.offset_y,
-                presets::install_font(&self.host.dirs, found),
-            ),
-            None => (new_title_style(&self.prefs), None, None),
-        };
+        let (style, offset_y, font, pop_in) =
+            match self.text_presets.iter().find(|held| held.id == preset) {
+                Some(found) => (
+                    found.style.clone(),
+                    found.offset_y,
+                    presets::install_font(&self.host.dirs, found),
+                    found.pop_in,
+                ),
+                None => (new_title_style(&self.prefs), None, None, false),
+            };
         // Over the picture, not under it: the first free lane above every
         // occupied one, minted at the top when there is none. A drop onto a
         // lane names its track and is placed there regardless.
         let add = Command::AddTextClip {
-            pop_in: false,
+            pop_in,
             track_id,
             start,
             style: Some(style),

@@ -1,0 +1,19 @@
+id = "crabcut.editorial"
+name = "Editorial"
+order = -90
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "Una historia diferente"
+fontFamily = "Hanken Grotesk"
+fontWeight = 500
+fontSize = 0.07
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = true
+maxWidth = 0.88

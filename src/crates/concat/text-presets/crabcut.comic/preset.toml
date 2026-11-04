@@ -1,0 +1,19 @@
+id = "crabcut.comic"
+name = "Comic Boom"
+order = -91
+language = "Latin"
+sample = "Comic"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "BOOM!"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.15
+color = "#ffe347"
+strokeColor = "#161616"
+strokeWidth = 0.008
+shadow = true
+italic = true
+maxWidth = 0.88

@@ -1,0 +1,20 @@
+id = "crabcut.travel"
+name = "Travel Diary"
+order = -82
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "UN LUGAR PARA VOLVER"
+fontFamily = "Hanken Grotesk"
+fontWeight = 700
+fontSize = 0.075
+color = "#ffffff"
+strokeColor = "#143e48"
+strokeWidth = 0.008
+shadow = true
+italic = false
+maxWidth = 0.88
+tracking = 0.06

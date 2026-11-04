@@ -1,0 +1,23 @@
+id = "crabcut.sale"
+name = "Sale Tag"
+order = -85
+language = "Latin"
+sample = "Sale"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "SOLO HOY"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.1
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = true
+maxWidth = 0.88
+background = "#ff734c"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

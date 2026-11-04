@@ -319,6 +319,15 @@ pub enum Command {
         #[serde(default)]
         ripple: bool,
     },
+    /// Places a small three-second sticker above the picture, or on a named lane.
+    AddStickerClip {
+        /// The imported image.
+        media_id: String,
+        /// A lane selected by a drag; otherwise find room above the video.
+        track_id: Option<String>,
+        /// Position in seconds.
+        start: f64,
+    },
     /// [`Command::AddClip`] without naming a lane: lands on the lowest
     /// track with nothing in the clip's span, falling back to the bottom
     /// track (overlap and all) rather than refusing.
@@ -1116,6 +1125,7 @@ impl Command {
             | Command::ConsolidateClips { item, .. } => bad(item.duration) || bad(item.frame_rate),
             Command::AddClip { start, .. }
             | Command::AddClipAtFirstFree { start, .. }
+            | Command::AddStickerClip { start, .. }
             | Command::AddClipsInSequence { start, .. } => bad([*start]),
             Command::AddShapeClip {
                 start,
@@ -1317,6 +1327,7 @@ pub fn apply(
         | Command::SetMediaColorRange { .. }) => media::apply(project, mint, command),
         command @ (Command::AddClip { .. }
         | Command::AddClipAtFirstFree { .. }
+        | Command::AddStickerClip { .. }
         | Command::AddClipsInSequence { .. }
         | Command::AddTextClip { .. }
         | Command::AddShapeClip { .. }

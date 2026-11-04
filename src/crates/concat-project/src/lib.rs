@@ -798,6 +798,55 @@ mod tests {
         assert!(serde_json::from_value::<Command>(wire).is_err());
     }
 
+    #[test]
+    fn stickers_land_above_video_without_moving_it_and_undo_cleanly() {
+        let (mut editor, _, video) = fixture();
+        let Command::AddMedia { mut item } = media("/sticker.png", 3.0, false) else {
+            unreachable!()
+        };
+        item.kind = MediaKind::Image;
+        item.duration = None;
+        let media_id = editor
+            .apply(Command::AddMedia { item })
+            .unwrap()
+            .created_id
+            .unwrap();
+        let before = editor.project().clone();
+        let id = editor
+            .apply(Command::AddStickerClip {
+                media_id: media_id.clone(),
+                track_id: None,
+                start: 1.0,
+            })
+            .unwrap()
+            .created_id
+            .unwrap();
+        let timeline = editor.project().active();
+        let clip = timeline.clip(&id).unwrap();
+        let video_clip = timeline.clip(&video).unwrap();
+        let row = |id: &str| {
+            timeline
+                .tracks
+                .iter()
+                .position(|track| track.id == id)
+                .unwrap()
+        };
+        assert!(row(&clip.track_id) > row(&video_clip.track_id));
+        assert_eq!((clip.start, clip.duration, clip.scale), (1.0, 3.0, 0.28));
+        assert_eq!((video_clip.start, video_clip.duration), (0.0, 10.0));
+        editor.undo();
+        assert_eq!(*editor.project(), before);
+        assert!(
+            editor
+                .apply(Command::AddStickerClip {
+                    media_id,
+                    track_id: None,
+                    start: f64::NAN
+                })
+                .is_err()
+        );
+    }
+
     /// Editor with one media item and one clip at [0, 10) on track one.
     fn fixture() -> (Editor, String, String) {
         let mut editor = Editor::new();

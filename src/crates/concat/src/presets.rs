@@ -70,6 +70,8 @@ pub struct TextPreset {
     /// Latin and the first two characters of its words for any other
     /// writing, so a Japanese card shows Japanese.
     pub sample: String,
+    /// A short entrance animation when this style is placed.
+    pub pop_in: bool,
 }
 
 #[derive(Deserialize)]
@@ -86,6 +88,8 @@ struct PresetFile {
     /// Where it sorts among its neighbours; absent sorts last, by name.
     #[serde(default)]
     order: Option<i64>,
+    #[serde(default)]
+    pop_in: bool,
     /// What the card draws; see [`TextPreset::sample`].
     #[serde(default)]
     sample: Option<String>,
@@ -280,6 +284,7 @@ fn parse(text: &str, folder: Option<&Path>) -> Option<(i64, TextPreset)> {
             font,
             language,
             sample,
+            pop_in: file.pop_in,
         },
     ))
 }

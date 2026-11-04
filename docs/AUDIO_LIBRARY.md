@@ -1,105 +1,40 @@
-# The Concat sound library
+# CrabCut audio library
 
-The Library's **Audio** page has a **Concat** shelf of built-in sounds and
-music (#60). Nothing ships inside the app: the shelf reads a manifest from
-the [`concatapp/assets`](https://github.com/concatapp/assets) repository the
-first time someone asks for it (a "Load Concat sounds" button, never at
-startup), and each sound is downloaded the first time it is played or used,
-then checked against its SHA-256 and kept in the app's cache.
+The desktop Audio tab exposes an offline catalogue with search, category filters,
+preview, click-to-add and drag-to-place. Files download on first use, are verified
+against SHA-256 and are then cached. Inserting a sound copies it into the project.
 
-This page is what the asset curator produces for that to work.
+The current catalogue contains 20 existing Kevin MacLeod recordings (CC BY 4.0),
+39 Kenney interface effects (CC0), and 7 original CrabCut effects (CC0).
+Songs are not bundled in the executable. The manifest is embedded so browsing
+works before the first network request, and an older cached list cannot hide the
+new library. Refresh fetches `audio/manifest.json` from this repository.
 
-## Layout in `concatapp/assets`
+## Attribution
 
-```text
-audio/
-  manifest.json
-  whoosh-air-short.ogg
-  impact-low-thud.ogg
-  ...
-```
+Each CC BY song row identifies its author and license and has a Copy button.
+Paste that credit into the published video's description. Inserting a song also
+writes a `.credits.txt` file beside the project's audio copy. See
+[the full credits](../audio/CREDITS.md). A license from TikTok or another platform
+is not assumed to apply to exports made with this editor.
 
-The files sit flat in `audio/`. The app fetches the manifest from:
+## Manifest
 
-```text
-https://raw.githubusercontent.com/concatapp/assets/main/audio/manifest.json
-```
+`audio/manifest.json` has a monotonically increasing `version` and a `sounds`
+array. Each entry has `id`, `name`, `category`, `file`, `duration`, `bytes`,
+`license`, `source`, `author`, and `sha256`. Optional `tags` aid search.
 
-and each sound from, in order:
+- `id`: lowercase letters, numbers and hyphens, stable across releases.
+- `file`: a plain filename; no path components.
+- `license`: CC0 / CC0-1.0, or CC-BY-4.0 with an author and HTTPS source page.
+- `sha256`: 64 hex digits; a different download is rejected.
+- `url`: optional original download, restricted to Incompetech's public MP3 path.
 
-1. the release mirror: `https://github.com/concatapp/assets/releases/download/audio-v1/<file>`
-2. the repository itself: `https://raw.githubusercontent.com/concatapp/assets/main/audio/<file>`
+The original download is tried first when present, then the repository's
+`audio-v1` release mirror, then `audio/<file>` on the main branch. Large music
+recordings live in the release mirror and at their original source, not in Git.
+The small Kenney WAV files are checked into `audio/` with their CC0 notice.
 
-Upload every file to the `audio-v1` release as well. Then a file that moves in
-the repository can't break the shelf. Whichever source the bytes come from,
-they are checked against the manifest's `sha256`. The URLs are constants in
-`src/crates/concat-host/src/models.rs`: `SOUNDS_MANIFEST`, `SOUNDS_REPO` and
-`SOUNDS_RELEASE`.
-
-Until `audio/manifest.json` exists (the request answers 404), the shelf says
-"Sound library coming soon".
-
-## `manifest.json`
-
-```json
-{
-  "version": 1,
-  "sounds": [
-    {
-      "id": "whoosh-air-short",
-      "name": "Air whoosh, short",
-      "category": "Whoosh",
-      "file": "whoosh-air-short.ogg",
-      "duration": 0.84,
-      "bytes": 18234,
-      "license": "CC0-1.0",
-      "source": "https://freesound.org/s/123456/",
-      "author": "someone",
-      "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
-    }
-  ]
-}
-```
-
-| Field | Required | What it is |
-|---|---|---|
-| `version` | yes | The manifest format: `1`. |
-| `sounds[].id` | yes | Stable for ever, unique, `[a-z0-9-]` only. Projects don't store it, but the app's cache does. |
-| `name` | yes | What the row shows. English. Keep it short and descriptive. |
-| `category` | yes | One of `Whoosh`, `Impact`, `Riser`, `Ambience`, `Music`. These five are translated in the app. Any other value shows only under "All". |
-| `file` | yes | The file name in `audio/`: a plain name, no folders. `.ogg` (Vorbis/Opus), `.mp3`, `.m4a`, `.flac` or `.wav`. |
-| `duration` | yes | Seconds, as a number. The row shows it before the file is downloaded. |
-| `bytes` | recommended | The file's size. It drives the progress bar. |
-| `license` | yes | `CC0-1.0`. Only CC0 is accepted. An entry with any other licence is left off the shelf. |
-| `source` | yes | Where the file was found (Freesound, Kenney, OpenGameArt…): the page a reviewer can check the licence on. |
-| `author` | no | Who made it, when known. CC0 owes no attribution, but it is kind to keep. |
-| `sha256` | yes | The SHA-256 of the file's bytes, lowercase hex, 64 characters. An entry without a valid digest is left off the shelf, and a download that doesn't match it is deleted. |
-
-Compute a digest with `shasum -a 256 <file>` (macOS/Linux) or
-`Get-FileHash -Algorithm SHA256 <file>` (Windows; lowercase the result).
-
-## Rules for the selection
-
-- **CC0 only**, so the sounds can be redistributed as a collection and used by
-  anyone without owing attribution. Pixabay's and Mixkit's licences forbid
-  passing their files on as a collection, so nothing from either.
-- Good sources: Freesound (filtered to CC0), Kenney and OpenGameArt CC0 packs.
-- Keep files small. Effects should be a few seconds long. Music beds should
-  be compressed (Ogg Vorbis around q5, or AAC around 160 kb/s) and ideally
-  under a few megabytes each.
-- Trim silence at the head, so a sound placed at the playhead starts there.
-  Normalise peaks to about −1 dBFS.
-- No recognisable voices, no trademarks, nothing that imitates a known
-  character or product sound.
-
-## How the app treats it
-
-- The manifest is cached at `<app data>/sounds/manifest.json`. Later sessions
-  show the shelf from that cache without going online. The shelf's Refresh
-  fetches it again.
-- A sound is cached at `<app data>/sounds/<first 12 characters of sha256>-<file>`.
-  It stays there until the cache is cleared. When a manifest changes a file's
-  bytes, the new digest gets a new file name.
-- Placing a sound copies it into the project's own `audio/` folder and
-  imports it into the bin, the same as the user's own sounds. Projects
-  never point into the cache.
+New additions must have a verified source, suitable redistribution license,
+accurate credits and a pinned digest. Do not add a platform's licensed music
+merely because it is playable inside that platform.

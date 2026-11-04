@@ -1,0 +1,19 @@
+id = "crabcut.electric"
+name = "Electric"
+order = -79
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "NUEVO NIVEL"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.12
+color = "#d9ff45"
+strokeColor = "#1d2428"
+strokeWidth = 0.008
+shadow = true
+italic = true
+maxWidth = 0.88

@@ -1,0 +1,23 @@
+id = "crabcut.coral"
+name = "Coral Pop"
+order = -99
+language = "Latin"
+sample = "Coral"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "ESTO CAMBIA TODO"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.08
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#f56b3f"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

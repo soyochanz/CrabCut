@@ -1,0 +1,19 @@
+id = "crabcut.neon"
+name = "Neon Mint"
+order = -96
+language = "Latin"
+sample = "Neon"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "EN DIRECTO"
+fontFamily = "Hanken Grotesk"
+fontWeight = 800
+fontSize = 0.09
+color = "#63ffc4"
+strokeColor = "#17372e"
+strokeWidth = 0.008
+shadow = true
+italic = false
+maxWidth = 0.88

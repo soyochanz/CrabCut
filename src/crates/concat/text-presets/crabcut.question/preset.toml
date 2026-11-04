@@ -1,0 +1,19 @@
+id = "crabcut.question"
+name = "Question"
+order = -86
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "¿SABÍAS ESTO?"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.1
+color = "#ffffff"
+strokeColor = "#8232cb"
+strokeWidth = 0.008
+shadow = true
+italic = false
+maxWidth = 0.88

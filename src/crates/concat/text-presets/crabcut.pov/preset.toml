@@ -1,0 +1,19 @@
+id = "crabcut.pov"
+name = "POV"
+order = -88
+language = "Latin"
+sample = "POV"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "POV: lo intentas por primera vez"
+fontFamily = "Hanken Grotesk"
+fontWeight = 800
+fontSize = 0.06
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.008
+shadow = true
+italic = false
+maxWidth = 0.88

@@ -63,6 +63,7 @@ mod prefs;
 mod presets;
 mod source;
 mod speed_ramp;
+mod stickers;
 mod studio;
 mod sysinfo;
 /// Native Wayland file drops, which winit does not report; see the module.
@@ -987,6 +988,11 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
     editor.on_library_add_text(on_window!(|state, preset: SharedString| {
         state.place_at_playhead(&format!("text:{preset}:Title"));
     }));
+    editor.on_library_add_sticker(on_window!(
+        |state, id: SharedString, label: SharedString| {
+            state.place_at_playhead(&format!("sticker:{id}:{label}"));
+        }
+    ));
     // A figure from the Stickers page, named in the interface's language.
     editor.on_library_add_shape(on_window!(
         |state, shape: SharedString, label: SharedString| {
@@ -1550,6 +1556,9 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
         // Voices: Text to speech on the voice or style clicked.
         // Concat's own sounds: the list asked for by a click, never at
         // startup.
+        sounds.on_search_changed(on_window!(|state, query: SharedString| {
+            state.handle(Msg::Sounds(SoundsMsg::Search(query.to_string())));
+        }));
         sounds.on_load_concat(on_window!(|state| {
             state.handle(Msg::Sounds(SoundsMsg::LoadConcat));
         }));

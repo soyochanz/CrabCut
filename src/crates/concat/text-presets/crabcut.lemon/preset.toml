@@ -1,0 +1,23 @@
+id = "crabcut.lemon"
+name = "Lemon Marker"
+order = -98
+language = "Latin"
+sample = "Lemon"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "EL TRUCO"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.09
+color = "#151515"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#ffe347"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

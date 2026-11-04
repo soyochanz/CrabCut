@@ -1,0 +1,19 @@
+id = "crabcut.pink"
+name = "Pink Punch"
+order = -97
+language = "Latin"
+sample = "Pink"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "WOW!"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.13
+color = "#ff63bb"
+strokeColor = "#17111d"
+strokeWidth = 0.008
+shadow = true
+italic = false
+maxWidth = 0.88

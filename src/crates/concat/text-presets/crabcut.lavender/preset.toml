@@ -1,0 +1,23 @@
+id = "crabcut.lavender"
+name = "Lavender"
+order = -80
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "Tu próximo paso"
+fontFamily = "Hanken Grotesk"
+fontWeight = 700
+fontSize = 0.07
+color = "#f4e9ff"
+strokeColor = "#6b32a0"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#38224e"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

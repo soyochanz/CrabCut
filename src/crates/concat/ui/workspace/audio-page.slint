@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Jareer Abdullah
 
+import { CopyChip } from "../primitives/modal.slint";
 import { I18n } from "../i18n.slint";
 import { Theme, Fmt, Glyph, Icon, Payload } from "../primitives/primitives.slint";
 import { Wave } from "../primitives/wave.slint";
@@ -28,6 +29,7 @@ export struct SoundCardData {
     wave: string,
     /// A second line beside the length: a category, a licence.
     detail: string,
+    credit: string,
     /// "Remove from library" is offered: a sound of the user's own.
     removable: bool,
     /// On disk and ready to play or lay down. A sound that is not is
@@ -80,6 +82,7 @@ export global Sounds {
     in property <int> concat-category;
     /// "Load Concat sounds", Refresh, Try again: the list fetched.
     callback load-concat();
+    callback search-changed(query: string);
     callback concat-category-changed(index: int);
 
     /// The Import button: the system's picker, for sound files.
@@ -218,6 +221,10 @@ export component SoundRow inherits Rectangle {
                     }
                 }
 
+                if root.item.credit != "": VerticalLayout {
+                    alignment: center;
+                    CopyChip { text: root.item.credit; }
+                }
                 if root.removable-shown: VerticalLayout {
                     alignment: center;
                     RowButton {

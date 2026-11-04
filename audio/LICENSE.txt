@@ -1,1 +1,13 @@
-CrabCut procedural audio pack. These generated audio files are dedicated to the public domain under CC0 1.0. No external recordings or samples are used. https://creativecommons.org/publicdomain/zero/1.0/
+CrabCut audio library — per-file licenses
+
+Kevin MacLeod songs: Creative Commons Attribution 4.0 (CC BY 4.0).
+Credit the composer and song in the description of your published video.
+Each song's source and author appear in manifest.json and CREDITS.md.
+https://creativecommons.org/licenses/by/4.0/
+
+Kenney Interface Sounds: Creative Commons Zero 1.0 (CC0).
+See KENNEY-LICENSE.txt and https://kenney.nl/assets/interface-sounds
+
+Original CrabCut procedural sounds (all other WAV files): CC0 1.0.
+No external recordings or samples were used for those procedural files.
+https://creativecommons.org/publicdomain/zero/1.0/

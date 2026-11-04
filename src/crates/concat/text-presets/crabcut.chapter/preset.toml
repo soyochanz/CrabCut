@@ -1,0 +1,23 @@
+id = "crabcut.chapter"
+name = "Chapter"
+order = -87
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "01 · EL COMIENZO"
+fontFamily = "Hanken Grotesk"
+fontWeight = 800
+fontSize = 0.06
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#1c3456"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

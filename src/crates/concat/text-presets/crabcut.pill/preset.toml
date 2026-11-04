@@ -1,0 +1,23 @@
+id = "crabcut.pill"
+name = "White Pill"
+order = -95
+language = "Latin"
+sample = "White"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "Una idea para hoy"
+fontFamily = "Hanken Grotesk"
+fontWeight = 700
+fontSize = 0.06
+color = "#161616"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#ffffff"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

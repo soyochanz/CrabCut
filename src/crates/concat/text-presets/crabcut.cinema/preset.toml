@@ -1,0 +1,20 @@
+id = "crabcut.cinema"
+name = "Cinema"
+order = -77
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "LA HISTORIA CONTINÚA"
+fontFamily = "Hanken Grotesk"
+fontWeight = 600
+fontSize = 0.075
+color = "#f8edcc"
+strokeColor = "#191919"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+tracking = 0.06

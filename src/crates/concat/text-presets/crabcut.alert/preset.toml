@@ -1,0 +1,23 @@
+id = "crabcut.alert"
+name = "Red Alert"
+order = -92
+language = "Latin"
+sample = "Red"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "IMPORTANTE"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.08
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#ee344f"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

@@ -1,0 +1,23 @@
+id = "crabcut.lower"
+name = "Lower Third"
+order = -78
+language = "Latin"
+sample = "Lower"
+popIn = true
+offsetY = 0.32
+
+[style]
+content = "TU NOMBRE"
+fontFamily = "Hanken Grotesk"
+fontWeight = 800
+fontSize = 0.055
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#e8613e"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

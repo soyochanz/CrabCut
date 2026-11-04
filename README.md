@@ -68,3 +68,19 @@ Pointer-driven clip and library previews publish at most once every 16 ms,
 without rescanning artwork caches on each mouse event. Releasing the clip still
 commits its latest coordinates and refreshes the window. The local build now
 optimizes the UI crate at level 2 as well as optimizing the video engine.
+
+### Music, sounds, titles and stickers
+
+- **Audio → Library**: search and preview 20 existing Kevin MacLeod songs and
+  46 effects. Use + or drag a row onto the timeline. Songs download on first use.
+- **Copy** on a song row copies its CC BY 4.0 credit for your published video
+  description. Kenney effects are CC0. [Audio credits](audio/CREDITS.md).
+- **Text → Styles**: 24 new social title looks with editable wording and a pop-in
+  entrance, alongside the existing styles and dynamic caption templates.
+- **Stickers**: 60 transparent Twemoji stickers in five categories, plus shapes.
+  Click to place a small three-second overlay above the video, or drag onto a
+  track. Resize, rotate and trim it like any image. Copy the Twemoji credit from
+  the gallery; PNGs and license notices are included in the app.
+
+This is a curated, freely licensed library, not an integration with a platform's
+full commercial music catalogue. See [library documentation](docs/AUDIO_LIBRARY.md).

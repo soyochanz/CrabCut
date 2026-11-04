@@ -1,0 +1,23 @@
+id = "crabcut.subscribe"
+name = "Subscribe"
+order = -84
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "SÍGUEME PARA MÁS"
+fontFamily = "Hanken Grotesk"
+fontWeight = 800
+fontSize = 0.065
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88
+background = "#e33232"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

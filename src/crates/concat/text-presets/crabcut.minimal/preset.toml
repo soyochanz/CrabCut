@@ -1,0 +1,19 @@
+id = "crabcut.minimal"
+name = "Minimal"
+order = -81
+language = "Latin"
+sample = "Aa"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "menos es más"
+fontFamily = "Hanken Grotesk"
+fontWeight = 400
+fontSize = 0.055
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = false
+maxWidth = 0.88

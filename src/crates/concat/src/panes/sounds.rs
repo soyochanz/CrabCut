@@ -39,7 +39,14 @@ const CONCAT: &str = "concat-";
 
 /// The Concat shelf's categories, as the manifest names them; the sidebar
 /// shows them in the interface's language, after All.
-pub const CATEGORIES: [&str; 5] = ["Whoosh", "Impact", "Riser", "Ambience", "Music"];
+pub const CATEGORIES: [&str; 6] = [
+    "Whoosh",
+    "Impact",
+    "Riser",
+    "Ambience",
+    "Music",
+    "Interface",
+];
 
 /// Where the Concat shelf stands.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -61,7 +68,7 @@ pub enum Then {
     /// Play it.
     Preview,
     /// Lay it on this lane, or the first with room, at this moment.
-    Place(Option<String>, f64),
+    Place(Option<String>, f64, String, String),
 }
 
 /// Everything that can happen to the Audio page.
@@ -86,6 +93,8 @@ pub enum SoundsMsg {
     ConcatLoaded(Result<Option<Catalogue>, String>),
     /// A category of the Concat shelf picked: 0 All, then [`CATEGORIES`].
     ConcatCategory(i32),
+    /// Text entered into the catalogue search.
+    Search(String),
     /// A Concat sound's download, how far.
     Fetching(String, f32),
     /// A Concat sound's download is done.
@@ -107,6 +116,8 @@ pub struct SoundsPane {
     pub concat: ConcatState,
     /// The category shown: 0 All, then a row of [`CATEGORIES`].
     pub category: usize,
+    /// Catalogue search, kept when changing shelves.
+    pub query: String,
     /// Downloads running, by card: how far, and what to do once in.
     fetching: HashMap<String, (f32, Then)>,
     /// Stops the downloads when the window goes.
@@ -178,8 +189,9 @@ impl SoundsPane {
                 }
             },
             SoundsMsg::ConcatCategory(index) => {
-                self.category = (index.max(0) as usize).min(CATEGORIES.len());
+                self.category = (index.max(0) as usize).min(CATEGORIES.len() + 1);
             }
+            SoundsMsg::Search(query) => self.query = query,
             SoundsMsg::Fetching(card, done) => {
                 if let Some((progress, _)) = self.fetching.get_mut(&card) {
                     *progress = done;
@@ -196,8 +208,17 @@ impl SoundsPane {
                 match result {
                     Ok(path) => match then {
                         Then::Preview => studio.preview_file(&card, &name, &path),
-                        Then::Place(track_id, start) => {
-                            studio.place_sound(&name, &path, track_id, start);
+                        Then::Place(track_id, start, project, timeline) => {
+                            if studio
+                                .session
+                                .as_ref()
+                                .is_some_and(|session| session.path() == project)
+                                && studio.project().active_timeline_id == timeline
+                            {
+                                studio.place_sound(&name, &path, track_id, start);
+                            } else {
+                                studio.notify(&t("gallery.downloadReady"), false);
+                            }
                         }
                     },
                     Err(error) if error == "cancelled" => {}
@@ -261,7 +282,13 @@ impl SoundsPane {
                 if let Some((name, path)) = self.file_of(&card) {
                     studio.place_sound(&name, &path, None, start);
                 } else {
-                    self.fetch(&card, Then::Place(None, start));
+                    let project = studio
+                        .session
+                        .as_ref()
+                        .map(|session| session.path().to_owned())
+                        .unwrap_or_default();
+                    let timeline = studio.project().active_timeline_id.clone();
+                    self.fetch(&card, Then::Place(None, start, project, timeline));
                 }
             }
             SoundsMsg::Remove(card) => {
@@ -363,7 +390,12 @@ impl SoundsPane {
             .sounds
             .iter()
             .filter(|sound| {
-                category.is_none_or(|wanted| sound.category.eq_ignore_ascii_case(wanted))
+                sound.matches(&self.query)
+                    && if self.category == CATEGORIES.len() + 1 {
+                        !sound.category.eq_ignore_ascii_case("Music")
+                    } else {
+                        category.is_none_or(|wanted| sound.category.eq_ignore_ascii_case(wanted))
+                    }
             })
             .map(|sound| {
                 let card = format!("{CONCAT}{}", sound.id);
@@ -374,7 +406,14 @@ impl SoundsPane {
                     name: sound.name.as_str().into(),
                     duration: sound.duration as f32,
                     wave: SharedString::new(),
-                    detail: category_label(&sound.category).into(),
+                    detail: format!(
+                        "{} · {} · {}",
+                        category_label(&sound.category),
+                        sound.author,
+                        sound.license
+                    )
+                    .into(),
+                    credit: sound.credit().into(),
                     removable: false,
                     progress,
                 }
@@ -395,6 +434,7 @@ impl SoundsPane {
                     name: sound.name.as_str().into(),
                     duration: sound.duration as f32,
                     detail: SharedString::new(),
+                    credit: SharedString::new(),
                     removable: true,
                     ready: true,
                     progress: -1.0,
@@ -425,6 +465,7 @@ pub fn category_label(category: &str) -> String {
         "riser" => t("sounds.catRiser"),
         "ambience" => t("sounds.catAmbience"),
         "music" => t("sounds.catMusic"),
+        "interface" => t("gallery.interface"),
         _ => category.to_owned(),
     }
 }
@@ -550,7 +591,14 @@ impl Studio {
         } else {
             // One of Concat's not downloaded yet: it lands where it was
             // dropped once it is in.
-            self.sounds.fetch(card, Then::Place(track_id, start));
+            let project = self
+                .session
+                .as_ref()
+                .map(|session| session.path().to_owned())
+                .unwrap_or_default();
+            let timeline = self.project().active_timeline_id.clone();
+            self.sounds
+                .fetch(card, Then::Place(track_id, start, project, timeline));
         }
     }
 
@@ -559,7 +607,7 @@ impl Studio {
     /// the copy already there - then cut onto `track_id` at `start`, or at
     /// `start` on the first lane with room. Selects what it made.
     pub fn place_sound(&mut self, name: &str, path: &Path, track_id: Option<String>, start: f64) {
-        let media_id = match self.adopt_sound(name, path) {
+        let media_id = match self.adopt_library_file(name, path, "audio") {
             Ok(id) => id,
             Err(error) => {
                 self.notify(&error, true);
@@ -586,13 +634,18 @@ impl Studio {
     /// project's `audio` folder, made and imported when it is not there
     /// yet. A file of that name that is not this sound - another size -
     /// leaves it alone and the copy takes a numbered name.
-    fn adopt_sound(&mut self, name: &str, path: &Path) -> Result<String, String> {
+    pub(crate) fn adopt_library_file(
+        &mut self,
+        name: &str,
+        path: &Path,
+        subfolder: &str,
+    ) -> Result<String, String> {
         let project = self
             .session
             .as_ref()
             .map(|session| PathBuf::from(session.path()))
             .ok_or_else(|| t("sounds.openProjectFirst"))?;
-        let folder = project.join("audio");
+        let folder = project.join(subfolder);
         let size = std::fs::metadata(path)
             .map_err(|error| format!("{}: {error}", path.display()))?
             .len();
@@ -625,6 +678,22 @@ impl Studio {
             std::fs::create_dir_all(&folder)
                 .and_then(|()| std::fs::copy(path, &target).map(drop))
                 .map_err(|error| tf("sounds.couldNotCopy", &[&name, &error]))?;
+        }
+        // SoundsPane is temporarily moved out of Studio while handling a
+        // download completion, so use the catalogue independent of that pane.
+        if let Some(catalogue) = sounds::cached_catalogue(&self.host.dirs)
+            && let Some(sound) = catalogue
+                .sounds
+                .iter()
+                .find(|sound| sounds::cached_file(&self.host.dirs, sound) == path)
+        {
+            let credit = sound.credit();
+            if !credit.is_empty() {
+                let _ = std::fs::write(target.with_extension("credits.txt"), credit);
+            }
+        }
+        if subfolder == "stickers" {
+            let _ = std::fs::write(folder.join("CREDITS.txt"), crate::stickers::CREDIT);
         }
         let summary = concat_host::media::probe(&target_text)?;
         let mut item = summary.to_new_media();

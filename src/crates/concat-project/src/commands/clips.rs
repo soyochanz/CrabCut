@@ -46,6 +46,36 @@ pub(super) fn apply(
             })
         }
 
+        Command::AddStickerClip {
+            media_id,
+            track_id,
+            start,
+        } => {
+            let media = project
+                .media_by_id(&media_id)
+                .ok_or(CommandError::MediaGone)?
+                .clone();
+            let timeline = project.active_mut();
+            let start = start.max(0.0);
+            let duration = 3.0;
+            let track_id = match track_id {
+                Some(id) if timeline.track(&id).is_none() => return Err(CommandError::TrackGone),
+                Some(id) => id,
+                None => first_free_track_above(timeline, start, duration)
+                    .unwrap_or_else(|| fresh_track(timeline, mint)),
+            };
+            let start = timeline.nearest_free_start(&track_id, start, duration, &[]);
+            let id = mint.next("c");
+            let mut clip = default_clip(id.clone(), track_id, &media, start);
+            clip.duration = duration;
+            clip.scale = 0.28;
+            timeline.clips.push(Arc::new(clip));
+            Ok(Outcome {
+                created_id: Some(id),
+                applied: true,
+            })
+        }
+
         Command::AddClipAtFirstFree { media_id, start } => {
             let media = project
                 .media_by_id(&media_id)

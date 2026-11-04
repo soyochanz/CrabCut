@@ -1,0 +1,23 @@
+id = "crabcut.quote"
+name = "Quote Card"
+order = -89
+language = "Latin"
+sample = "Quote"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "«Todo empieza con una idea»"
+fontFamily = "Hanken Grotesk"
+fontWeight = 600
+fontSize = 0.06
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.0
+shadow = true
+italic = true
+maxWidth = 0.88
+background = "#332b59"
+backgroundRadius = 0.025
+backgroundPaddingX = 0.025
+backgroundPaddingY = 0.012

@@ -13,6 +13,8 @@ import { Select } from "../primitives/select.slint";
 import { Wave } from "../primitives/wave.slint";
 import { ContextMenu, MenuItemData } from "../primitives/context-menu.slint";
 import { SourcePreview } from "source-preview.slint";
+import { StickerGrid } from "sticker-gallery.slint";
+import { CopyChip } from "../primitives/modal.slint";
 import { Sounds, SoundList, VoiceList } from "audio-page.slint";
 
 export { SourcePreview }
@@ -1781,6 +1783,7 @@ export component MediaPane inherits Rectangle {
     /// Stickers page: add the figure `shape` names at the playhead, as a
     /// clip called `label`.
     callback add-shape(shape: string, label: string);
+    callback add-sticker(id: string, label: string);
     /// Catalogue pages: apply to the selected clip; Rust validates & explains.
     callback apply-effect(effect-id: string);
     callback apply-transition(transition-id: string);
@@ -1826,7 +1829,8 @@ export component MediaPane inherits Rectangle {
     changed tab => { Sounds.shown(root.tab == 8); }
     /// The Audio page's shelf: 0 = Mine, 10 = Voices, 11 = Styles. 1 was
     /// Concat's own sounds, off the page until their list is published (#60).
-    property <int> audio-category;
+    property <int> audio-category: 1;
+    property <int> sticker-category: 1;
     property <bool> sounds-open: true;
     property <bool> voices-open: true;
     /// How far left the page strip can be pushed: nothing, while its chips
@@ -2181,6 +2185,30 @@ export component MediaPane inherits Rectangle {
                         }
                         if root.sounds-open: CategoryRow {
                             height: 24px;
+                            label: I18n.t("gallery.allAudio");
+                            current: root.audio-category == 1 && Sounds.concat-category == 0;
+                            clicked => { root.audio-category = 1; Sounds.concat-category-changed(0); }
+                        }
+                        if root.sounds-open: CategoryRow {
+                            height: 24px;
+                            label: I18n.t("gallery.music");
+                            current: root.audio-category == 1 && Sounds.concat-category == 5;
+                            clicked => { root.audio-category = 1; Sounds.concat-category-changed(5); }
+                        }
+                        if root.sounds-open: CategoryRow {
+                            height: 24px;
+                            label: I18n.t("gallery.effects");
+                            current: root.audio-category == 1 && Sounds.concat-category == 7;
+                            clicked => { root.audio-category = 1; Sounds.concat-category-changed(7); }
+                        }
+                        if root.sounds-open: CategoryRow {
+                            height: 24px;
+                            label: I18n.t("gallery.interface");
+                            current: root.audio-category == 1 && Sounds.concat-category == 6;
+                            clicked => { root.audio-category = 1; Sounds.concat-category-changed(6); }
+                        }
+                        if root.sounds-open: CategoryRow {
+                            height: 24px;
                             label: I18n.t("sounds.mine");
                             count: Sounds.mine.length;
                             current: root.audio-category == 0;
@@ -2244,8 +2272,17 @@ export component MediaPane inherits Rectangle {
                         if root.stickers-open: CategoryRow {
                             height: 24px;
                             label: I18n.t("mediaPane.shapes");
-                            current: true;
+                            current: root.sticker-category == 0;
+                            clicked => { root.sticker-category = 0; }
                         }
+                    }
+
+                    if root.tab == 2 && root.stickers-open: VerticalLayout {
+                        CategoryRow { height: 24px; label: I18n.t("gallery.reactions"); current: root.sticker-category == 1; clicked => { root.sticker-category = 1; } }
+                        CategoryRow { height: 24px; label: I18n.t("gallery.gestures"); current: root.sticker-category == 2; clicked => { root.sticker-category = 2; } }
+                        CategoryRow { height: 24px; label: I18n.t("gallery.symbols"); current: root.sticker-category == 3; clicked => { root.sticker-category = 3; } }
+                        CategoryRow { height: 24px; label: I18n.t("gallery.creator"); current: root.sticker-category == 4; clicked => { root.sticker-category = 4; } }
+                        CategoryRow { height: 24px; label: I18n.t("gallery.lifestyle"); current: root.sticker-category == 5; clicked => { root.sticker-category = 5; } }
                     }
 
                     if root.tab == 3: VerticalLayout {
@@ -2550,6 +2587,17 @@ export component MediaPane inherits Rectangle {
                 // Mine: the user's own sounds, copied in and kept across
                 // projects. The import is the page's head, and its rows
                 // are the sounds, newest first.
+                if root.tab == 8 && root.audio-category == 1: VerticalLayout {
+                    padding: 8px;
+                    spacing: 8px;
+                    Text { text: I18n.t("gallery.audioTitle"); font-size: Theme.fs; font-weight: 700; color: Theme.fg; }
+                    Text { text: I18n.t("gallery.audioHint"); font-size: Theme.fs-sm; color: Theme.fg-muted; wrap: word-wrap; }
+                    SearchField { placeholder: I18n.t("gallery.searchAudio"); edited(query) => { Sounds.search-changed(query); } }
+                    ImportButton { label: I18n.t("gallery.refresh"); busy: Sounds.concat-state == 1; clicked => { Sounds.load-concat(); } }
+                    if Sounds.concat.length == 0: Text { text: I18n.t("gallery.noResults"); color: Theme.fg-muted; font-size: Theme.fs-sm; wrap: word-wrap; }
+                    SoundList { items: Sounds.concat; }
+                }
+
                 if root.tab == 8 && root.audio-category == 0: VerticalLayout {
                     padding: 8px;
                     spacing: 8px;
@@ -2617,9 +2665,18 @@ export component MediaPane inherits Rectangle {
                     }
                 }
 
+                if root.tab == 2 && root.sticker-category > 0: VerticalLayout {
+                    padding: 8px; spacing: 8px;
+                    HorizontalLayout {
+                        Text { text: I18n.t("gallery.stickerCredit"); color: Theme.fg-muted; font-size: Theme.fs-xs; wrap: word-wrap; horizontal-stretch: 1; }
+                        CopyChip { text: "Twemoji graphics — Twitter, Inc. and other contributors. https://github.com/twitter/twemoji — CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ (rasterized to PNG)"; }
+                    }
+                    StickerGrid { category: root.sticker-category; placed(id, label) => { root.add-sticker(id, label); } }
+                }
+
                 // The figures. Each card is one shape, placed at the
                 // playhead on a click or dragged onto a lane.
-                if root.tab == 2: HorizontalLayout {
+                if root.tab == 2 && root.sticker-category == 0: HorizontalLayout {
                     padding: 8px;
 
                     ShapeGrid {

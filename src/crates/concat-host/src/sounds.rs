@@ -289,7 +289,7 @@ fn now() -> u64 {
 /// has it; the schema is `docs/AUDIO_LIBRARY.md`.
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 pub struct Catalogue {
-    /// The format: 1.
+    /// Catalogue revision, used to replace older cached lists.
     #[serde(default)]
     pub version: u32,
     /// The sounds, in the order the shelf shows them.
@@ -315,7 +315,7 @@ pub struct Listed {
     /// Its size, for the progress bar; 0 when not given.
     #[serde(default)]
     pub bytes: u64,
-    /// CC0-1.0, and nothing else is shown.
+    /// CC0-1.0 or CC-BY-4.0; attribution is required for the latter.
     #[serde(default)]
     pub license: String,
     /// Where it was found.
@@ -327,11 +327,42 @@ pub struct Listed {
     /// Lowercase hex: what the download must match.
     #[serde(default)]
     pub sha256: String,
+    /// Optional original download, restricted to the licensed music provider.
+    #[serde(default)]
+    pub url: String,
+    /// Searchable moods and instruments.
+    #[serde(default)]
+    pub tags: String,
 }
 
 impl Listed {
+    /// Ready-to-paste attribution for use in the published video's description.
+    pub fn credit(&self) -> String {
+        if self.license.eq_ignore_ascii_case("CC-BY-4.0") {
+            format!(
+                "{} — {}. {}\nLicensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nAudio may be trimmed or mixed in this video.",
+                self.name, self.author, self.source
+            )
+        } else {
+            String::new()
+        }
+    }
+
+    /// Searches names, creators, categories and mood tags without a server.
+    pub fn matches(&self, query: &str) -> bool {
+        let haystack = format!(
+            "{} {} {} {}",
+            self.name, self.author, self.category, self.tags
+        )
+        .to_lowercase();
+        query
+            .to_lowercase()
+            .split_whitespace()
+            .all(|word| haystack.contains(word))
+    }
+
     /// Whether the entry can be offered: a plain file name, an id of the
-    /// shape the cache keys on, a digest to check against, and CC0.
+    /// shape the cache keys on, a digest, a supported license and its credit metadata.
     pub fn is_offered(&self) -> bool {
         let license = self.license.to_ascii_uppercase();
         !self.id.is_empty()
@@ -342,7 +373,15 @@ impl Listed {
             && is_plain_name(&self.file)
             && self.sha256.len() == 64
             && self.sha256.chars().all(|c| c.is_ascii_hexdigit())
-            && (license == "CC0" || license == "CC0-1.0")
+            && (license == "CC0"
+                || license == "CC0-1.0"
+                || (license == "CC-BY-4.0"
+                    && !self.author.trim().is_empty()
+                    && self.source.starts_with("https://")))
+            && (self.url.is_empty()
+                || self
+                    .url
+                    .starts_with("https://incompetech.com/music/royalty-free/mp3-royaltyfree/"))
     }
 }
 
@@ -372,8 +411,15 @@ pub fn cache_dir(dirs: &AppDirs) -> PathBuf {
 
 /// The manifest as last fetched, when it has been.
 pub fn cached_catalogue(dirs: &AppDirs) -> Option<Catalogue> {
-    let bytes = std::fs::read(cache_dir(dirs).join("manifest.json")).ok()?;
-    Catalogue::parse(&bytes).ok()
+    let builtin = Catalogue::parse(include_bytes!("../../../../audio/manifest.json")).ok()?;
+    let cached = std::fs::read(cache_dir(dirs).join("manifest.json"))
+        .ok()
+        .and_then(|bytes| Catalogue::parse(&bytes).ok());
+    Some(
+        cached
+            .filter(|held| held.version >= builtin.version)
+            .unwrap_or(builtin),
+    )
 }
 
 /// Fetches the manifest, and keeps it for the sessions after. `Ok(None)`
@@ -436,7 +482,11 @@ pub fn fetch_sound(
         .map_err(|error| format!("could not create {}: {error}", dir.display()))?;
     let partial = target.with_extension("partial");
     let mut last = String::new();
-    for url in crate::models::sound_sources(&sound.file) {
+    let mut sources = crate::models::sound_sources(&sound.file);
+    if !sound.url.is_empty() && sound.is_offered() {
+        sources.insert(0, sound.url.clone());
+    }
+    for url in sources {
         match crate::models::download(&url, &partial, sound.bytes, cancel, "cancelled", progress) {
             Ok(_) => match crate::models::verify(&partial, &sound.sha256) {
                 Ok(()) => {
@@ -550,6 +600,61 @@ mod tests {
             Path::new("/cache/sounds/aaaaaaaaaaaa-w.ogg")
         );
         assert!(Catalogue::parse(b"not json").is_err());
+    }
+
+    #[test]
+    fn licensed_music_needs_attribution_and_a_trusted_download() {
+        let mut sound = Listed {
+            id: "song".into(),
+            name: "Carefree".into(),
+            file: "song.mp3".into(),
+            sha256: "a".repeat(64),
+            license: "CC-BY-4.0".into(),
+            author: "Kevin MacLeod".into(),
+            source: "https://incompetech.com/".into(),
+            tags: "upbeat acoustic".into(),
+            url: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3".into(),
+            ..Default::default()
+        };
+        assert!(sound.is_offered());
+        assert!(sound.credit().contains("Kevin MacLeod"));
+        assert!(
+            sound
+                .credit()
+                .contains("https://creativecommons.org/licenses/by/4.0/")
+        );
+        assert!(sound.matches("KEVIN acoustic"));
+        assert!(!sound.matches("piano"));
+        sound.url = "file:///etc/passwd".into();
+        assert!(!sound.is_offered());
+        sound.url.clear();
+        sound.author.clear();
+        assert!(!sound.is_offered());
+    }
+
+    #[test]
+    fn builtin_catalogue_contains_existing_songs_and_survives_an_old_cache() {
+        let dir = scratch("builtin");
+        let dirs = AppDirs::under(&dir);
+        std::fs::create_dir_all(cache_dir(&dirs)).unwrap();
+        std::fs::write(
+            cache_dir(&dirs).join("manifest.json"),
+            br#"{"version":1,"sounds":[]}"#,
+        )
+        .unwrap();
+        let catalogue = cached_catalogue(&dirs).unwrap();
+        assert_eq!(catalogue.version, 2);
+        assert_eq!(
+            catalogue
+                .sounds
+                .iter()
+                .filter(|s| s.category == "Music")
+                .count(),
+            20
+        );
+        assert_eq!(catalogue.sounds.len(), 66);
+        assert!(catalogue.get("kevin-monkeys-spinning-monkeys").is_some());
+        let _ = std::fs::remove_dir_all(dir);
     }
 
     /// An index that names a file outside the folder is not believed.

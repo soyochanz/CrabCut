@@ -1,0 +1,19 @@
+id = "crabcut.hook"
+name = "HOOK"
+order = -100
+language = "Latin"
+sample = "HOOK"
+popIn = true
+offsetY = 0.0
+
+[style]
+content = "NO TE LO PIERDAS"
+fontFamily = "Hanken Grotesk"
+fontWeight = 900
+fontSize = 0.1
+color = "#ffffff"
+strokeColor = "#000000"
+strokeWidth = 0.008
+shadow = true
+italic = false
+maxWidth = 0.88
