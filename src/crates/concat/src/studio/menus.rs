@@ -61,7 +61,7 @@ impl Studio {
             .filter(|c| {
                 c.start + edge < at && at < c.start + c.duration - edge && !self.locked(&c.track_id)
             })
-            .cloned()
+            .map(|clip| clip.as_ref().clone())
             .collect();
         let selected: Vec<&Clip> = under
             .iter()
