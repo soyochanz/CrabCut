@@ -46,6 +46,9 @@ use whisper_rs::{
 /// names alphabetically with their accents set aside, then each other
 /// script together, alphabetically within it.
 pub const LANGUAGES: &[(&str, &str)] = &[
+    ("es", "Español"),
+    ("fr", "Français"),
+    ("pt", "Português"),
     ("af", "Afrikaans"),
     ("az", "Azərbaycanca"),
     ("id", "Bahasa Indonesia"),
@@ -62,10 +65,8 @@ pub const LANGUAGES: &[(&str, &str)] = &[
     ("de", "Deutsch"),
     ("et", "Eesti"),
     ("en", "English"),
-    ("es", "Español"),
     ("eu", "Euskara"),
     ("fo", "Føroyskt"),
-    ("fr", "Français"),
     ("gl", "Galego"),
     ("ha", "Hausa"),
     ("hr", "Hrvatski"),
@@ -89,7 +90,6 @@ pub const LANGUAGES: &[(&str, &str)] = &[
     ("haw", "ʻŌlelo Hawaiʻi"),
     ("uz", "Oʻzbekcha"),
     ("pl", "Polski"),
-    ("pt", "Português"),
     ("ro", "Română"),
     ("sq", "Shqip"),
     ("sk", "Slovenčina"),
@@ -171,10 +171,33 @@ struct KnownModel {
 
 /// The models the settings panel offers, fastest first.
 ///
-/// All from the official `ggerganov/whisper.cpp` conversions. Nothing bigger
-/// than `small`: `medium` is 1.5 GB and minutes-per-minute on CPU, which is
-/// the opposite of what this feature is for.
+/// Official whisper.cpp conversions, including larger multilingual models
+/// for people who prefer accuracy over download size and CPU latency.
 const KNOWN_MODELS: &[KnownModel] = &[
+    KnownModel {
+        id: "large-v3-turbo-q5_0",
+        label: "Whisper Turbo · recomendado",
+        blurb: "Español, francés y portugués. Buen equilibrio entre precisión y velocidad; 574 MB. Transcribe en el idioma hablado.",
+        approx_bytes: 574041195,
+        sha256: "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2",
+        english_only: false,
+    },
+    KnownModel {
+        id: "large-v3-q5_0",
+        label: "Whisper Large v3 · máxima calidad",
+        blurb: "Multilingüe, incluido español, francés y portugués. 1,08 GB; más lento y exigente en memoria.",
+        approx_bytes: 1081140203,
+        sha256: "d75795ecff3f83b5faa89d1900604ad8c780abd5739fae406de19f23ecd98ad1",
+        english_only: false,
+    },
+    KnownModel {
+        id: "medium",
+        label: "Whisper Medium · multilingüe",
+        blurb: "Español, francés y portugués. Modelo completo de 1,53 GB; prioriza calidad sobre velocidad en CPU.",
+        approx_bytes: 1533763059,
+        sha256: "6c14d5adee5f86394037b4e4e8b59f1673b6cee10e3cf0b11bbdbee79c156208",
+        english_only: false,
+    },
     KnownModel {
         id: "tiny.en",
         label: "Tiny (English)",
@@ -218,7 +241,7 @@ const KNOWN_MODELS: &[KnownModel] = &[
     KnownModel {
         id: "small",
         label: "Small (Multilingual)",
-        blurb: "Best quality offered, any language.",
+        blurb: "Calidad equilibrada con menor consumo; español, francés y portugués.",
         approx_bytes: 487_601_967,
         sha256: "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
         english_only: false,
@@ -1330,6 +1353,20 @@ mod tests {
         assert!(keep_segment(3.0, 4.0, "♪ ♪".to_owned()).is_none());
         assert!(keep_segment(3.0, 4.0, "Lalu (sambil tertawa) pergi.".to_owned()).is_some());
         assert!(keep_segment(3.0, 4.0, String::new()).is_none());
+    }
+
+    #[test]
+    fn accuracy_models_are_multilingual_and_priority_languages_are_available() {
+        for id in ["large-v3-turbo-q5_0", "large-v3-q5_0", "medium"] {
+            let model = known(id).expect("downloadable model");
+            assert!(!model.english_only);
+            assert_eq!(model.sha256.len(), 64);
+            assert!(model.approx_bytes > 500_000_000);
+        }
+        assert_eq!(
+            &LANGUAGES[..3],
+            &[("es", "Español"), ("fr", "Français"), ("pt", "Português")]
+        );
     }
 
     #[test]

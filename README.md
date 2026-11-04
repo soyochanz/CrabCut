@@ -97,3 +97,15 @@ captions, keeping their words and timing. **Aplicar efectos a toda la pista**
 copies the selected clip's effect chains to its track. These are single undoable
 edits. Locked tracks are not changed. Timeline positions and source media stay
 unchanged.
+
+### Higher-quality multilingual transcription
+
+Settings → Transcriber now offers **Whisper Turbo Q5** (574 MB, recommended),
+**Large v3 Q5** (1.08 GB, accuracy-first) and **Medium** (1.53 GB), alongside the
+smaller models. They run locally without an API subscription. Spanish, French
+and Portuguese appear first in the language picker. Larger models need more
+memory and may be slow on CPU. Use an explicit language when it is known.
+
+These controls transcribe speech into its original language. They are not a
+Spanish/French/Portuguese translation service. Whisper Turbo is not trained for
+speech translation; adding a target-language translator is a separate feature.

@@ -48,10 +48,10 @@ on:
   workflow_dispatch:
     inputs:
       runner:
-        description: macOS runner (alternative pool when one is queued)
+        description: Build target
         type: choice
-        options: [macos-15, macos-26]
-        default: macos-15
+        options: [windows-2025, macos-15, macos-26]
+        default: windows-2025
 
 env:
   CARGO_TERM_COLOR: always
@@ -94,12 +94,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: macos
-            arch: arm64
-            os: macos-15
-            target: aarch64-apple-darwin
+          - platform: ${{ startsWith(inputs.runner, 'windows') && 'windows' || 'macos' }}
+            arch: ${{ startsWith(inputs.runner, 'windows') && 'x86_64' || 'arm64' }}
+            target: ${{ startsWith(inputs.runner, 'windows') && 'x86_64-pc-windows-msvc' || 'aarch64-apple-darwin' }}
+            ggml: ${{ startsWith(inputs.runner, 'windows') && 'variants' || 'none' }}
+            llvm: win64
+            ffmpeg: win64
+            ort: win-x64
+            vc: x64
+            wix: x64
+            inno: x64compatible
 
-    runs-on: ${{ inputs.runner || matrix.os }}
+    runs-on: ${{ inputs.runner || 'windows-2025' }}
     # The slowest target is Intel macOS, whose build alone ran past an hour
     # in v0.2.7-rc.1. The steps that can hang have timeouts of their own,
     # at most 155 minutes between them on any one target, so a stuck step
@@ -425,11 +431,12 @@ jobs:
       # read, but the step summary is public - so on failure the tail of the
       # build goes there, and a red run explains itself to anyone.
       - name: Caption and project checks
+        shell: bash
         working-directory: src
         run: |
           cargo fmt --all --check
-          rustc --edition=2024 --test crates/concat/src/panes/caption_chunks.rs -o /tmp/crabcut-caption-tests
-          /tmp/crabcut-caption-tests
+          rustc --edition=2024 --test crates/concat/src/panes/caption_chunks.rs -o "$RUNNER_TEMP/crabcut-caption-tests.exe"
+          "$RUNNER_TEMP/crabcut-caption-tests.exe"
           cargo test -p concat-project
       - name: Build
         # An Intel Mac runner is the slow one: its release build ran past
@@ -632,7 +639,7 @@ jobs:
           # profile. In lib/ the rpath finds the libraries and
           # concat-speech's `cpu_backend` the modules.
           if [ "${{ matrix.ggml }}" = variants ]; then
-            out=$(ls -dt "src/target/${{ matrix.target }}/app/build"/whisper-rs-sys-*/out/bin | head -1)
+            out=$(ls -dt "src/target/${{ matrix.target }}/quick/build"/whisper-rs-sys-*/out/bin | head -1)
             out=${out%/bin}
             echo "whisper's build: $out"
             cp -a "$out"/lib*/libwhisper.so* "$out"/lib*/libggml*.so* "$out"/bin/libggml-cpu-*.so "stage/$name/lib/"
@@ -860,7 +867,7 @@ jobs:
           $name = "CrabCut-$env:VERSION-windows-${{ matrix.arch }}"
           $dir = "stage\$name"
           New-Item -ItemType Directory -Force $dir | Out-Null
-          Copy-Item "src\target\${{ matrix.target }}\app\concat.exe" $dir
+          Copy-Item "src\target\${{ matrix.target }}\quick\concat.exe" $dir
           Copy-Item "$env:FFMPEG_DIR\bin\*.dll" $dir
           Copy-Item "$env:ORT_DIR\lib\*.dll" $dir
           # whisper's DLLs and its CPU modules, one per x86_64 generation
@@ -869,7 +876,7 @@ jobs:
           # the program. Beside concat.exe Windows finds the DLLs and
           # concat-speech's `cpu_backend` the modules.
           if ("${{ matrix.ggml }}" -eq "variants") {
-            $built = Get-ChildItem "src\target\${{ matrix.target }}\app\build\whisper-rs-sys-*\out\bin\ggml-cpu-x64.dll" |
+            $built = Get-ChildItem "src\target\${{ matrix.target }}\quick\build\whisper-rs-sys-*\out\bin\ggml-cpu-x64.dll" |
               Sort-Object LastWriteTime -Descending | Select-Object -First 1
             if (-not $built) { throw "whisper-rs-sys installed no ggml-cpu-x64.dll" }
             Write-Host "whisper's build: $($built.DirectoryName)"

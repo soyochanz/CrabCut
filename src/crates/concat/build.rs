@@ -116,6 +116,7 @@ fn main() {
         winresource::WindowsResource::new()
             .set_icon(icon)
             .set("ProductName", "CrabCut")
+            .set("CompanyName", "Althera Solutions")
             .set("FileDescription", "CrabCut")
             .set(
                 "LegalCopyright",
