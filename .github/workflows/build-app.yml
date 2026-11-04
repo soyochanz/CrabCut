@@ -49,6 +49,9 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # Keep first builds practical; same engine optimisation with parallel thin LTO.
+  CARGO_PROFILE_APP_LTO: thin
+  CARGO_PROFILE_APP_CODEGEN_UNITS: 16
   # The prebuilt dependencies - BtbN's FFmpeg 8.1 (LGPL, shared, one per
   # arch), ONNX Runtime, nfpm, appimagetool, LLVM for Windows
   # and Intel's emulator - are each pinned to one file and its digest in
@@ -408,6 +411,7 @@ jobs:
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           workspaces: src
+          cache-on-failure: true
           key: ${{ matrix.target }}
           env-vars: CARGO CC CFLAGS CXX CMAKE RUST GGML ORT
 
