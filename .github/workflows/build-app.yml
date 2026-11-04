@@ -1052,6 +1052,15 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "WiX failed with $LASTEXITCODE" }
           if (-not (Test-Path "stage\$name.msi")) { throw "stage\$name.msi is not there" }
           Sign "stage\$name.msi"
+          # Install the actual EXE into a disposable runner folder, then launch it.
+          $qaInstall = "$env:RUNNER_TEMP\CrabCut-installer-test"
+          $install = Start-Process -Wait -PassThru -FilePath "$PWD\stage\$name-setup.exe" `
+            -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/DIR=$qaInstall"
+          if ($install.ExitCode -ne 0) { throw "Installer exited $($install.ExitCode)" }
+          scripts/ci/smoke-windows.ps1 -Bundle $qaInstall
+          $uninstall = Start-Process -Wait -PassThru -FilePath "$qaInstall\unins000.exe" `
+            -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART'
+          if ($uninstall.ExitCode -ne 0) { throw "Uninstaller exited $($uninstall.ExitCode)" }
           # The folder itself is not published: the two installers are.
           Remove-Item -Recurse -Force "stage\$name"
 
