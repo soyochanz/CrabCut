@@ -294,8 +294,23 @@ impl CaptionsPane {
         };
         let look = self.look();
         let base = studio.prefs.title_style.clone();
-        let cues = split_segments(cues.into_iter().map(|c| Segment { start: c.start, end: c.end, text: c.text }).collect(), self.format)
-            .into_iter().map(|s| srt::Cue { start: s.start, end: s.end, text: s.text }).collect();
+        let cues = split_segments(
+            cues.into_iter()
+                .map(|c| Segment {
+                    start: c.start,
+                    end: c.end,
+                    text: c.text,
+                })
+                .collect(),
+            self.format,
+        )
+        .into_iter()
+        .map(|s| srt::Cue {
+            start: s.start,
+            end: s.end,
+            text: s.text,
+        })
+        .collect();
         let commands = srt_commands(cues, look, base.as_ref());
         if commands.is_empty() {
             self.message = t("captions.noSubtitlesInFile");
@@ -476,12 +491,22 @@ impl CaptionsPane {
     fn run_script(&mut self, studio: &mut Studio) {
         let lines = script_captions(&self.text);
         let mut cursor = 0.0;
-        let segments = lines.into_iter().map(|(text, seconds)| {
-            let start = cursor; cursor += seconds;
-            Segment { start, end: cursor, text }
-        }).collect();
-        let lines: Vec<_> = split_segments(segments, self.format).into_iter()
-            .map(|s| (s.text, s.end - s.start)).collect();
+        let segments = lines
+            .into_iter()
+            .map(|(text, seconds)| {
+                let start = cursor;
+                cursor += seconds;
+                Segment {
+                    start,
+                    end: cursor,
+                    text,
+                }
+            })
+            .collect();
+        let lines: Vec<_> = split_segments(segments, self.format)
+            .into_iter()
+            .map(|s| (s.text, s.end - s.start))
+            .collect();
         if lines.is_empty() {
             self.message = t("captions.nothingToCaptionYet");
             return;
@@ -1100,8 +1125,12 @@ mod tests {
 
 fn split_segments(segments: Vec<Segment>, format: usize) -> Vec<Segment> {
     let words = [usize::MAX, 1, 3, 5][format.min(3)];
-    segments.into_iter().flat_map(|s| {
-        caption_chunks::split(&s.text, s.start, s.end, words).into_iter()
-            .map(|(text, start, end)| Segment { text, start, end })
-    }).collect()
+    segments
+        .into_iter()
+        .flat_map(|s| {
+            caption_chunks::split(&s.text, s.start, s.end, words)
+                .into_iter()
+                .map(|(text, start, end)| Segment { text, start, end })
+        })
+        .collect()
 }
