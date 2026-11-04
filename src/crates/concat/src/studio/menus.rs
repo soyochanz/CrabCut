@@ -72,9 +72,15 @@ impl Studio {
         } else if selected.len() > 1 {
             None
         } else {
-            under
-                .iter()
-                .find(|c| main == Some(c.track_id.as_str()))
+            self.quick_cut_anchor
+                .as_ref()
+                .filter(|anchor| anchor.revision == self.revision)
+                .and_then(|anchor| {
+                    under
+                        .iter()
+                        .find(|c| c.id == anchor.left || c.id == anchor.right)
+                })
+                .or_else(|| under.iter().find(|c| main == Some(c.track_id.as_str())))
                 .or_else(|| (under.len() == 1).then(|| &under[0]))
         };
         let Some(clip) = target.cloned() else {
