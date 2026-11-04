@@ -2,7 +2,7 @@ id = "crabcut.quote"
 name = "Quote Card"
 order = -89
 language = "Latin"
-sample = "Quote"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

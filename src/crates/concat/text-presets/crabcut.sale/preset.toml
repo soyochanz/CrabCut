@@ -2,7 +2,7 @@ id = "crabcut.sale"
 name = "Sale Tag"
 order = -85
 language = "Latin"
-sample = "Sale"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

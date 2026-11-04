@@ -2,7 +2,7 @@ id = "crabcut.lower"
 name = "Lower Third"
 order = -78
 language = "Latin"
-sample = "Lower"
+sample = "Aa"
 popIn = true
 offsetY = 0.32
 

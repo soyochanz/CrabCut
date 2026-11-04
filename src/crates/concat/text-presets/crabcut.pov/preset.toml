@@ -2,7 +2,7 @@ id = "crabcut.pov"
 name = "POV"
 order = -88
 language = "Latin"
-sample = "POV"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

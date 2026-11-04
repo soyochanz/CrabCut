@@ -2,7 +2,7 @@ id = "crabcut.alert"
 name = "Red Alert"
 order = -92
 language = "Latin"
-sample = "Red"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

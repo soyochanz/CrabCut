@@ -2,7 +2,7 @@ id = "crabcut.hook"
 name = "HOOK"
 order = -100
 language = "Latin"
-sample = "HOOK"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

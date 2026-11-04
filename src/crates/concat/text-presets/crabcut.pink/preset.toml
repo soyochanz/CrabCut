@@ -2,7 +2,7 @@ id = "crabcut.pink"
 name = "Pink Punch"
 order = -97
 language = "Latin"
-sample = "Pink"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

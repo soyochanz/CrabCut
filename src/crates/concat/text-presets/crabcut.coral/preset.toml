@@ -2,7 +2,7 @@ id = "crabcut.coral"
 name = "Coral Pop"
 order = -99
 language = "Latin"
-sample = "Coral"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

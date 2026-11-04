@@ -2,7 +2,7 @@ id = "crabcut.neon"
 name = "Neon Mint"
 order = -96
 language = "Latin"
-sample = "Neon"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

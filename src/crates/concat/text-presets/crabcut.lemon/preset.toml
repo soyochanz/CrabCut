@@ -2,7 +2,7 @@ id = "crabcut.lemon"
 name = "Lemon Marker"
 order = -98
 language = "Latin"
-sample = "Lemon"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

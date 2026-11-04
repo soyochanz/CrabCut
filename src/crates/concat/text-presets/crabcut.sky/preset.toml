@@ -2,7 +2,7 @@ id = "crabcut.sky"
 name = "Sky Outline"
 order = -93
 language = "Latin"
-sample = "Sky"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

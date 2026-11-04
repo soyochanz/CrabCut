@@ -2,7 +2,7 @@ id = "crabcut.night"
 name = "Night Card"
 order = -94
 language = "Latin"
-sample = "Night"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

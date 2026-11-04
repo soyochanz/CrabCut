@@ -2,7 +2,7 @@ id = "crabcut.comic"
 name = "Comic Boom"
 order = -91
 language = "Latin"
-sample = "Comic"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 

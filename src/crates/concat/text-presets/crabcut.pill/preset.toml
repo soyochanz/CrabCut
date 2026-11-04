@@ -2,7 +2,7 @@ id = "crabcut.pill"
 name = "White Pill"
 order = -95
 language = "Latin"
-sample = "White"
+sample = "Aa"
 popIn = true
 offsetY = 0.0
 
