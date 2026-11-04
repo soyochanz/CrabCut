@@ -19,18 +19,23 @@ cp "$root/assets/macos/installer/"* "$staging/resources/"
 cp "$root/LICENSE" "$staging/resources/LICENSE.txt"
 pkgbuild --component "$app" --install-location /Applications \
   --identifier app.crabcut.editor --version "$version" "$staging/CrabCut-component.pkg"
-python3 - "$staging" "$version" "$arch" <<'PY'
-import sys,xml.etree.ElementTree as ET
+python3 - "$staging" "$version" "$arch" "$app" <<'PY'
+import sys,plistlib,xml.etree.ElementTree as ET
 from pathlib import Path
-folder,version,arch=sys.argv[1:]
+folder,version,arch,app=sys.argv[1:]
+with open(Path(app)/"Contents/Info.plist", "rb") as f:
+    minimum=plistlib.load(f)["LSMinimumSystemVersion"]
 root=ET.Element('installer-gui-script',{'minSpecVersion':'2'})
 ET.SubElement(root,'title').text='CrabCut · Althera Solutions'
 for tag in ('background', 'background-darkAqua'):
-    ET.SubElement(root,tag,{'file':'sidebar.png','alignment':'bottomleft','scaling':'none'})
+    ET.SubElement(root,tag,{'file':'sidebar.png','alignment':'bottomleft','scaling':'none','mime-type':'image/png'})
 ET.SubElement(root,'welcome',{'file':'welcome.html','mime-type':'text/html'})
 ET.SubElement(root,'license',{'file':'LICENSE.txt','mime-type':'text/plain'})
 ET.SubElement(root,'conclusion',{'file':'conclusion.html','mime-type':'text/html'})
-ET.SubElement(root,'options',{'customize':'never','require-scripts':'false','hostArchitectures':arch})
+ET.SubElement(root,'options',{'customize':'never','require-scripts':'true','hostArchitectures':arch})
+volume=ET.SubElement(root,'volume-check',{'script':'true'})
+allowed=ET.SubElement(volume,'allowed-os-versions')
+ET.SubElement(allowed,'os-version',{'min':minimum})
 outline=ET.SubElement(root,'choices-outline');ET.SubElement(outline,'line',{'choice':'crabcut'})
 choice=ET.SubElement(root,'choice',{'id':'crabcut','visible':'false','title':'CrabCut'})
 ET.SubElement(choice,'pkg-ref',{'id':'app.crabcut.editor'})

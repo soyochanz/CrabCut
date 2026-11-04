@@ -35,7 +35,7 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 
 Download installers from [Releases](https://github.com/soyochanz/CrabCut/releases/latest):
 
-- **macOS Apple Silicon:** branded `.pkg` assistant or drag-to-Applications `.dmg`.
+- **macOS 15+ Apple Silicon:** branded `.pkg` assistant or drag-to-Applications `.dmg`.
 - **Windows x64:** branded `-setup.exe` assistant or `.msi` for managed installation.
 
 Save projects and close CrabCut before updating. These builds do not yet carry
