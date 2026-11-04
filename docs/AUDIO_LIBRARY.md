@@ -38,3 +38,23 @@ The small Kenney WAV files are checked into `audio/` with their CC0 notice.
 New additions must have a verified source, suitable redistribution license,
 accurate credits and a pinned digest. Do not add a platform's licensed music
 merely because it is playable inside that platform.
+
+## Instagram publishing integration (not implemented)
+
+Meta's [Instagram Audio API](https://developers.facebook.com/documentation/instagram-platform/content-publishing/audio-api)
+was checked on 2026-11-04. It supports searching original audio or music and
+attaching an `audio_id` when creating a Reel through the publishing API.
+It requires a professional Instagram account, a linked Facebook Page,
+a registered Meta app, the applicable publishing permissions and a valid user
+token. The available catalogue is music authorized for third-party use and may
+differ from the native Instagram app; a particular artist is not guaranteed.
+
+The documented `download_url` is a temporary audio-preview URL, not a blanket
+license to mirror songs or burn them into arbitrary cross-platform exports.
+A future integration should keep Instagram-selected audio separate from this
+redistributable offline library, authorize each account, and attach it through
+the supported Reel publishing flow. No Meta credentials are shipped in CrabCut.
+
+CapCut's [Materials License Agreement](https://www.capcut.com/clause/material-license-agreement)
+also restricts its music licenses by material and platform. Being able to use a
+song inside CapCut does not authorize copying its catalogue into another app.
