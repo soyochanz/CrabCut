@@ -10,7 +10,7 @@ A local video editor for short-form creators, forked from [Concat](https://githu
 - Caption formats: original, one word, Reels (up to 3 words), short (up to 5 words).
 - Sentence-aware grouping for voice captions, scripts and imported SRT subtitles.
 - Short captions get bold text, an outline and a brief scale entrance.
-- Nine original CC0 sound effects and music loops in the Audio library.
+- Nine original CC0 sound effects and music loops, importable into the Audio library.
 - English and Spanish interface text for the new controls.
 
 Short caption timing is estimated within the original phrase, not forced word alignment.
@@ -18,6 +18,14 @@ Existing timeline tools allow further manual adjustment. Original mode preserves
 
 The underlying editor includes transitions, effects, local transcription and a sounds panel.
 Instagram and CapCut music catalogues are not included or claimed as licensed for reuse.
+
+## Install and sounds
+
+Download the Apple Silicon DMG from [Releases](https://github.com/soyochanz/CrabCut/releases).
+This preview is ad-hoc signed, not Apple-notarized.
+Download and extract `CrabCut-audio-CC0.zip`, then choose **Audio → My sounds → Import sounds**
+and select the nine WAV files. They remain available across projects.
+The remote catalogue backend is present, but its shelf is not exposed in this inherited UI.
 
 ## Build
 
