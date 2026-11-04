@@ -421,7 +421,8 @@ jobs:
         with:
           workspaces: src
           cache-on-failure: true
-          key: ${{ matrix.target }}
+          cache-workspace-crates: true
+          key: ${{ matrix.target }}-${{ hashFiles('src/crates/**', 'src/patches/**') }}
           env-vars: CARGO CC CFLAGS CXX CMAKE RUST GGML ORT
 
       # The shipping profile: fat LTO, panic=abort, stripped. See the

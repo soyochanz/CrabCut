@@ -142,3 +142,6 @@ i-slint-renderer-skia = { path = "patches/i-slint-renderer-skia" }
 # (see patches/README.md, and GGML_BACKEND_DL in build-app.yml). 0.15.0
 # exactly; bump it with whisper-rs, re-applying the change.
 whisper-rs-sys = { path = "patches/whisper-rs-sys" }
+
+# CPU feature reporting through ggml registry supports shared backend modules.
+whisper-rs = { path = "patches/whisper-rs" }

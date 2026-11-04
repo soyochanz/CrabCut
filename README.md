@@ -31,18 +31,34 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 - The offer expires after 3.5 seconds; Escape, another edit, selection change or seeking dismisses it. Doing nothing keeps the piece. Undo restores it.
 - Shift combinations and typing in fields do not cut.
 
-## Install
+## 🪟 ¿Usas Windows?
 
-Download installers from [Releases](https://github.com/soyochanz/CrabCut/releases/latest):
+**[Descargar CrabCut para Windows · instalador EXE](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-windows-x86_64-setup.exe)**
 
-- **macOS 15+ Apple Silicon:** branded `.pkg` assistant or drag-to-Applications `.dmg`.
-- **Windows x64:** branded `-setup.exe` assistant or `.msi` for managed installation.
+Windows de 64 bits (x64). Abre el archivo descargado y sigue el asistente de Althera Solutions. Para instalaciones administradas: [instalador MSI](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-windows-x86_64.msi).
 
-Save projects and close CrabCut before updating. These builds do not yet carry
-Althera Solutions commercial signing certificates or Apple notarization, so the
-operating system may show an unverified-publisher warning. The Mac build is not
-for Intel Macs. Speech models download separately in **Settings → Transcriber**.
-Music and effects are available directly in **Audio → Library**.
+## 🍎 ¿Usas Mac?
+
+**[Descargar CrabCut para Mac · instalador PKG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-macos-arm64.pkg)**
+
+Requiere **macOS 15 o posterior y Apple Silicon (M1, M2, M3, M4 o posterior)**. No compatible con Mac Intel.
+
+1. Abre el PKG y sigue el asistente de instalación.
+2. Abre **CrabCut** desde Aplicaciones.
+3. También puedes usar el [DMG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-macos-arm64.dmg) y arrastrar CrabCut a Aplicaciones.
+
+### Si Mac no permite abrirlo porque no puede verificar el desarrollador
+
+Esta versión aún no está notarizada por Apple. Si has descargado el instalador de esta página y confías en él:
+
+1. Intenta abrir el instalador o CrabCut una vez y cierra el aviso.
+2. Ve a ** → Ajustes del Sistema → Privacidad y seguridad**.
+3. En Seguridad, busca el aviso de CrabCut y pulsa **Abrir igualmente**.
+4. Confirma la apertura y autentícate si macOS lo solicita.
+
+Es una excepción para esta aplicación; no desactives la protección general del Mac. [Instrucciones oficiales de Apple](https://support.apple.com/es-es/102445).
+
+Guarda tus proyectos y cierra CrabCut antes de actualizar. Los instaladores todavía no llevan certificados comerciales de firma de Althera Solutions; Windows también puede mostrar un aviso de editor no verificado. **No descargues “Source code” para instalar:** elige el enlace de tu sistema arriba.
 
 ## Build
 

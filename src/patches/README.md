@@ -93,3 +93,12 @@ CMake directories. The Windows variants build previously emitted 247 search
 paths totaling over 35,000 characters, exceeding Windows' PATH limit and
 causing downstream crates using derive macros to fail with E0463. The static
 build's search behavior is unchanged.
+
+## whisper-rs 0.16.0
+
+The published Unlicense crate, with its license and source retained. `SystemInfo`
+queries `ggml_backend_get_features` on the registered CPU backend, as ggml's
+source prescribes for dynamically loaded CPU modules. Direct references to
+`ggml_cpu_has_avx`, `avx2`, `fma` and `f16c` otherwise leave unresolved
+symbols in Windows builds without LTO. Missing backends or feature lists
+report false. Static macOS behavior is checked against the original CPU flags.

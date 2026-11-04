@@ -68,11 +68,12 @@ impl Studio {
                 let scale = f64::from(shown_w) / f64::from(width);
                 let up = |px: u32| (f64::from(px) / scale).round() as u32;
                 let up_off = |px: i32| (f64::from(px) / scale).round() as i32;
-                for title in self
-                    .host
-                    .titles
-                    .clips_live(self.project(), shown_w, shown_h)
-                {
+                for title in self.host.titles.clips_live_at(
+                    self.project(),
+                    shown_w,
+                    shown_h,
+                    f64::from(self.playhead),
+                ) {
                     self.title_blocks.insert(
                         title.clip_id,
                         (

@@ -212,7 +212,7 @@ impl Titles {
     /// each, for a `width` × `height` frame. One that fails to paint is left
     /// out and said once on stderr; the rest of the edit still renders.
     pub fn clips(&self, project: &Project, width: u32, height: u32) -> Vec<TitleClip> {
-        self.clips_with(project, width, height, false)
+        self.clips_with(project, width, height, false, None)
     }
 
     /// [`Titles::clips`] for a monitor showing a change as it is made:
@@ -222,16 +222,38 @@ impl Titles {
     /// touches the disk, which is what makes a drag smooth: a PNG per
     /// pointer step, encoded, written and decoded again, was the lag.
     pub fn clips_live(&self, project: &Project, width: u32, height: u32) -> Vec<TitleClip> {
-        self.clips_with(project, width, height, true)
+        self.clips_with(project, width, height, true, None)
     }
 
-    fn clips_with(&self, project: &Project, width: u32, height: u32, live: bool) -> Vec<TitleClip> {
+    /// Paint only the titles visible at this instant during an interactive edit.
+    /// Export and playback still use the complete timeline through `clips`.
+    pub fn clips_live_at(
+        &self,
+        project: &Project,
+        width: u32,
+        height: u32,
+        at: f64,
+    ) -> Vec<TitleClip> {
+        self.clips_with(project, width, height, true, Some(at))
+    }
+
+    fn clips_with(
+        &self,
+        project: &Project,
+        width: u32,
+        height: u32,
+        live: bool,
+        at: Option<f64>,
+    ) -> Vec<TitleClip> {
         if live {
             self.live.lock().unwrap_or_else(|e| e.into_inner()).begin();
         }
         let timeline = project.active();
         let mut out = Vec::new();
         for clip in &timeline.clips {
+            if at.is_some_and(|at| !(clip.start <= at && at < clip.start + clip.duration)) {
+                continue;
+            }
             let (text, shape);
             let painting = match clip.kind {
                 ModelClipKind::Text => {
@@ -983,6 +1005,41 @@ mod tests {
         let frame = live[0].frame.as_ref().expect("painted live");
         assert_eq!((frame.width(), frame.height()), (canvas_w, canvas_h));
         assert_eq!(live[0].clip.overscan, clip.overscan);
+        let _ = std::fs::remove_dir_all(dirs.data.parent().unwrap());
+    }
+
+    #[test]
+    fn live_preview_paints_only_titles_at_the_requested_instant() {
+        let dirs = scratch("live_at");
+        let mut editor = Editor::new();
+        for start in [0.0, 1.0, 1.0, 50.0] {
+            editor
+                .apply(Command::AddShapeClip {
+                    above: false,
+                    track_id: None,
+                    start,
+                    style: None,
+                    duration: Some(1.0),
+                    name: "Shape".into(),
+                })
+                .unwrap();
+        }
+        let titles = Titles::new(&dirs);
+        assert_eq!(titles.clips_live_at(editor.project(), 64, 64, 0.0).len(), 1);
+        let overlapping = titles.clips_live_at(editor.project(), 64, 64, 1.0);
+        assert_eq!(overlapping.len(), 2);
+        assert!(overlapping.iter().all(|title| title.clip.start == 1.0));
+        assert!(
+            titles
+                .clips_live_at(editor.project(), 64, 64, 2.0)
+                .is_empty()
+        );
+        assert!(
+            titles
+                .clips_live_at(editor.project(), 64, 64, f64::NAN)
+                .is_empty()
+        );
+        assert_eq!(titles.clips_live(editor.project(), 64, 64).len(), 4);
         let _ = std::fs::remove_dir_all(dirs.data.parent().unwrap());
     }
 

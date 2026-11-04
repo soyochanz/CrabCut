@@ -1286,6 +1286,21 @@ fn drop_repeats(lines: Vec<Segment>) -> Vec<Segment> {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn backend_features_match_static_cpu_flags() {
+        use whisper_rs::whisper_rs_sys as ffi;
+        let info = whisper_rs::SystemInfo::default();
+        // The static macOS backend exports both APIs, so compare their results.
+        unsafe {
+            assert!(!ffi::ggml_backend_reg_by_name(c"CPU".as_ptr()).is_null());
+            assert_eq!(info.avx, ffi::ggml_cpu_has_avx() != 0);
+            assert_eq!(info.avx2, ffi::ggml_cpu_has_avx2() != 0);
+            assert_eq!(info.fma, ffi::ggml_cpu_has_fma() != 0);
+            assert_eq!(info.f16c, ffi::ggml_cpu_has_f16c() != 0);
+        }
+    }
+
     use super::*;
 
     /// Prints the captions a downloaded model makes of a file, for timing
