@@ -10,20 +10,16 @@ impl Studio {
     /// Split at `at`: every selected clip the instant runs through, or every
     /// clip at all when nothing is selected.
     pub fn split_at(&mut self, at: f32, only_selected: bool) {
-        let selection = self.selection.clone();
         let at = f64::from(at);
-        let victims: Vec<String> = self
-            .timeline()
-            .clips
-            .iter()
-            .filter(|clip| {
-                clip.start + f64::from(MIN_DURATION) < at
-                    && at < clip.start + clip.duration - f64::from(MIN_DURATION)
-                    && (!only_selected || selection.is_empty() || selection.contains(&clip.id))
-                    && !self.locked(&clip.track_id)
-            })
-            .map(|clip| clip.id.clone())
-            .collect();
+        let selected = if only_selected {
+            self.selection.clone()
+        } else {
+            Vec::new()
+        };
+        let victims =
+            concat_project::quick_cut::split_targets(self.timeline(), &selected, at, |track| {
+                self.locked(track)
+            });
         if !victims.is_empty() {
             self.apply(Command::SplitClips {
                 clip_ids: victims,
@@ -46,7 +42,7 @@ impl Studio {
     }
 
     /// A tap of Shift cuts the selected clip at the playhead. With no
-    /// selected clip there, prefer the main video lane, never every overlay.
+    /// selected clip there, prefer the main video lane. Linked lanes follow the cut.
     pub fn quick_cut(&mut self) {
         self.pause();
         self.quick_cut_pending = None;
@@ -70,7 +66,15 @@ impl Studio {
         let target = if selected.len() == 1 {
             selected.first().copied()
         } else if selected.len() > 1 {
-            None
+            if self.timeline().linkage {
+                selected
+                    .iter()
+                    .copied()
+                    .find(|c| main == Some(c.track_id.as_str()))
+                    .or_else(|| selected.first().copied())
+            } else {
+                None
+            }
         } else {
             self.quick_cut_anchor
                 .as_ref()
@@ -408,7 +412,12 @@ impl Studio {
         }
         self.flush_commit();
         self.apply(Command::SplitClips {
-            clip_ids: vec![id.to_owned()],
+            clip_ids: concat_project::quick_cut::split_targets(
+                self.timeline(),
+                &[id.to_owned()],
+                at,
+                |track| self.locked(track),
+            ),
             time: at,
         });
     }

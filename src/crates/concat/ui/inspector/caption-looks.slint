@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright 2026 altherasolutions
+import { Editor } from "../editor.slint";
+import { Theme } from "../theme/theme.slint";
+import { Button } from "../primitives/modal.slint";
+export component CaptionLooks inherits VerticalLayout {
+    spacing: 8px;
+    padding: 14px;
+    property <bool> whole: false;
+    property <int> word: 0;
+    property <[string]> names: ["Classic", "Crab Karaoke", "Sunshine", "Electric Blue", "Bubblegum", "Lavender", "Golden Progress", "Coral Progress", "Underline", "Neon", "Paper", "Midnight", "Comic", "Typewriter", "Spotlight", "Mono Pop"];
+    property <[color]> accents: [#ffffff, #ff784f, #ffe45c, #55dfff, #ff75bc, #c9a5ff, #ffd15c, #ff784f, #ffb36b, #9fffe8, #b7441e, #ff9a76, #ffe45c, #ffffff, #ffffff, #ff784f];
+    Timer { interval: 550ms; running: true; triggered => { root.word = Math.mod(root.word + 1, 3); } }
+    Text { text: "Estilos de subtítulos"; color: Theme.fg; font-weight: 700; }
+    Button { label: root.whole ? "Aplicar a: toda la pista ✓" : "Aplicar a: selección"; clicked => { root.whole = !root.whole; } }
+    for row in 8: HorizontalLayout {
+        spacing: 8px;
+        for column in 2: card := Rectangle {
+            property <int> preset: row * 2 + column;
+            height: 86px;
+            border-radius: 8px;
+            background: self.preset == 10 ? #fff1d6 : #131a2a;
+            border-width: area.has-hover ? 2px : 1px;
+            border-color: area.has-hover ? #ff784f : #454550;
+            VerticalLayout {
+                padding: 8px;
+                HorizontalLayout {
+                    spacing: 3px;
+                    for word[index] in ["Crea", "tu", "vídeo"]: Text {
+                        text: card.preset == 12 ? ["CREA", "TU", "VÍDEO"][index] : word;
+                        color: (index == root.word || ((card.preset == 6 || card.preset == 7) && index <= root.word)) ? root.accents[card.preset] : card.preset == 10 ? #29201b : #ffffff;
+                        opacity: (card.preset == 13 && index > root.word) || (card.preset == 15 && index != root.word) ? 0 : 1;
+                        font-size: 13px;
+                        font-weight: 800;
+                    }
+                }
+                Text { text: root.names[card.preset]; color: card.preset == 10 ? #29201b : #bfc2cf; font-size: 11px; horizontal-alignment: center; }
+            }
+            area := TouchArea { clicked => { Editor.caption-look(card.preset, root.whole); } }
+        }
+    }
+}

@@ -625,6 +625,16 @@ pub enum Command {
         #[serde(default)]
         ripple: bool,
     },
+    /// Rebuilds the selected caption spans with a timed visual template.
+    RestyleCaptions {
+        /// Existing text clips to restyle.
+        clip_ids: Vec<String>,
+        /// Index into the caption template catalogue.
+        preset: usize,
+        /// Optional edited reference typography, while preserving destination words.
+        #[serde(default)]
+        style: Option<TextStyle>,
+    },
     /// Cuts each named clip in two at one playhead time. The head keeps the
     /// id and the transition; the tail is minted fresh and stays
     /// source-continuous. A clip the time misses (or grazes within the
@@ -1336,6 +1346,7 @@ pub fn apply(
         | Command::MoveClips { .. }
         | Command::TrimClip { .. }
         | Command::SplitClips { .. }
+        | Command::RestyleCaptions { .. }
         | Command::FreezeFrame { .. }
         | Command::ReplaceClipMedia { .. }
         | Command::SetClipEnhanced { .. }

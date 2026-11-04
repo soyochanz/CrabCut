@@ -34,3 +34,10 @@ through Audio → My sounds; the remote catalogue shelf is not exposed in the in
 
 Validation: 203 project tests, standalone caption tests, strict project Clippy, locale inventory,
 and full Slint UI compilation. Native build and interactive verification are checked separately.
+
+
+Inspector and linked editing update:
+- Shift, the blade and the Split action cut every unlocked lane at the same time when linkage is enabled. With linkage off, the selection is cut independently.
+- Existing titles/captions expose 16 animated template cards in the inspector, with selection/whole-track scope. Existing timed word states are restyled in place; new word states preserve clip placement, effects, metadata and their span.
+- Apply style/effects to the track copies presentation without replacing destination words or moving media. Caption templates and track-wide edits undo in one step.
+- The gallery update also exposes the real 20-song/46-effect audio catalogue, 24 title presets and 60 Twemoji stickers; the earlier procedural-only audio notes above describe the initial build.

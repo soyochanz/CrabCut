@@ -481,6 +481,50 @@ pub(super) fn apply(
             })
         }
 
+        Command::RestyleCaptions {
+            clip_ids,
+            preset,
+            style,
+        } => {
+            if preset >= crate::caption_templates::COUNT {
+                return Ok(Outcome::default());
+            }
+            let timeline = project.active_mut();
+            let selected: std::collections::HashSet<_> = clip_ids.iter().collect();
+            let mut created = None;
+            let mut replacement = Vec::new();
+            for original in &timeline.clips {
+                if !selected.contains(&original.id) || original.text.is_none() {
+                    replacement.push(original.clone());
+                    continue;
+                }
+                let frames = crate::caption_templates::restyle(original, preset);
+                for (index, mut frame) in frames.into_iter().enumerate() {
+                    if let Some(reference) = &style
+                        && let Some(target) = &mut frame.text
+                    {
+                        let content = target.content.clone();
+                        let runs = target.runs.clone();
+                        *target = reference.clone();
+                        target.content = content;
+                        target.runs = runs;
+                    }
+                    frame
+                        .extra
+                        .insert("crabcutCaptionTemplate".into(), serde_json::json!(preset));
+                    if index > 0 {
+                        frame.id = mint.next("c");
+                    }
+                    created = Some(frame.id.clone());
+                    replacement.push(Arc::new(frame));
+                }
+            }
+            timeline.clips = replacement;
+            Ok(Outcome {
+                applied: created.is_some(),
+                created_id: created,
+            })
+        }
         Command::SplitClips { clip_ids, time } => {
             let timeline = project.active_mut();
             let mut created = None;

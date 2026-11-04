@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Jareer Abdullah and Concat contributors
 
+import { Editor } from "../editor.slint";
+import { Button } from "../primitives/modal.slint";
 import { I18n } from "../i18n.slint";
 import { Theme, SegmentedControl } from "../primitives/primitives.slint";
 import { SectionTabs } from "../primitives/section-tabs.slint";
@@ -705,6 +707,11 @@ export component ConfigPane inherits Rectangle {
                     }
                 }
             }
+        }
+
+        if root.has-selection: Button {
+            label: root.showing == "Text" ? "Aplicar estilo a toda la pista" : "Aplicar efectos a toda la pista";
+            clicked => { Editor.apply-track-look(); }
         }
 
         if root.has-selection: PaneBody {

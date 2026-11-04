@@ -194,6 +194,193 @@ pub fn apply(command: Command, preset: usize, word_starts: &[f64]) -> Vec<Comman
         .collect()
 }
 
+/// Presentation-only patch; timing, source media and destination words stay intact.
+pub fn presentation_patch(
+    source: &crate::model::Clip,
+    target: &crate::model::Clip,
+) -> crate::commands::ClipPatch {
+    let text = source
+        .text
+        .as_ref()
+        .zip(target.text.as_ref())
+        .map(|(style, target)| {
+            let mut style = style.clone();
+            style.content = target.content.clone();
+            style.runs = target.runs.clone();
+            Some(style)
+        });
+    crate::commands::ClipPatch {
+        text,
+        video_effects: Some(source.video_effects.clone()),
+        filters: Some(source.filters.clone()),
+        ..Default::default()
+    }
+}
+
+/// Apply a look without losing a caption's placement, effects or metadata.
+/// Existing word-state clips retain their own word range and duration.
+pub fn restyle(original: &crate::model::Clip, preset: usize) -> Vec<crate::model::Clip> {
+    let Some(mut style) = original.text.clone() else {
+        return vec![original.clone()];
+    };
+    let stored = original
+        .extra
+        .get("crabcutCaptionContent")
+        .and_then(|v| v.as_str());
+    let saved_word = original
+        .extra
+        .get("crabcutCaptionWord")
+        .and_then(|v| v.as_array())
+        .and_then(|v| Some((v.first()?.as_u64()? as usize, v.get(1)?.as_u64()? as usize)));
+    let expected = stored.map(|full| {
+        match (
+            original
+                .extra
+                .get("crabcutCaptionTemplate")
+                .and_then(|v| v.as_u64()),
+            saved_word,
+        ) {
+            (Some(13), Some((_, b))) => full.chars().take(b).collect::<String>(),
+            (Some(15), Some((a, b))) => full.chars().skip(a).take(b.saturating_sub(a)).collect(),
+            _ => full.to_owned(),
+        }
+    });
+    let edited = expected.as_ref().is_some_and(|text| *text != style.content);
+    let full = if edited {
+        style.content.clone()
+    } else {
+        stored.unwrap_or(&style.content).to_owned()
+    };
+    let active = (if edited { None } else { saved_word })
+        .or_else(|| {
+            style.runs.first().map(|r| {
+                words(&full)
+                    .into_iter()
+                    .find(|(_, b)| *b == r.end)
+                    .unwrap_or((r.start, r.end))
+            })
+        })
+        .filter(|(a, b)| a < b && *b <= full.chars().count());
+    style.content = full.clone();
+    if preset == 0 {
+        let mut clip = original.clone();
+        clip.text = Some(TextStyle {
+            content: full,
+            font_size: style.font_size,
+            ..Default::default()
+        });
+        return vec![clip];
+    }
+    if let Some((a, b)) = active {
+        let accent = look(&mut style, preset);
+        let from = if matches!(preset, 6 | 7 | 13) { 0 } else { a };
+        style.style_range(
+            from,
+            b,
+            &RunStyle {
+                color: Some(accent.into()),
+                underline: (preset == 8).then_some(true),
+                ..Default::default()
+            },
+        );
+        if preset == 13 {
+            style.content = full.chars().take(b).collect();
+        }
+        if preset == 15 {
+            style.content = full.chars().skip(a).take(b - a).collect();
+            style.runs.clear();
+            style.color = accent.into();
+        }
+        let mut clip = original.clone();
+        clip.extra
+            .insert("crabcutCaptionContent".into(), serde_json::json!(full));
+        clip.extra
+            .insert("crabcutCaptionWord".into(), serde_json::json!([a, b]));
+        clip.text = Some(style);
+        return vec![clip];
+    }
+    let frames = apply(
+        Command::AddTextClip {
+            track_id: Some(original.track_id.clone()),
+            above: true,
+            start: original.start,
+            duration: Some(original.duration),
+            style: Some(style),
+            offset_y: Some(original.offset_y),
+            pop_in: false,
+        },
+        preset,
+        &[],
+    );
+    if frames.is_empty() {
+        return vec![original.clone()];
+    }
+    frames
+        .into_iter()
+        .filter_map(|frame| {
+            let Command::AddTextClip {
+                start,
+                duration: Some(duration),
+                style: Some(style),
+                pop_in,
+                ..
+            } = frame
+            else {
+                return None;
+            };
+            let mut clip = original.clone();
+            clip.rewindow_keys(
+                original.duration,
+                start - original.start,
+                start - original.start + duration,
+            );
+            clip.start = start;
+            clip.duration = duration;
+            clip.extra
+                .insert("crabcutCaptionContent".into(), serde_json::json!(full));
+            if let Some(run) = style.runs.first() {
+                if let Some((a, b)) = words(&full).into_iter().find(|(_, b)| *b == run.end) {
+                    clip.extra
+                        .insert("crabcutCaptionWord".into(), serde_json::json!([a, b]));
+                }
+            } else {
+                let ranges = words(&full);
+                let weight: usize = ranges.iter().map(|(a, b)| b - a).sum();
+                let mut elapsed = 0;
+                for (a, b) in ranges {
+                    let boundary =
+                        original.start + original.duration * elapsed as f64 / weight as f64;
+                    if (boundary - start).abs() < 0.000001 {
+                        clip.extra
+                            .insert("crabcutCaptionWord".into(), serde_json::json!([a, b]));
+                        break;
+                    }
+                    elapsed += b - a;
+                }
+            }
+            if pop_in && !original.is_keyed(crate::model::KeyProperty::Scale) {
+                use crate::model::{ClipKey, KeyEase, KeyProperty};
+                clip.keys.extend([
+                    ClipKey {
+                        property: KeyProperty::Scale,
+                        at: 0.0,
+                        value: original.scale * 0.82,
+                        ease: KeyEase::OUT,
+                    },
+                    ClipKey {
+                        property: KeyProperty::Scale,
+                        at: (0.12 / duration).min(0.45),
+                        value: original.scale,
+                        ease: KeyEase::OUT,
+                    },
+                ]);
+            }
+            clip.text = Some(style);
+            Some(clip)
+        })
+        .collect()
+}
+
 /// Collapse adjacent visual word states when exporting plain SRT, which
 /// cannot carry their colour changes. Gaps and different text stay intact.
 pub fn plain_cues(cues: Vec<crate::srt::Cue>) -> Vec<crate::srt::Cue> {
@@ -307,6 +494,203 @@ mod tests {
         assert_eq!(
             plain_cues(vec![cue(0.0, 0.3), cue(0.3, 1.0), cue(2.0, 3.0)]),
             vec![cue(0.0, 1.0), cue(2.0, 3.0)]
+        );
+    }
+}
+
+#[cfg(test)]
+mod inspector_tests {
+    use super::*;
+    use crate::{
+        Editor,
+        model::{Clip, ClipKind},
+    };
+    fn caption() -> Clip {
+        let mut clip = Clip::blank("c1", "T1", ClipKind::Text, "caption", 3., 2.);
+        clip.text = Some(TextStyle {
+            content: "Un vídeo increíble".into(),
+            ..Default::default()
+        });
+        clip.offset_x = 0.15;
+        clip.offset_y = 0.3;
+        clip.rotation = 4.;
+        clip.extra.insert("custom".into(), serde_json::json!(true));
+        clip
+    }
+    #[test]
+    fn restyling_preserves_placement_and_does_not_multiply_existing_word_states() {
+        let original = caption();
+        let frames = restyle(&original, 2);
+        assert_eq!(frames.len(), 3);
+        assert_eq!(frames.first().unwrap().start, 3.);
+        assert_eq!(
+            frames.last().unwrap().start + frames.last().unwrap().duration,
+            5.
+        );
+        for frame in frames {
+            assert_eq!(frame.offset_x, original.offset_x);
+            assert_eq!(frame.rotation, original.rotation);
+            assert_eq!(frame.extra.get("custom"), original.extra.get("custom"));
+            for preset in 0..COUNT {
+                let changed = restyle(&frame, preset);
+                assert_eq!(changed.len(), 1);
+                assert_eq!(changed[0].duration, frame.duration);
+            }
+        }
+    }
+    #[test]
+    fn copy_style_keeps_the_destinations_words() {
+        let mut source = caption();
+        source.text.as_mut().unwrap().font_size = 0.15;
+        let mut target = caption();
+        target.text.as_mut().unwrap().content = "Otro texto distinto".into();
+        let style = presentation_patch(&source, &target).text.unwrap().unwrap();
+        assert_eq!(style.content, "Otro texto distinto");
+        assert_eq!(style.font_size, 0.15);
+    }
+    #[test]
+    fn copying_effects_preserves_media_timing_and_is_undoable() {
+        let mut editor = Editor::new();
+        let mut ids = Vec::new();
+        for start in [0., 5.] {
+            ids.push(
+                editor
+                    .apply(Command::AddTextClip {
+                        track_id: Some("T1".into()),
+                        above: true,
+                        start,
+                        duration: Some(2.),
+                        style: caption().text,
+                        offset_y: Some(0.3),
+                        pop_in: false,
+                    })
+                    .unwrap()
+                    .created_id
+                    .unwrap(),
+            );
+        }
+        let effect = crate::model::AppliedFilter {
+            id: "test-look".into(),
+            params: [("amount".into(), 0.7)].into(),
+            enabled: true,
+            keys: Default::default(),
+        };
+        editor
+            .apply(Command::UpdateClip {
+                clip_id: ids[0].clone(),
+                patch: crate::commands::ClipPatch {
+                    video_effects: Some(vec![effect.clone()]),
+                    ..Default::default()
+                },
+            })
+            .unwrap();
+        let source = editor.project().active().clip(&ids[0]).unwrap();
+        let target = editor.project().active().clip(&ids[1]).unwrap();
+        let before = target.clone();
+        let patch = presentation_patch(source, target);
+        editor
+            .apply(Command::UpdateClip {
+                clip_id: ids[1].clone(),
+                patch,
+            })
+            .unwrap();
+        let target = editor.project().active().clip(&ids[1]).unwrap();
+        assert_eq!(target.start, before.start);
+        assert_eq!(target.duration, before.duration);
+        assert_eq!(target.media_id, before.media_id);
+        assert_eq!(target.video_effects, vec![effect]);
+        editor.undo();
+        assert!(
+            editor
+                .project()
+                .active()
+                .clip(&ids[1])
+                .unwrap()
+                .video_effects
+                .is_empty()
+        );
+    }
+    #[test]
+    fn caption_template_command_is_one_undo_step_and_ids_stay_unique() {
+        let mut editor = Editor::new();
+        let id = editor
+            .apply(Command::AddTextClip {
+                track_id: None,
+                above: true,
+                start: 3.,
+                duration: Some(2.),
+                style: caption().text,
+                offset_y: Some(0.3),
+                pop_in: false,
+            })
+            .unwrap()
+            .created_id
+            .unwrap();
+        editor
+            .apply(Command::RestyleCaptions {
+                clip_ids: vec![id.clone()],
+                preset: 2,
+                style: None,
+            })
+            .unwrap();
+        assert_eq!(editor.project().active().clips.len(), 3);
+        let ids: std::collections::HashSet<_> = editor
+            .project()
+            .active()
+            .clips
+            .iter()
+            .map(|c| &c.id)
+            .collect();
+        assert_eq!(ids.len(), 3);
+        assert!(ids.contains(&id));
+        editor.undo();
+        assert_eq!(editor.project().active().clips.len(), 1);
+        assert_eq!(
+            editor.project().active().clips[0]
+                .text
+                .as_ref()
+                .unwrap()
+                .content,
+            "Un vídeo increíble"
+        );
+    }
+}
+
+#[cfg(test)]
+mod persistence_tests {
+    use super::*;
+    use crate::model::{Clip, ClipKind};
+    #[test]
+    fn repeated_words_retain_their_position_when_switching_from_mono() {
+        let mut clip = Clip::blank("c", "T1", ClipKind::Text, "words", 0., 3.);
+        clip.text = Some(TextStyle {
+            content: "sí sí sí".into(),
+            ..Default::default()
+        });
+        let frames = restyle(&clip, 15);
+        assert_eq!(frames.len(), 3);
+        assert_eq!(
+            frames[2].extra["crabcutCaptionWord"],
+            serde_json::json!([6, 8])
+        );
+    }
+    #[test]
+    fn changing_a_template_never_restores_stale_words_over_a_manual_edit() {
+        let mut clip = Clip::blank("c", "T1", ClipKind::Text, "words", 0., 3.);
+        clip.text = Some(TextStyle {
+            content: "Antes del cambio".into(),
+            ..Default::default()
+        });
+        let mut frame = restyle(&clip, 15).remove(0);
+        frame
+            .extra
+            .insert("crabcutCaptionTemplate".into(), serde_json::json!(15));
+        frame.text.as_mut().unwrap().content = "Texto corregido".into();
+        let revised = restyle(&frame, 2);
+        assert!(
+            revised
+                .iter()
+                .all(|c| c.text.as_ref().unwrap().content == "Texto corregido")
         );
     }
 }

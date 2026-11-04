@@ -26,7 +26,7 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 ## Fast cutting
 
 - Delete / Backspace closes the removed clip’s gap (ripple delete). Linked lanes follow the main video lane.
-- Tap and release Shift alone at the playhead to cut the selected clip; without a selection under it, the main video is preferred.
+- Tap and release Shift alone at the playhead to cut. With **Linked tracks** on, every unlocked clip crossing that instant is cut together (video, audio and captions). With it off, only the selected clip is cut; without a selection under it, the main video is preferred.
 - Two Shift cuts in the same clip offer **Return** to remove the middle piece and close the gap.
 - The offer expires after 3.5 seconds; Escape, another edit, selection change or seeking dismisses it. Doing nothing keeps the piece. Undo restores it.
 - Shift combinations and typing in fields do not cut.
@@ -84,3 +84,16 @@ optimizes the UI crate at level 2 as well as optimizing the video engine.
 
 This is a curated, freely licensed library, not an integration with a platform's
 full commercial music catalogue. See [library documentation](docs/AUDIO_LIBRARY.md).
+
+### Caption inspector and track-wide styles
+
+Select an existing caption to open **Plantillas animadas** in its inspector.
+The 16 animated cards can apply to the current selection or the entire caption
+track; toggle **Aplicar a** before picking a card. The gallery can be collapsed
+to reach the usual content and typography controls.
+
+**Aplicar estilo a toda la pista** copies the selected caption look to the other
+captions, keeping their words and timing. **Aplicar efectos a toda la pista**
+copies the selected clip's effect chains to its track. These are single undoable
+edits. Locked tracks are not changed. Timeline positions and source media stay
+unchanged.

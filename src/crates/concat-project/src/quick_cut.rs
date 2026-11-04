@@ -2,6 +2,27 @@
 // Copyright 2026 altherasolutions
 //! Identify the middle section made by two cuts of the same original clip.
 
+/// Resolve one cut across all linked, unlocked lanes. Empty selection means all.
+pub fn split_targets(
+    timeline: &crate::model::Timeline,
+    selected: &[String],
+    at: f64,
+    locked: impl Fn(&str) -> bool,
+) -> Vec<String> {
+    let edge = crate::model::ranges::MIN_CLIP_DURATION;
+    timeline
+        .clips
+        .iter()
+        .filter(|clip| {
+            !locked(&clip.track_id)
+                && clip.start + edge < at
+                && at < clip.start + clip.duration - edge
+                && (timeline.linkage || selected.is_empty() || selected.contains(&clip.id))
+        })
+        .map(|clip| clip.id.clone())
+        .collect()
+}
+
 /// The two pieces and document revision immediately after the first cut.
 #[derive(Clone, Debug)]
 pub struct Anchor {
@@ -104,5 +125,37 @@ mod tests {
         assert!(clips.iter().any(|c| c.start == 2.0 && c.duration == 5.0));
         e.undo();
         assert_eq!(e.project().active().clips.len(), 3);
+    }
+}
+
+#[cfg(test)]
+mod linked_tests {
+    use super::*;
+    use crate::model::{Clip, ClipKind, Timeline};
+    use std::sync::Arc;
+    #[test]
+    fn linked_cut_includes_video_audio_and_captions_but_not_locked_or_edges() {
+        let mut timeline = Timeline::default();
+        for (id, lane, kind, start, duration) in [
+            ("v", "video", ClipKind::Video, 0., 10.),
+            ("a", "audio", ClipKind::Audio, 0., 10.),
+            ("s", "subs", ClipKind::Text, 2., 4.),
+            ("l", "locked", ClipKind::Video, 0., 10.),
+            ("e", "edge", ClipKind::Text, 5., 2.),
+        ] {
+            timeline
+                .clips
+                .push(Arc::new(Clip::blank(id, lane, kind, id, start, duration)));
+        }
+        assert_eq!(
+            split_targets(&timeline, &["v".into()], 5., |lane| lane == "locked"),
+            vec!["v", "a", "s"]
+        );
+        timeline.linkage = false;
+        assert_eq!(
+            split_targets(&timeline, &["v".into()], 5., |_| false),
+            vec!["v"]
+        );
+        assert!(split_targets(&timeline, &["v".into()], f64::NAN, |_| false).is_empty());
     }
 }

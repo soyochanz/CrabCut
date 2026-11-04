@@ -364,3 +364,80 @@ impl Studio {
         self.request_preview();
     }
 }
+
+impl Studio {
+    /// Copy presentation only; every destination keeps its words and timing.
+    pub fn apply_track_look(&mut self) {
+        self.flush_commit();
+        let Some(source) = self.selection.first().and_then(|id| self.clip(id)).cloned() else {
+            return;
+        };
+        if self.locked(&source.track_id) {
+            return;
+        }
+        if let Some(preset) = source
+            .extra
+            .get("crabcutCaptionTemplate")
+            .and_then(|v| v.as_u64())
+        {
+            let clip_ids = self
+                .timeline()
+                .clips
+                .iter()
+                .filter(|c| c.track_id == source.track_id && c.text.is_some() && c.id != source.id)
+                .map(|c| c.id.clone())
+                .collect();
+            self.apply(Command::RestyleCaptions {
+                clip_ids,
+                preset: preset as usize,
+                style: source.text.clone(),
+            });
+            return;
+        }
+        let commands = self
+            .timeline()
+            .clips
+            .iter()
+            .filter(|c| {
+                c.track_id == source.track_id
+                    && c.id != source.id
+                    && c.text.is_some() == source.text.is_some()
+            })
+            .map(|c| Command::UpdateClip {
+                clip_id: c.id.clone(),
+                patch: concat_project::caption_templates::presentation_patch(&source, c),
+            })
+            .collect();
+        self.apply(Command::Batch { commands });
+    }
+
+    /// Restyle existing captions using the same timed templates as transcription.
+    pub fn caption_look(&mut self, index: i32, whole: bool) {
+        if !(0..concat_project::caption_templates::COUNT as i32).contains(&index) {
+            return;
+        }
+        self.flush_commit();
+        let Some(source) = self.selection.first().and_then(|id| self.clip(id)).cloned() else {
+            return;
+        };
+        if source.text.is_none() || self.locked(&source.track_id) {
+            return;
+        }
+        let clips: Vec<_> = self
+            .timeline()
+            .clips
+            .iter()
+            .filter(|c| {
+                c.text.is_some()
+                    && c.track_id == source.track_id
+                    && (whole || self.selection.contains(&c.id))
+            })
+            .cloned()
+            .collect();
+        self.apply(Command::RestyleCaptions {
+            clip_ids: clips.iter().map(|c| c.id.clone()).collect(),
+            preset: index as usize,
+            style: None,
+        });
+    }
+}

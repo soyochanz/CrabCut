@@ -1405,6 +1405,13 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
         }));
     }
 
+    editor.on_apply_track_look(on_lanes!(|state| {
+        state.apply_track_look();
+    }));
+    editor.on_caption_look(on_lanes!(|state, index: i32, whole: bool| {
+        state.caption_look(index, whole);
+    }));
+
     editor.on_clip_set(on_lanes!(|state, field: ClipField, value: f32| {
         state.clip_set(field, value);
     }));
