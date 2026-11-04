@@ -86,3 +86,10 @@ existing shared-library build and CPU backend selection are unchanged.
 Apart from the changes documented here, the copy matches the published
 crate. When refreshing it, check whether the new whisper.cpp already
 includes this fix before reapplying it.
+
+CrabCut's shared-library build only exports the installed `lib`, `lib64` and
+`bin` search directories. It does not recursively export MSVC's intermediate
+CMake directories. The Windows variants build previously emitted 247 search
+paths totaling over 35,000 characters, exceeding Windows' PATH limit and
+causing downstream crates using derive macros to fail with E0463. The static
+build's search behavior is unchanged.

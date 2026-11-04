@@ -329,12 +329,15 @@ fn main() {
 
     let destination = config.build();
 
-    add_link_search_path(&out.join("build")).unwrap();
-
     println!("cargo:rustc-link-search=native={}", destination.display());
     if backend_dl {
+        // CrabCut: CMake installs the shared import libraries in lib/ and
+        // DLLs in bin/. Recursing through every MSVC object directory adds
+        // hundreds of search paths to rustc and Cargo's DLL lookup PATH,
+        // exceeding Windows' environment-variable limit and hiding proc macros.
         link_shared(&destination, &out);
     } else {
+        add_link_search_path(&out.join("build")).unwrap();
         link_static();
     }
 
