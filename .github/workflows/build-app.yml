@@ -422,7 +422,8 @@ jobs:
           workspaces: src
           cache-on-failure: true
           cache-workspace-crates: true
-          key: ${{ matrix.target }}-${{ hashFiles('src/crates/**', 'src/patches/**') }}
+          cache-on-failure: true
+          key: ${{ matrix.target }}
           env-vars: CARGO CC CFLAGS CXX CMAKE RUST GGML ORT
 
       # The shipping profile: fat LTO, panic=abort, stripped. See the
@@ -442,7 +443,7 @@ jobs:
       - name: Build
         # An Intel Mac runner is the slow one: its release build ran past
         # sixty minutes in v0.2.7-rc.1.
-        timeout-minutes: ${{ matrix.platform == 'macos' && matrix.arch == 'x86_64' && 100 || 60 }}
+        timeout-minutes: 100
         shell: bash
         working-directory: src
         run: |
