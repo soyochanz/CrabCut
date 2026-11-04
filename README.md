@@ -31,21 +31,29 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 - The offer expires after 3.5 seconds; Escape, another edit, selection change or seeking dismisses it. Doing nothing keeps the piece. Undo restores it.
 - Shift combinations and typing in fields do not cut.
 
-## Install and sounds
+## Install
 
-Download the Apple Silicon DMG from [Releases](https://github.com/soyochanz/CrabCut/releases).
-This preview is ad-hoc signed, not Apple-notarized.
-Download and extract `CrabCut-audio-CC0.zip`, then choose **Audio → My sounds → Import sounds**
-and select the nine WAV files. They remain available across projects.
-The remote catalogue backend is present, but its shelf is not exposed in this inherited UI.
+Download installers from [Releases](https://github.com/soyochanz/CrabCut/releases/latest):
+
+- **macOS Apple Silicon:** branded `.pkg` assistant or drag-to-Applications `.dmg`.
+- **Windows x64:** branded `-setup.exe` assistant or `.msi` for managed installation.
+
+Save projects and close CrabCut before updating. These builds do not yet carry
+Althera Solutions commercial signing certificates or Apple notarization, so the
+operating system may show an unverified-publisher warning. The Mac build is not
+for Intel Macs. Speech models download separately in **Settings → Transcriber**.
+Music and effects are available directly in **Audio → Library**.
 
 ## Build
 
 See [engine setup](src/README.md). Requires Rust 1.93.1, FFmpeg development libraries,
 CMake and a C++ compiler. `cd src && cargo build --profile app -p concat`.
 The internal Rust crate names and project format remain compatible with the upstream engine.
-The GitHub **Build CrabCut** workflow packages a macOS Apple Silicon preview using
-the `quick` profile with both the video engine and editor UI optimized.
+The GitHub **Build CrabCut** workflow supports Windows x64 and macOS Apple Silicon
+using the `quick` profile with both the video engine and editor UI optimized.
+Windows CI runs the application from the staged folder and from a real silent
+installer installation, then tests uninstallation. The macOS `.pkg` can also be
+built from a verified app bundle with `scripts/package-macos.sh`.
 
 ## Licence and origin
 
