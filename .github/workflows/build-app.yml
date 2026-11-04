@@ -46,6 +46,12 @@ name: Build CrabCut
 # `fail-fast` is off for the same reason.
 on:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: macOS runner (alternative pool when one is queued)
+        type: choice
+        options: [macos-15, macos-26]
+        default: macos-15
 
 env:
   CARGO_TERM_COLOR: always
@@ -93,7 +99,7 @@ jobs:
             os: macos-15
             target: aarch64-apple-darwin
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ inputs.runner || matrix.os }}
     # The slowest target is Intel macOS, whose build alone ran past an hour
     # in v0.2.7-rc.1. The steps that can hang have timeouts of their own,
     # at most 155 minutes between them on any one target, so a stuck step
