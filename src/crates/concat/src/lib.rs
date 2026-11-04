@@ -714,6 +714,29 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
         ($($handler:tt)*) => { handler!(publish_dock, $($handler)*) };
     }
 
+    // Pointer motion changes the preview, not media. Avoid walking artwork
+    // caches on every event and cap model publication at display cadence.
+    // Release/drop still use on_window, committing the latest coordinates.
+    macro_rules! on_drag {
+        (|$state:ident $(, $arg:ident : $ty:ty)*| $body:block) => {{
+            let last = std::cell::Cell::new(None::<std::time::Instant>);
+            move |$($arg : $ty),*| {
+                Shell::with(|shell, app| {
+                    {
+                        let mut $state = shell.studio.borrow_mut();
+                        #[allow(clippy::redundant_closure_call)]
+                        (|| $body)();
+                    }
+                    let now = std::time::Instant::now();
+                    if last.get().is_none_or(|at| now.duration_since(at).as_millis() >= 16) {
+                        last.set(Some(now));
+                        shell.studio.borrow().publish_lanes(&app, &shell.models);
+                    }
+                });
+            }
+        }};
+    }
+
     let editor = app.global::<Editor>();
 
     // ── the launch screen ──
@@ -1188,7 +1211,7 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
     editor.on_save_frame(on_window!(|state| {
         state.save_frame_as();
     }));
-    editor.on_clip_dragged(on_lanes!(|state, seconds: f32, pixels: f32| {
+    editor.on_clip_dragged(on_drag!(|state, seconds: f32, pixels: f32| {
         state.clip_dragged(seconds, pixels);
     }));
     editor.on_clip_released(on_window!(|state| {
@@ -1196,10 +1219,10 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
     }));
 
     // ── drag and drop from the library ──
-    editor.on_drag_hovered(on_lanes!(|state,
-                                      payload: SharedString,
-                                      seconds: f32,
-                                      y: f32| {
+    editor.on_drag_hovered(on_drag!(|state,
+                                     payload: SharedString,
+                                     seconds: f32,
+                                     y: f32| {
         let row = state.row_at(y);
         state.drop = state.plan(payload.as_str(), seconds, row);
     }));

@@ -887,6 +887,7 @@
   "tray.generateCaptions": "生成字幕",
   "tray.hideMeters": "隐藏电平表",
   "tray.linkage": "联动",
+  "tray.linkedTracks": "Linked tracks",
   "tray.magneticTimelineDeletingTrimming": "磁性时间线",
   "tray.panTool": "平移工具 ({0})",
   "tray.playerFollowsResizePlayhead": "播放器跟随修剪",

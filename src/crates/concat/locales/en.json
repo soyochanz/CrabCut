@@ -887,6 +887,7 @@
   "tray.generateCaptions": "Generate Captions",
   "tray.hideMeters": "Hide the level meters",
   "tray.linkage": "Linkage",
+  "tray.linkedTracks": "Linked tracks",
   "tray.magneticTimelineDeletingTrimming": "Magnetic timeline",
   "tray.panTool": "Pan tool ({0})",
   "tray.playerFollowsResizePlayhead": "Player follows the resize",

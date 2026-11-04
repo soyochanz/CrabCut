@@ -45,7 +45,7 @@ See [engine setup](src/README.md). Requires Rust 1.93.1, FFmpeg development libr
 CMake and a C++ compiler. `cd src && cargo build --profile app -p concat`.
 The internal Rust crate names and project format remain compatible with the upstream engine.
 The GitHub **Build CrabCut** workflow packages a macOS Apple Silicon preview using
-the upstream `quick` profile: optimized video engine, faster UI compilation.
+the `quick` profile with both the video engine and editor UI optimized.
 
 ## Licence and origin
 
@@ -55,3 +55,16 @@ modified distribution, not an official Concat release. Original documentation is
 in [docs/UPSTREAM_README.md](docs/UPSTREAM_README.md).
 
 See [changes](CRABCUT_CHANGES.md) for verification and limitations.
+
+### Linked tracks and dragging
+
+The **Linked tracks / Pistas vinculadas** control beside the chain icon toggles
+project-wide linkage. When enabled, ripple-deleting footage on the main video
+lane removes captions inside that interval, shortens captions crossing its
+edges, and pulls subsequent clips back into sync. Undo restores the edit.
+Disable linkage to edit the main lane independently.
+
+Pointer-driven clip and library previews publish at most once every 16 ms,
+without rescanning artwork caches on each mouse event. Releasing the clip still
+commits its latest coordinates and refreshes the window. The local build now
+optimizes the UI crate at level 2 as well as optimizing the video engine.

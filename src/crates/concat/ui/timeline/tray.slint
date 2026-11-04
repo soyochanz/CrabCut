@@ -403,6 +403,14 @@ export component TimelineTray inherits Rectangle {
             clicked => { root.linkage-changed(!root.linkage); }
         }
 
+        Text {
+            text: I18n.t("tray.linkedTracks");
+            color: root.linkage ? Theme.accent : Theme.fg;
+            font-size: Theme.fs-sm;
+            vertical-alignment: center;
+            TouchArea { clicked => { root.linkage-changed(!root.linkage); } }
+        }
+
         Divider { }
 
         TrayButton {

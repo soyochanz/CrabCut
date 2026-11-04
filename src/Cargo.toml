@@ -73,21 +73,11 @@ lto = false
 codegen-units = 16
 incremental = true
 
-# The window's own crate unoptimised. It is where every edit lands, and
-# most of it is the Slint compiler's output: one enormous module that the
-# front end takes fifty-odd seconds to check and that LLVM then took two
-# minutes over at level 3 - and, measured, the same two minutes at level
-# 1, since the time is a few huge generated functions and not the level.
-# At 0 that is ten seconds. With the profile's incremental honoured (see
-# .cargo/config.toml) a Rust edit rebuilds in twenty seconds and a .slint
-# edit in twenty-five, from three minutes twenty. The engine crates keep
-# the profile's level 3: decoding and compositing are theirs, and they
-# only rebuild when they change. What this crate does itself - publish the
-# lanes, run the panes, format a waveform - is light enough that nothing
-# on screen tells the difference; if something ever does, the shipping
-# build is `--profile app`.
+# CrabCut ships the local quick build with the window optimised too:
+# timeline model publication and pointer gestures live in this crate.
+# Keep incremental builds and parallel code generation for iteration.
 [profile.quick.package.concat]
-opt-level = 0
+opt-level = 2
 codegen-units = 256
 
 # The shipping build of the editor window: `cargo build --profile app -p concat`.

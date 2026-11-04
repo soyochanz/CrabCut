@@ -1078,6 +1078,9 @@ mod tests {
         let over_the_gone = text_at(&mut editor, 12.0, 3.0);
         let over_the_kept = text_at(&mut editor, 22.0, 3.0);
         let across = text_at(&mut editor, 8.0, 4.0);
+        let spanning = text_at(&mut editor, 8.0, 15.0);
+        let tail = text_at(&mut editor, 18.0, 5.0);
+        let single_frame = text_at(&mut editor, 24.0, 1.0 / 60.0);
         editor
             .apply(Command::RemoveClips {
                 clip_ids: vec![rest[0].clone()],
@@ -1101,7 +1104,37 @@ mod tests {
             editor.project().active().clip(&over_the_gone).is_none(),
             "words over footage that went go with it"
         );
+        assert_eq!(
+            editor.project().active().clip(&across).unwrap().duration,
+            2.0
+        );
+        assert_eq!(
+            editor.project().active().clip(&spanning).unwrap().duration,
+            5.0
+        );
+        assert_eq!(editor.project().active().clip(&tail).unwrap().duration, 3.0);
+        assert_eq!(start_of(&editor, &tail), 10.0);
+        assert_eq!(
+            editor
+                .project()
+                .active()
+                .clip(&single_frame)
+                .unwrap()
+                .duration,
+            1.0 / 60.0
+        );
         assert_eq!(start_of(&editor, &first), 0.0);
+        editor.undo();
+        assert_eq!(
+            editor.project().active().clip(&across).unwrap().duration,
+            4.0
+        );
+        assert_eq!(
+            editor.project().active().clip(&spanning).unwrap().duration,
+            15.0
+        );
+        assert_eq!(start_of(&editor, &tail), 18.0);
+        assert!(editor.project().active().clip(&over_the_gone).is_some());
     }
 
     /// With linkage off a ripple delete closes its own lane and no other.

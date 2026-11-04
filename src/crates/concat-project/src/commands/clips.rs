@@ -962,19 +962,42 @@ pub(crate) fn follow_main(timeline: &mut Timeline, main: Option<&str>, lane: &st
             if spans.is_empty() {
                 return;
             }
-            let spoken_over_nothing = |clip: &Clip| {
-                clip.track_id != lane
-                    && clip.kind == ClipKind::Text
-                    && spans.iter().any(|&(start, end)| {
-                        clip.start >= start - JOIN_EPSILON
-                            && clip.start + clip.duration <= end + JOIN_EPSILON
-                    })
+            let compressed = |at: f64| (at - removed_before(&spans, at)).max(0.0);
+            let remaining = |clip: &Clip| {
+                clip.duration
+                    - (removed_before(&spans, clip.start + clip.duration)
+                        - removed_before(&spans, clip.start))
             };
-            timeline.clips.retain(|clip| !spoken_over_nothing(clip));
-            for clip in timeline.clips_where(|clip| {
-                clip.track_id != lane && spans.iter().any(|&(start, _)| start < clip.start)
-            }) {
-                clip.start = (clip.start - removed_before(&spans, clip.start)).max(0.0);
+            timeline.clips.retain(|clip| {
+                clip.track_id == lane
+                    || clip.kind != ClipKind::Text
+                    || remaining(clip) + JOIN_EPSILON >= MIN_CLIP_DURATION
+            });
+            for clip in timeline.clips_where(|clip| clip.track_id != lane) {
+                let start = clip.start;
+                let next_start = compressed(start);
+                if clip.kind == ClipKind::Text {
+                    let old_duration = clip.duration;
+                    let duration = remaining(clip).max(MIN_CLIP_DURATION);
+                    let remap = |at: f64| {
+                        ((compressed(start + at * old_duration) - next_start) / duration)
+                            .clamp(0.0, 1.0)
+                    };
+                    for key in &mut clip.keys {
+                        key.at = remap(key.at);
+                    }
+                    for effect in clip.filters.iter_mut().chain(clip.video_effects.iter_mut()) {
+                        for keys in effect.keys.values_mut() {
+                            for key in keys {
+                                key.at = remap(key.at);
+                            }
+                        }
+                    }
+                    clip.duration = duration;
+                    clip.fade_in = clip.fade_in.min(duration);
+                    clip.fade_out = clip.fade_out.min(duration);
+                }
+                clip.start = next_start;
             }
         }
     }
