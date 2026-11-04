@@ -2,7 +2,7 @@
 # Launches the built macOS bundle the way a person would, and fails if it
 # does not start: nothing else in the build ever runs what it packages.
 #
-#   smoke-macos.sh Concat.app
+#   smoke-macos.sh CrabCut.app
 #
 # The signature holds over the whole bundle (an ad-hoc one, which is what
 # a fork's build gets, passes and is reported); no binary in it loads a
@@ -35,7 +35,7 @@ expect_ok() {
   fi
 }
 
-[ $# -eq 1 ] || { echo "usage: $0 Concat.app" >&2; exit 2; }
+[ $# -eq 1 ] || { echo "usage: $0 CrabCut.app" >&2; exit 2; }
 app=$1
 bin="$app/Contents/MacOS/concat"
 [ -x "$bin" ] || fail "$bin is not there"

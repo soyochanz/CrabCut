@@ -1,13 +1,13 @@
-name: Build app
+name: Build CrabCut
 
-# Builds Concat - the Slint window, `src/crates/concat` - for every
+# Builds CrabCut - the Slint window, `src/crates/concat` - for every
 # platform and architecture it ships on, each on a runner of that
 # architecture so nothing is cross-compiled, and uploads one artifact per
 # target:
 #
-#   macOS    arm64 (Apple silicon)   x86_64 (Intel)     -> Concat-*.dmg
-#   Linux    x86_64                  aarch64            -> Concat-*.deb, .rpm, .AppImage, .pkg.tar.zst
-#   Windows  x86_64                  (aarch64, #326)    -> Concat-*-setup.exe, .msi
+#   macOS    arm64 (Apple silicon)   x86_64 (Intel)     -> CrabCut-*.dmg
+#   Linux    x86_64                  aarch64            -> CrabCut-*.deb, .rpm, .AppImage, .pkg.tar.zst
+#   Windows  x86_64                  (aarch64, #326)    -> CrabCut-*-setup.exe, .msi
 #
 # Installers and binaries only: the program is not shipped as an archive
 # of a folder to unpack, so what a person downloads is what they run.
@@ -18,7 +18,7 @@ name: Build app
 # - The engine links FFmpeg and compiles whisper.cpp in, so a build needs the
 #   FFmpeg 7+ development libraries (headers and import libraries), cmake, a
 #   C++ toolchain and libclang for bindgen.
-# - FFmpeg is LGPL everywhere, with nothing GPL in it: Concat encodes H.264,
+# - FFmpeg is LGPL everywhere, with nothing GPL in it: CrabCut encodes H.264,
 #   HEVC and AAC on the platform's own encoders. On macOS it is built here
 #   from source (src/scripts/ffmpeg-macos.sh) against Homebrew's BSD-licensed
 #   VP9, AV1 and Opus libraries, and travels with the app: the dylibs are
@@ -45,34 +45,7 @@ name: Build app
 # The six targets are a matrix so one fails without taking the rest down;
 # `fail-fast` is off for the same reason.
 on:
-  workflow_call:
-    inputs:
-      ref:
-        description: The ref to build, when it is not the one this runs on
-        type: string
-        default: ""
-    secrets:
-      APPLE_CERTIFICATE_P12:
-        description: Base64 of a Developer ID Application .p12
-        required: false
-      APPLE_CERTIFICATE_PASSWORD:
-        required: false
-      APPLE_SIGNING_IDENTITY:
-        description: "The identity to sign with, e.g. Developer ID Application: Name (TEAMID)"
-        required: false
-      APPLE_ID:
-        required: false
-      APPLE_TEAM_ID:
-        required: false
-      APPLE_APP_PASSWORD:
-        description: An app-specific password for notarytool
-        required: false
-      WINDOWS_CERTIFICATE_PFX:
-        description: Base64 of an Authenticode code-signing .pfx
-        required: false
-      WINDOWS_CERTIFICATE_PASSWORD:
-        description: The .pfx's password
-        required: false
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -115,56 +88,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # `ffmpeg` and `ort` name the target the way each project's
-          # release archives do.
           - platform: macos
             arch: arm64
             os: macos-15
             target: aarch64-apple-darwin
-          - platform: macos
-            arch: x86_64
-            os: macos-15-intel
-            target: x86_64-apple-darwin
-            # No `ggml` row: built as 0.2.7 was, with no AVX2. This bundle
-            # runs on macOS 12 again, and so on the 2013 Mac Pro, whose Ivy
-            # Bridge has AVX and nothing newer; Intel Macs are about one
-            # download in a hundred, and slower captions there beat a crash.
-          # 22.04, not latest: the binary links the build machine's glibc,
-          # so the oldest supported runner is what keeps it runnable on
-          # older distributions.
-          - platform: linux
-            arch: x86_64
-            os: ubuntu-22.04
-            target: x86_64-unknown-linux-gnu
-            ffmpeg: linux64
-            ort: x64
-            nfpm: amd64
-            appimage: x86_64
-            ggml: variants
-          - platform: linux
-            arch: aarch64
-            os: ubuntu-22.04-arm
-            target: aarch64-unknown-linux-gnu
-            ffmpeg: linuxarm64
-            ort: aarch64
-            nfpm: arm64
-            appimage: aarch64
-          - platform: windows
-            arch: x86_64
-            os: windows-2022
-            target: x86_64-pc-windows-msvc
-            ffmpeg: win64
-            ort: win-x64
-            llvm: win64
-            vc: x64
-            inno: x64compatible
-            wix: x64
-            ggml: variants
-          # No Windows on ARM until its program starts: v0.2.7-rc.4's
-          # concat.exe died with an access violation on `--version` (#326).
-          # Its row was platform windows, arch aarch64, os windows-11-arm,
-          # target aarch64-pc-windows-msvc, ffmpeg winarm64, ort
-          # win-arm64, llvm woa64, vc and inno and wix arm64.
+
     runs-on: ${{ matrix.os }}
     # The slowest target is Intel macOS, whose build alone ran past an hour
     # in v0.2.7-rc.1. The steps that can hang have timeouts of their own,
@@ -212,7 +140,7 @@ jobs:
       # started by hand builds main and publishes it under the tag's name.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ github.ref }}
       # The toolchain src/rust-toolchain.toml pins, installed by name, so the
       # runner never also fetches a stable it will not use.
       - name: The pinned toolchain
@@ -229,7 +157,7 @@ jobs:
         run: |
           version=$(sed -n 's/^version = "\(.*\)"/\1/p' src/Cargo.toml | head -1)
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "Building Concat $version for ${{ matrix.target }}"
+          echo "Building CrabCut $version for ${{ matrix.target }}"
 
       # ── Linux ──────────────────────────────────────────────────────────
       # Slint's Skia renderer links fontconfig and freetype; cpal links
@@ -523,13 +451,13 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          app=Concat.app
+          app=CrabCut.app
           rm -rf "$app"
           mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources" "$app/Contents/Frameworks"
           cp "src/target/${{ matrix.target }}/app/concat" "$app/Contents/MacOS/concat"
 
           # The icon set Apple wants: each size and its @2x twin.
-          iconset=Concat.iconset
+          iconset=CrabCut.iconset
           rm -rf "$iconset"; mkdir "$iconset"
           icons=assets/icons
           cp "$icons/concat_logo_16.png"  "$iconset/icon_16x16.png"
@@ -541,27 +469,27 @@ jobs:
           cp "$icons/concat_logo_256.png" "$iconset/icon_256x256.png"
           cp "$icons/concat_logo_512.png" "$iconset/icon_256x256@2x.png"
           cp "$icons/concat_logo_512.png" "$iconset/icon_512x512.png"
-          iconutil -c icns "$iconset" -o "$app/Contents/Resources/Concat.icns"
+          iconutil -c icns "$iconset" -o "$app/Contents/Resources/CrabCut.icns"
 
           cat > "$app/Contents/Info.plist" <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
-            <key>CFBundleName</key><string>Concat</string>
-            <key>CFBundleDisplayName</key><string>Concat</string>
-            <key>CFBundleIdentifier</key><string>app.concat.editor</string>
+            <key>CFBundleName</key><string>CrabCut</string>
+            <key>CFBundleDisplayName</key><string>CrabCut</string>
+            <key>CFBundleIdentifier</key><string>app.crabcut.editor</string>
             <key>CFBundleVersion</key><string>${VERSION}</string>
             <key>CFBundleShortVersionString</key><string>${VERSION}</string>
             <key>CFBundleExecutable</key><string>concat</string>
-            <key>CFBundleIconFile</key><string>Concat</string>
+            <key>CFBundleIconFile</key><string>CrabCut</string>
             <key>CFBundlePackageType</key><string>APPL</string>
             <key>LSMinimumSystemVersion</key><string>${MACOSX_DEPLOYMENT_TARGET}</string>
             <key>NSHighResolutionCapable</key><true/>
             <key>NSSupportsAutomaticGraphicsSwitching</key><true/>
             <key>LSApplicationCategoryType</key><string>public.app-category.video</string>
             <key>NSHumanReadableCopyright</key><string>AGPL-3.0-or-later. See THIRD_PARTY_NOTICES.md.</string>
-            <key>NSMicrophoneUsageDescription</key><string>Concat records voiceovers from your microphone.</string>
+            <key>NSMicrophoneUsageDescription</key><string>CrabCut records voiceovers from your microphone.</string>
           </dict>
           </plist>
           PLIST
@@ -619,8 +547,8 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          app=Concat.app
-          dmg="Concat-${VERSION}-macos-${{ matrix.arch }}.dmg"
+          app=CrabCut.app
+          dmg="CrabCut-${VERSION}-macos-${{ matrix.arch }}.dmg"
           if [ -n "${CERT_P12}" ] && [ -n "${IDENTITY}" ]; then
             keychain=$RUNNER_TEMP/signing.keychain-db
             echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
@@ -649,7 +577,7 @@ jobs:
             codesign --force --deep -s - "$app"
           fi
 
-          hdiutil create -volname Concat -srcfolder "$app" -ov -format UDZO "$dmg"
+          hdiutil create -volname CrabCut -srcfolder "$app" -ov -format UDZO "$dmg"
 
           if [ -n "${APPLE_ID}" ] && [ -n "${TEAM_ID}" ] && [ -n "${APP_PASSWORD}" ] && [ -n "${IDENTITY}" ]; then
             codesign --force --timestamp -s "$IDENTITY" "$dmg"
@@ -665,7 +593,7 @@ jobs:
       - name: Smoke test (macOS)
         if: matrix.platform == 'macos'
         timeout-minutes: 10
-        run: scripts/ci/smoke-macos.sh Concat.app
+        run: scripts/ci/smoke-macos.sh CrabCut.app
 
       # ── Package: Linux ─────────────────────────────────────────────────
       # The binary, the FFmpeg runtime libraries it loads from lib/ beside
@@ -676,7 +604,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          name="Concat-${VERSION}-linux-${{ matrix.arch }}"
+          name="CrabCut-${VERSION}-linux-${{ matrix.arch }}"
           mkdir -p "stage/$name/lib"
           cp "src/target/${{ matrix.target }}/app/concat" "stage/$name/concat"
           cp -a ffmpeg-dev/lib/*.so* "stage/$name/lib/"
@@ -703,7 +631,7 @@ jobs:
           cat > "stage/$name/concat.desktop" <<DESKTOP
           [Desktop Entry]
           Type=Application
-          Name=Concat
+          Name=CrabCut
           Comment=Video editor
           Exec=concat
           Icon=concat
@@ -749,7 +677,7 @@ jobs:
             tar -xJf sde.tar.xz -C sde --strip-components=1
             args+=(--sde "$PWD/sde/sde64")
           fi
-          scripts/ci/smoke-linux.sh "${args[@]}" "stage/Concat-${VERSION}-linux-${{ matrix.arch }}"
+          scripts/ci/smoke-linux.sh "${args[@]}" "stage/CrabCut-${VERSION}-linux-${{ matrix.arch }}"
 
       # Every x86_64 binary in the folder, disassembled and counted for
       # instructions an Ivy Bridge does not have, against what
@@ -762,7 +690,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get install -y llvm
-          scripts/ci/isa-scan.sh "stage/Concat-${VERSION}-linux-${{ matrix.arch }}"
+          scripts/ci/isa-scan.sh "stage/CrabCut-${VERSION}-linux-${{ matrix.arch }}"
 
       # Arch Linux package, from the same folder as the .deb and .rpm.
       # Arch ships x86_64 only, so aarch64 comes from Arch Linux ARM.
@@ -772,7 +700,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          name="Concat-${VERSION}-linux-${{ matrix.arch }}"
+          name="CrabCut-${VERSION}-linux-${{ matrix.arch }}"
           pkgver="${VERSION//-/_}"
           image=archlinux:base-devel
           if [ "${{ matrix.arch }}" = aarch64 ]; then
@@ -820,7 +748,7 @@ jobs:
           ARCH: ${{ matrix.appimage }}
         run: |
           set -euo pipefail
-          name="Concat-${VERSION}-linux-${{ matrix.arch }}"
+          name="CrabCut-${VERSION}-linux-${{ matrix.arch }}"
           export STAGE="$PWD/stage/$name"
 
           # What the packages add over the folder: the launcher, and a
@@ -842,7 +770,7 @@ jobs:
           # The AppDir: the binary and its lib/ under usr/bin, so the
           # rpath holds; the desktop entry and icon at the root, where
           # the tool wants them; AppRun is the binary.
-          appdir="$PWD/Concat.AppDir"
+          appdir="$PWD/CrabCut.AppDir"
           rm -rf "$appdir"
           mkdir -p "$appdir/usr/bin" "$appdir/usr/share/icons/hicolor/256x256/apps" "$appdir/usr/share/applications"
           cp "$STAGE/concat" "$appdir/usr/bin/concat"
@@ -877,7 +805,7 @@ jobs:
           # Extract-and-run: the runner has no FUSE to mount the tool with.
           # No "linux" in its name: every AppImage is for Linux, and the
           # AppImage catalog's check warns about names that say so.
-          appimage="stage/Concat-${VERSION}-${{ matrix.arch }}.AppImage"
+          appimage="stage/CrabCut-${VERSION}-${{ matrix.arch }}.AppImage"
           ./appimagetool --appimage-extract-and-run --runtime-file appimage-runtime "$appdir" "$appimage"
           chmod +x "$appimage"
 
@@ -898,8 +826,8 @@ jobs:
           set -euo pipefail
           for image in ubuntu:22.04 debian:12; do
             scripts/ci/smoke-linux.sh --container "$image" \
-              "stage/Concat-${VERSION}-linux-${{ matrix.arch }}.deb" \
-              "stage/Concat-${VERSION}-${{ matrix.arch }}.AppImage"
+              "stage/CrabCut-${VERSION}-linux-${{ matrix.arch }}.deb" \
+              "stage/CrabCut-${VERSION}-${{ matrix.arch }}.AppImage"
           done
 
       # ── Package: Windows ───────────────────────────────────────────────
@@ -915,7 +843,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           $ErrorActionPreference = "Stop"
-          $name = "Concat-$env:VERSION-windows-${{ matrix.arch }}"
+          $name = "CrabCut-$env:VERSION-windows-${{ matrix.arch }}"
           $dir = "stage\$name"
           New-Item -ItemType Directory -Force $dir | Out-Null
           Copy-Item "src\target\${{ matrix.target }}\app\concat.exe" $dir
@@ -1000,12 +928,12 @@ jobs:
           if (-not $signtool) { throw "signtool.exe is not in the Windows SDK" }
           "SIGNTOOL=$($signtool.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
           "SIGNING_THUMBPRINT=$($cert.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Append
-          $dir = "stage\Concat-$env:VERSION-windows-${{ matrix.arch }}"
+          $dir = "stage\CrabCut-$env:VERSION-windows-${{ matrix.arch }}"
           $unsigned = Get-ChildItem $dir -Recurse -File -Include *.exe, *.dll |
             Where-Object { (Get-AuthenticodeSignature $_.FullName).Status -ne "Valid" }
           foreach ($file in $unsigned) {
             & $signtool.FullName sign /sha1 $cert.Thumbprint /s My /fd SHA256 `
-              /tr http://timestamp.digicert.com /td SHA256 /d Concat $file.FullName
+              /tr http://timestamp.digicert.com /td SHA256 /d CrabCut $file.FullName
             if ($LASTEXITCODE -ne 0) { throw "signtool failed on $($file.Name)" }
           }
           Write-Host "Signed $(@($unsigned).Count) files."
@@ -1021,7 +949,7 @@ jobs:
         shell: pwsh
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: scripts/ci/smoke-windows.ps1 -Bundle "stage\Concat-$env:VERSION-windows-${{ matrix.arch }}"
+        run: scripts/ci/smoke-windows.ps1 -Bundle "stage\CrabCut-$env:VERSION-windows-${{ matrix.arch }}"
 
       # The same, then `--version` under Intel's emulator posing as an Ivy
       # Bridge (#313). A step of its own, after the plain smoke test: in
@@ -1049,7 +977,7 @@ jobs:
           $sde = (Get-ChildItem sde -Recurse -Filter sde.exe | Select-Object -First 1).FullName
           if (-not $sde) { throw "sde.exe is not in the archive" }
           Write-Host "SDE at $sde"
-          scripts/ci/smoke-windows.ps1 -Bundle "stage\Concat-$env:VERSION-windows-x86_64" -Sde $sde
+          scripts/ci/smoke-windows.ps1 -Bundle "stage\CrabCut-$env:VERSION-windows-x86_64" -Sde $sde
 
       # Every x86_64 binary in the folder, disassembled and counted for
       # instructions an Ivy Bridge does not have, against what
@@ -1061,7 +989,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         # llvm-objdump from the LLVM installed above, on the path.
-        run: scripts/ci/isa-scan.sh "stage/Concat-${VERSION}-windows-${{ matrix.arch }}"
+        run: scripts/ci/isa-scan.sh "stage/CrabCut-${VERSION}-windows-${{ matrix.arch }}"
 
       # The installers, from the checked folder: Inno Setup's .exe and
       # WiX's .msi, each signed when the folder was.
@@ -1072,11 +1000,11 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           $ErrorActionPreference = "Stop"
-          $name = "Concat-$env:VERSION-windows-${{ matrix.arch }}"
+          $name = "CrabCut-$env:VERSION-windows-${{ matrix.arch }}"
           function Sign($file) {
             if (-not $env:SIGNING_THUMBPRINT) { return }
             & $env:SIGNTOOL sign /sha1 $env:SIGNING_THUMBPRINT /s My /fd SHA256 `
-              /tr http://timestamp.digicert.com /td SHA256 /d Concat $file
+              /tr http://timestamp.digicert.com /td SHA256 /d CrabCut $file
             if ($LASTEXITCODE -ne 0) { throw "signtool failed on $file" }
           }
           # The installer, from that folder: Inno Setup, which the x64
@@ -1115,6 +1043,6 @@ jobs:
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: Concat-${{ matrix.platform }}-${{ matrix.arch }}
+          name: CrabCut-${{ matrix.platform }}-${{ matrix.arch }}
           path: stage/*
           if-no-files-found: error

@@ -16,6 +16,9 @@
 //! The sheet also reads a SubRip file in as captions, with the same look,
 //! and writes the timeline's captions out as one.
 
+#[path = "caption_chunks.rs"]
+mod caption_chunks;
+
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
@@ -62,6 +65,7 @@ pub enum CaptionsMsg {
     LanguageChanged(i32),
     PlacementChanged(i32),
     SizeChanged(i32),
+    FormatChanged(i32),
     /// Run the pass the sheet describes.
     Begin,
     Cancel,
@@ -87,6 +91,7 @@ struct Subject {
     speed: f64,
     /// The look chosen when the run began.
     look: (f64, f64),
+    format: usize,
     /// The transcriber model, and the thirty-second windows whisper reads
     /// the sound in: what the run's timing is kept by.
     model: String,
@@ -127,6 +132,7 @@ pub struct CaptionsPane {
     pub placement: usize,
     /// 0 small, 1 medium, 2 large.
     pub size: usize,
+    pub format: usize,
     pub running: bool,
     /// How far the running transcription looks.
     pub pace: Pace,
@@ -186,6 +192,7 @@ impl CaptionsPane {
             CaptionsMsg::PlacementChanged(index) => {
                 self.placement = (index.max(0) as usize).min(2);
             }
+            CaptionsMsg::FormatChanged(index) => self.format = index.clamp(0, 3) as usize,
             CaptionsMsg::SizeChanged(index) => self.size = (index.max(0) as usize).min(2),
             CaptionsMsg::Begin => {
                 if self.from_voice {
@@ -214,6 +221,7 @@ impl CaptionsPane {
                         };
                         let look = subject.look;
                         let base = studio.prefs.title_style.clone();
+                        let segments = split_segments(segments, subject.format);
                         let commands: Vec<Command> = segments
                             .into_iter()
                             .filter_map(|segment| {
@@ -222,7 +230,7 @@ impl CaptionsPane {
                                     caption_clip(
                                         text,
                                         subject.start + segment.start / subject.speed,
-                                        ((segment.end - segment.start) / subject.speed).max(0.2),
+                                        (segment.end - segment.start) / subject.speed,
                                         look,
                                         base.as_ref(),
                                     )
@@ -286,6 +294,8 @@ impl CaptionsPane {
         };
         let look = self.look();
         let base = studio.prefs.title_style.clone();
+        let cues = split_segments(cues.into_iter().map(|c| Segment { start: c.start, end: c.end, text: c.text }).collect(), self.format)
+            .into_iter().map(|s| srt::Cue { start: s.start, end: s.end, text: s.text }).collect();
         let commands = srt_commands(cues, look, base.as_ref());
         if commands.is_empty() {
             self.message = t("captions.noSubtitlesInFile");
@@ -433,6 +443,7 @@ impl CaptionsPane {
                 .filter(|code| language_row(Some(code)) > 0),
             placement: 0,
             size: 1,
+            format: 2,
             timings: std::mem::take(&mut self.timings),
             ..CaptionsPane::default()
         };
@@ -464,6 +475,13 @@ impl CaptionsPane {
     /// The script as titles, one after another from the playhead.
     fn run_script(&mut self, studio: &mut Studio) {
         let lines = script_captions(&self.text);
+        let mut cursor = 0.0;
+        let segments = lines.into_iter().map(|(text, seconds)| {
+            let start = cursor; cursor += seconds;
+            Segment { start, end: cursor, text }
+        }).collect();
+        let lines: Vec<_> = split_segments(segments, self.format).into_iter()
+            .map(|s| (s.text, s.end - s.start)).collect();
         if lines.is_empty() {
             self.message = t("captions.nothingToCaptionYet");
             return;
@@ -544,6 +562,7 @@ impl CaptionsPane {
             start: clip.start,
             speed: clip.speed,
             look: self.look(),
+            format: self.format,
             model,
             windows,
         });
@@ -620,6 +639,7 @@ impl CaptionsPane {
             language_fixed: english_only,
             placement: self.placement as i32,
             size: self.size as i32,
+            format: self.format as i32,
             running: self.running,
             progress: self.pace.floor,
             ceiling: self.pace.ceiling,
@@ -1076,4 +1096,12 @@ mod tests {
         assert!(script_captions("  \n ").is_empty());
         assert_eq!(script_captions("你好。再见！").len(), 2);
     }
+}
+
+fn split_segments(segments: Vec<Segment>, format: usize) -> Vec<Segment> {
+    let words = [usize::MAX, 1, 3, 5][format.min(3)];
+    segments.into_iter().flat_map(|s| {
+        caption_chunks::split(&s.text, s.start, s.end, words).into_iter()
+            .map(|(text, start, end)| Segment { text, start, end })
+    }).collect()
 }

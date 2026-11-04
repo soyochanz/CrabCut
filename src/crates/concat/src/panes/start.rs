@@ -95,7 +95,7 @@ pub fn shown<'a>(
 /// The official site, which the guides and the developer docs are pages of.
 const SITE: &str = "https://concat.standalones.org";
 /// The repository: the code, the issues, the releases.
-pub const REPOSITORY: &str = "https://github.com/jub0t/Concat";
+pub const REPOSITORY: &str = "https://github.com/soyochanz/CrabCut";
 
 /// Where each of the launch screen's links goes, by the name the screen
 /// sends. One table, so a moved page is one line here. Every address is a
@@ -199,13 +199,13 @@ fn default_location() -> String {
 /// the folder the file manager shows for the app. An iPhone's live in the
 /// app's Documents, the one folder of its sandbox the Files app can show:
 /// `~/Desktop` there is a folder the app is not allowed to make, and every
-/// new project failed with EPERM. https://github.com/jub0t/Concat/issues/299
+/// new project failed with EPERM. https://github.com/soyochanz/CrabCut/issues/299
 fn location_on(os: &str, desktop: Option<PathBuf>, home: impl Fn(&str) -> String) -> String {
     match os {
-        "android" => home("Concat"),
+        "android" => home("CrabCut"),
         "ios" => home("Documents/Concat"),
         _ => desktop
-            .map(|desktop| desktop.join("Concat").to_string_lossy().into_owned())
+            .map(|desktop| desktop.join("CrabCut").to_string_lossy().into_owned())
             .unwrap_or_else(|| home("Desktop/Concat")),
     }
 }
@@ -233,7 +233,7 @@ fn is_untitled(name: &str) -> bool {
 /// The first of "Untitled project", "Untitled project 2", ... whose folder
 /// is not `taken`. A second new project in the same place used to be
 /// refused as "already exists" until it was renamed by hand.
-/// https://github.com/jub0t/Concat/issues/151
+/// https://github.com/soyochanz/CrabCut/issues/151
 fn first_free_untitled(taken: impl Fn(&str) -> bool) -> String {
     let untitled = untitled();
     std::iter::once(untitled.clone())
@@ -570,7 +570,7 @@ mod tests {
         assert_eq!(location_on("android", None, home), "/home/Concat");
         assert_eq!(
             PathBuf::from(location_on("macos", desktop(), home)),
-            Path::new("/desk").join("Concat")
+            Path::new("/desk").join("CrabCut")
         );
         assert_eq!(location_on("linux", None, home), "/home/Desktop/Concat");
     }

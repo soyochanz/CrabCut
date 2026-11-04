@@ -183,11 +183,11 @@ export {
     NewVoiceData,
 }
 export component App inherits Window {
-    title: "Concat";
+    title: "CrabCut";
     // The taskbar's and Alt-Tab's picture on Windows, and the window
     // list's on X11. A Mac takes its Dock icon from the bundle and ignores
     // this; the .exe's own, for Explorer, is embedded by build.rs.
-    icon: @image-url("../../../../assets/icons/concat_logo_256.png");
+    icon: @image-url("../../../../assets/crabcut/icon.png");
     // Where the strip carries its own window buttons the platform's
     // decorations are not wanted, and this is the property Slint keeps
     // them off with: the winit backend re-applies `no-frame` to the
@@ -437,6 +437,7 @@ export component App inherits Window {
     callback captions-language-changed(index: int);
     callback captions-placement-changed(index: int);
     callback captions-size-changed(index: int);
+    callback captions-format-changed(index: int);
     callback captions-begin();
     callback captions-cancel();
     callback captions-import-srt();
@@ -859,6 +860,7 @@ export component App inherits Window {
             language-changed(index) => { root.captions-language-changed(index); }
             placement-changed(index) => { root.captions-placement-changed(index); }
             size-changed(index) => { root.captions-size-changed(index); }
+            format-changed(index) => { root.captions-format-changed(index); }
             begin => { root.captions-begin(); }
             cancel => { root.captions-cancel(); }
             import-srt => { root.captions-import-srt(); }

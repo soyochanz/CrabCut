@@ -51,6 +51,7 @@ export struct CaptionsSheetData {
     placement: int,
     /// 0 Small, 1 Medium, 2 Large
     size: int,
+    format: int,
     running: bool,
     /// 0..1: where the transcription surely is.
     progress: float,
@@ -84,6 +85,7 @@ export component CaptionsDialog inherits Modal {
     callback language-changed(index: int);
     callback placement-changed(index: int);
     callback size-changed(index: int);
+    callback format-changed(index: int);
     callback begin();
     callback cancel();
     callback import-srt();
@@ -240,6 +242,14 @@ export component CaptionsDialog inherits Modal {
             title: I18n.t("captions.captions");
 
             DialogRow {
+                label: I18n.t("captions.format");
+                Select {
+                    options: [I18n.t("captions.original"), I18n.t("captions.oneWord"), I18n.t("captions.reels"), I18n.t("captions.shortPhrase")];
+                    current: root.data.format;
+                    changed(index) => { root.format-changed(index); }
+                }
+            }
+            DialogRow {
                 label: I18n.t("captions.placement");
                 SegmentedControl {
                     options: [I18n.t("common.bottom"), I18n.t("captions.centre"), I18n.t("common.top")];
@@ -258,9 +268,7 @@ export component CaptionsDialog inherits Modal {
             }
 
             Text {
-                text: root.from-voice
-                    ? I18n.t("captions.oneTitlePerPhrase")
-                    : I18n.t("captions.oneTitlePerSentence");
+                text: I18n.t("captions.timingHint");
                 color: Theme.fg-dim;
                 font-size: Theme.fs-sm;
                 wrap: word-wrap;
