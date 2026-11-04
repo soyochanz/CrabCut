@@ -24,7 +24,8 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 See [engine setup](src/README.md). Requires Rust 1.93.1, FFmpeg development libraries,
 CMake and a C++ compiler. `cd src && cargo build --profile app -p concat`.
 The internal Rust crate names and project format remain compatible with the upstream engine.
-The GitHub **Build CrabCut** workflow packages a macOS Apple Silicon app.
+The GitHub **Build CrabCut** workflow packages a macOS Apple Silicon preview using
+the upstream `quick` profile: optimized video engine, faster UI compilation.
 
 ## Licence and origin
 

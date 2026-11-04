@@ -49,9 +49,6 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  # Keep first builds practical; same engine optimisation with parallel thin LTO.
-  CARGO_PROFILE_APP_LTO: thin
-  CARGO_PROFILE_APP_CODEGEN_UNITS: 16
   # The prebuilt dependencies - BtbN's FFmpeg 8.1 (LGPL, shared, one per
   # arch), ONNX Runtime, nfpm, appimagetool, LLVM for Windows
   # and Intel's emulator - are each pinned to one file and its digest in
@@ -436,7 +433,7 @@ jobs:
         working-directory: src
         run: |
           set -o pipefail
-          cargo build --profile app -p concat --target ${{ matrix.target }} 2>&1 | tee build.log
+          cargo build --profile quick -p concat --target ${{ matrix.target }} 2>&1 | tee build.log
 
       - name: Build log to the summary (failure only)
         if: failure()
@@ -465,7 +462,7 @@ jobs:
           app=CrabCut.app
           rm -rf "$app"
           mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources" "$app/Contents/Frameworks"
-          cp "src/target/${{ matrix.target }}/app/concat" "$app/Contents/MacOS/concat"
+          cp "src/target/${{ matrix.target }}/quick/concat" "$app/Contents/MacOS/concat"
 
           # The icon set Apple wants: each size and its @2x twin.
           iconset=CrabCut.iconset
@@ -617,7 +614,7 @@ jobs:
           set -euo pipefail
           name="CrabCut-${VERSION}-linux-${{ matrix.arch }}"
           mkdir -p "stage/$name/lib"
-          cp "src/target/${{ matrix.target }}/app/concat" "stage/$name/concat"
+          cp "src/target/${{ matrix.target }}/quick/concat" "stage/$name/concat"
           cp -a ffmpeg-dev/lib/*.so* "stage/$name/lib/"
           cp -a "$ORT_DIR"/lib/libonnxruntime.so* "stage/$name/lib/"
           # whisper's shared libraries and its CPU modules, one per x86_64
