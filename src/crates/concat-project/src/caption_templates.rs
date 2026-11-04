@@ -137,10 +137,24 @@ pub fn apply(command: Command, preset: usize, word_starts: &[f64]) -> Vec<Comman
         .collect();
     boundaries[0] = start;
     boundaries.push(end);
-    ranges
+    let minimum = crate::model::ranges::MIN_CLIP_DURATION;
+    if duration < minimum {
+        return Vec::new();
+    }
+    let mut states = vec![0];
+    for i in 1..ranges.len() {
+        if boundaries[i] - boundaries[*states.last().unwrap()] >= minimum {
+            states.push(i);
+        }
+    }
+    if states.len() > 1 && end - boundaries[*states.last().unwrap()] < minimum {
+        states.pop();
+    }
+    states
         .iter()
         .enumerate()
-        .map(|(i, &(a, b))| {
+        .map(|(position, &i)| {
+            let (a, b) = ranges[i];
             let mut frame = style.clone();
             let from = if matches!(preset, 6 | 7 | 13) { 0 } else { a };
             frame.style_range(
@@ -165,7 +179,12 @@ pub fn apply(command: Command, preset: usize, word_starts: &[f64]) -> Vec<Comman
                 track_id: track_id.clone(),
                 above,
                 start: boundaries[i],
-                duration: Some(boundaries[i + 1] - boundaries[i]),
+                duration: Some(
+                    states
+                        .get(position + 1)
+                        .map_or(end, |&next| boundaries[next])
+                        - boundaries[i],
+                ),
                 style: Some(frame),
                 offset_y,
                 // A phrase pops once; mono words get their own entrance.
@@ -173,6 +192,23 @@ pub fn apply(command: Command, preset: usize, word_starts: &[f64]) -> Vec<Comman
             }
         })
         .collect()
+}
+
+/// Collapse adjacent visual word states when exporting plain SRT, which
+/// cannot carry their colour changes. Gaps and different text stay intact.
+pub fn plain_cues(cues: Vec<crate::srt::Cue>) -> Vec<crate::srt::Cue> {
+    let mut out: Vec<crate::srt::Cue> = Vec::new();
+    for cue in cues {
+        if let Some(last) = out.last_mut()
+            && last.text == cue.text
+            && (last.end - cue.start).abs() < 0.000001
+        {
+            last.end = cue.end;
+        } else {
+            out.push(cue);
+        }
+    }
+    out
 }
 
 #[cfg(test)]
@@ -249,5 +285,28 @@ mod tests {
             assert_eq!(s.runs[0].start, if preset == 6 { 0 } else { 5 });
             assert_eq!(s.runs[0].end, 10);
         }
+    }
+    #[test]
+    fn fast_words_do_not_get_expanded_into_overlapping_lanes() {
+        let frames = apply(cue(), 1, &[4.0, 4.001, 6.999]);
+        assert_eq!(frames.len(), 1);
+        let mut editor = crate::editor::Editor::new();
+        editor.apply(Command::Batch { commands: frames }).unwrap();
+        let clips = &editor.project().active().clips;
+        assert_eq!(clips.len(), 1);
+        assert_eq!(clips[0].start, 4.0);
+        assert_eq!(clips[0].duration, 3.0);
+    }
+    #[test]
+    fn plain_subtitles_merge_visual_states_but_keep_gaps() {
+        let cue = |start, end| crate::srt::Cue {
+            start,
+            end,
+            text: "hello world".into(),
+        };
+        assert_eq!(
+            plain_cues(vec![cue(0.0, 0.3), cue(0.3, 1.0), cue(2.0, 3.0)]),
+            vec![cue(0.0, 1.0), cue(2.0, 3.0)]
+        );
     }
 }
