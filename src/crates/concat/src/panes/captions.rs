@@ -1144,19 +1144,18 @@ fn social_style(commands: Vec<Command>, format: usize) -> Vec<Command> {
     commands
         .into_iter()
         .map(|mut command| {
-            if format > 0 {
-                if let Command::AddTextClip {
+            if format > 0
+                && let Command::AddTextClip {
                     pop_in,
                     style: Some(style),
                     ..
                 } = &mut command
-                {
-                    *pop_in = true;
-                    style.font_weight = 800.0;
-                    style.stroke_width = 0.002;
-                    style.stroke_color = "#101426".into();
-                    style.max_width = 0.85;
-                }
+            {
+                *pop_in = true;
+                style.font_weight = 800.0;
+                style.stroke_width = 0.002;
+                style.stroke_color = "#101426".into();
+                style.max_width = 0.85;
             }
             command
         })

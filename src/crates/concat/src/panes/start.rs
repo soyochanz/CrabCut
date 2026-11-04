@@ -203,10 +203,10 @@ fn default_location() -> String {
 fn location_on(os: &str, desktop: Option<PathBuf>, home: impl Fn(&str) -> String) -> String {
     match os {
         "android" => home("CrabCut"),
-        "ios" => home("Documents/Concat"),
+        "ios" => home("Documents/CrabCut"),
         _ => desktop
             .map(|desktop| desktop.join("CrabCut").to_string_lossy().into_owned())
-            .unwrap_or_else(|| home("Desktop/Concat")),
+            .unwrap_or_else(|| home("Desktop/CrabCut")),
     }
 }
 
@@ -464,7 +464,7 @@ impl StartPane {
     fn open_chosen(folder: &Path, studio: &mut Studio) {
         let path = folder.to_string_lossy().into_owned();
         if !projects::is_project(folder) {
-            studio.notify(&tf("start.notConcatProjectFolder", &[&path]), true);
+            studio.notify(&tf("start.notCrabCutProjectFolder", &[&path]), true);
             return;
         }
         if let Err(error) = projects::open(&path).and_then(|info| studio.open_project(info)) {
@@ -564,15 +564,15 @@ mod tests {
         let desktop = || Some(PathBuf::from("/desk"));
         assert_eq!(
             location_on("ios", desktop(), home),
-            "/home/Documents/Concat"
+            "/home/Documents/CrabCut"
         );
-        assert_eq!(location_on("ios", None, home), "/home/Documents/Concat");
-        assert_eq!(location_on("android", None, home), "/home/Concat");
+        assert_eq!(location_on("ios", None, home), "/home/Documents/CrabCut");
+        assert_eq!(location_on("android", None, home), "/home/CrabCut");
         assert_eq!(
             PathBuf::from(location_on("macos", desktop(), home)),
             Path::new("/desk").join("CrabCut")
         );
-        assert_eq!(location_on("linux", None, home), "/home/Desktop/Concat");
+        assert_eq!(location_on("linux", None, home), "/home/Desktop/CrabCut");
     }
 
     /// The next untitled name skips every folder already there, and starts
