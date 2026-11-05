@@ -437,7 +437,7 @@ export component App inherits Window {
     callback captions-language-changed(index: int);
     callback captions-placement-changed(index: int);
     callback captions-size-changed(index: int);
-    callback captions-format-changed(index: int);
+    callback captions-track-changed(index: int);
     callback captions-template-changed(index: int);
     callback quick-cut();
     callback quick-cut-arm();
@@ -886,7 +886,7 @@ export component App inherits Window {
             placement-changed(index) => { root.captions-placement-changed(index); }
             size-changed(index) => { root.captions-size-changed(index); }
             template-changed(index) => { root.captions-template-changed(index); }
-            format-changed(index) => { root.captions-format-changed(index); }
+            track-changed(index) => { root.captions-track-changed(index); }
             begin => { root.captions-begin(); }
             cancel => { root.captions-cancel(); }
             import-srt => { root.captions-import-srt(); }

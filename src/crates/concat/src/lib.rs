@@ -2349,8 +2349,8 @@ fn start(project: Option<std::path::PathBuf>, smoke: bool) -> Result<(), slint::
     app.on_captions_template_changed(on_window!(|state, index: i32| {
         state.handle(Msg::Captions(CaptionsMsg::TemplateChanged(index)));
     }));
-    app.on_captions_format_changed(on_window!(|state, index: i32| {
-        state.handle(Msg::Captions(CaptionsMsg::FormatChanged(index)));
+    app.on_captions_track_changed(on_window!(|state, index: i32| {
+        state.handle(Msg::Captions(CaptionsMsg::TrackChanged(index)));
     }));
     app.on_captions_begin(on_window!(|state| {
         state.handle(Msg::Captions(CaptionsMsg::Begin));

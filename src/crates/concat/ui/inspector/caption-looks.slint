@@ -1,3 +1,4 @@
+import { I18n } from "../i18n.slint";
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright 2026 altherasolutions
 import { Editor } from "../editor.slint";
@@ -8,11 +9,11 @@ export component CaptionLooks inherits VerticalLayout {
     padding: 14px;
     property <bool> whole: false;
     property <int> word: 0;
-    property <[string]> names: ["Classic", "Crab Karaoke", "Sunshine", "Electric Blue", "Bubblegum", "Lavender", "Golden Progress", "Coral Progress", "Underline", "Neon", "Paper", "Midnight", "Comic", "Typewriter", "Spotlight", "Mono Pop"];
+    property <[string]> names: [I18n.t("captions.style0"), I18n.t("captions.style1"), I18n.t("captions.style2"), I18n.t("captions.style3"), I18n.t("captions.style4"), I18n.t("captions.style5"), I18n.t("captions.style6"), I18n.t("captions.style7"), I18n.t("captions.style8"), I18n.t("captions.style9"), I18n.t("captions.style10"), I18n.t("captions.style11"), I18n.t("captions.style12"), I18n.t("captions.style13"), I18n.t("captions.style14"), I18n.t("captions.style15")];
     property <[color]> accents: [#ffffff, #ff784f, #ffe45c, #55dfff, #ff75bc, #c9a5ff, #ffd15c, #ff784f, #ffb36b, #9fffe8, #b7441e, #ff9a76, #ffe45c, #ffffff, #ffffff, #ff784f];
     Timer { interval: 550ms; running: true; triggered => { root.word = Math.mod(root.word + 1, 3); } }
-    Text { text: "Estilos de subtítulos"; color: Theme.fg; font-weight: 700; }
-    Button { label: root.whole ? "Aplicar a: toda la pista ✓" : "Aplicar a: selección"; clicked => { root.whole = !root.whole; } }
+    Text { text: I18n.t("captions.styles"); color: Theme.fg; font-weight: 700; }
+    Button { label: root.whole ? I18n.t("captions.allSelection") : I18n.t("captions.selection"); clicked => { root.whole = !root.whole; } }
     for row in 8: HorizontalLayout {
         spacing: 8px;
         for column in 2: card := Rectangle {
@@ -26,8 +27,8 @@ export component CaptionLooks inherits VerticalLayout {
                 padding: 8px;
                 HorizontalLayout {
                     spacing: 3px;
-                    for word[index] in ["Crea", "tu", "vídeo"]: Text {
-                        text: card.preset == 12 ? ["CREA", "TU", "VÍDEO"][index] : word;
+                    for word[index] in [I18n.t("captions.demo0"), I18n.t("captions.demo1"), I18n.t("captions.demo2")]: Text {
+                        text: card.preset == 12 ? [I18n.t("captions.demoUpper0"), I18n.t("captions.demoUpper1"), I18n.t("captions.demoUpper2")][index] : word;
                         color: (index == root.word || ((card.preset == 6 || card.preset == 7) && index <= root.word)) ? root.accents[card.preset] : card.preset == 10 ? #29201b : #ffffff;
                         opacity: (card.preset == 13 && index > root.word) || (card.preset == 15 && index != root.word) ? 0 : 1;
                         font-size: 13px;

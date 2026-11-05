@@ -9,7 +9,7 @@ A local video editor for short-form creators, forked from [Concat](https://githu
 - CrabCut identity, coral-orange interface, crab icon and separate application data directory.
 - developed by altherasolutions (independent fork; upstream credits retained).
 - 16 caption templates with animated previews: karaoke, progressive colour, underline, neon, paper, comic, typewriter and more.
-- Caption formats: original, one word, Reels (up to 3 words), short (up to 5 words).
+- Adaptive captions follow speech timing, pauses and punctuation. Open Captions beside Audio, choose a track, then transcribe the entire track or a single clip.
 - Sentence-aware grouping for voice captions, scripts and imported SRT subtitles.
 - Short captions get bold text, an outline and a brief scale entrance.
 - Nine original CC0 sound effects and music loops, importable into the Audio library.
@@ -33,13 +33,13 @@ Instagram and CapCut music catalogues are not included or claimed as licensed fo
 
 ## 🍎 ¿Usas Mac?
 
-**[Descargar CrabCut para Mac · instalador PKG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-macos-arm64.pkg)**
+**[Descargar CrabCut para Mac · instalador PKG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.9/CrabCut-0.2.9-macos-arm64.pkg)**
 
 Requiere **macOS 15 o posterior y Apple Silicon (M1, M2, M3, M4 o posterior)**. No compatible con Mac Intel.
 
 1. Abre el PKG y sigue el asistente de instalación.
 2. Abre **CrabCut** desde Aplicaciones.
-3. También puedes usar el [DMG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.8-crabcut.4/CrabCut-0.2.8-crabcut.4-macos-arm64.dmg) y arrastrar CrabCut a Aplicaciones.
+3. También puedes usar el [DMG](https://github.com/soyochanz/CrabCut/releases/download/v0.2.9/CrabCut-0.2.9-macos-arm64.dmg) y arrastrar CrabCut a Aplicaciones.
 
 ### Si Mac no permite abrirlo porque no puede verificar el desarrollador
 

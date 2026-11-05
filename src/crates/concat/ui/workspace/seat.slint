@@ -83,6 +83,8 @@ export component Seat inherits Rectangle {
     }
 
     if root.kind == PaneKind.media: MediaPane {
+        captions-open: Editor.captions-open;
+        captions => { Editor.captions(); }
             x: 0;
             y: 0;
             width: root.width;

@@ -65,15 +65,15 @@ pub enum CaptionsMsg {
     LanguageChanged(i32),
     PlacementChanged(i32),
     SizeChanged(i32),
-    FormatChanged(i32),
+    TrackChanged(i32),
     TemplateChanged(i32),
     /// Run the pass the sheet describes.
     Begin,
     Cancel,
     /// The transcriber's worker reporting the stage it is in.
-    Progress(JobStage),
+    Progress(u64, JobStage),
     /// The transcriber's worker is done: what was said, or why not.
-    Finished(Result<Vec<Segment>, String>),
+    Finished(u64, Result<Vec<(Segment, Vec<f64>)>, String>),
     /// Asks for a SubRip file to read in.
     ImportSrt,
     /// The SubRip file chosen: its cues as captions.
@@ -88,11 +88,11 @@ pub enum CaptionsMsg {
 /// need it: where it starts on the timeline and how fast it plays.
 #[derive(Clone, Debug)]
 struct Subject {
-    start: f64,
-    speed: f64,
+    timeline: String,
+    token: u64,
+    cancelled: Arc<std::sync::atomic::AtomicBool>,
     /// The look chosen when the run began.
     look: (f64, f64),
-    format: usize,
     template: usize,
     /// The transcriber model, and the thirty-second windows whisper reads
     /// the sound in: what the run's timing is kept by.
@@ -134,7 +134,8 @@ pub struct CaptionsPane {
     pub placement: usize,
     /// 0 small, 1 medium, 2 large.
     pub size: usize,
-    pub format: usize,
+    pub track: Option<String>,
+    pub whole: bool,
     pub template: usize,
     pub running: bool,
     /// How far the running transcription looks.
@@ -156,8 +157,7 @@ impl CaptionsPane {
             // asked for again: closing it never stopped the run.
             CaptionsMsg::Open | CaptionsMsg::OpenOnClip(_) if self.running => self.open = true,
             CaptionsMsg::Open => {
-                let selected = studio.sole_selection();
-                self.open_on(studio, selected, false);
+                self.open_on(studio, None, false);
             }
             CaptionsMsg::OpenOnClip(id) => self.open_on(studio, Some(id), true),
             CaptionsMsg::Close => self.open = false,
@@ -176,14 +176,20 @@ impl CaptionsPane {
                 }
             }
             CaptionsMsg::SourceChanged(index) => {
-                if let Some(source) = usize::try_from(index)
-                    .ok()
-                    .and_then(|index| sources(studio).into_iter().nth(index))
-                {
-                    self.clip = Some(source.id);
-                    self.chosen_with = studio.sole_selection();
-                    self.message.clear();
-                }
+                self.whole = index == 0;
+                self.clip = self
+                    .track_sources(studio)
+                    .get(index.saturating_sub(1) as usize)
+                    .map(|s| s.id.clone());
+                self.chosen_with = studio.sole_selection();
+                self.message.clear();
+            }
+            CaptionsMsg::TrackChanged(index) => {
+                self.track = tracks(studio).get(index as usize).cloned();
+                self.whole = true;
+                self.clip = None;
+                self.chosen_with = studio.sole_selection();
+                self.message.clear();
             }
             CaptionsMsg::TextEdited(text) => self.text = text,
             CaptionsMsg::ModelChanged(index) => self.model = index.max(0) as usize,
@@ -195,7 +201,6 @@ impl CaptionsPane {
             CaptionsMsg::PlacementChanged(index) => {
                 self.placement = (index.max(0) as usize).min(2);
             }
-            CaptionsMsg::FormatChanged(index) => self.format = index.clamp(0, 3) as usize,
             CaptionsMsg::TemplateChanged(index) => self.template = index.clamp(0, 15) as usize,
             CaptionsMsg::SizeChanged(index) => self.size = (index.max(0) as usize).min(2),
             CaptionsMsg::Begin => {
@@ -206,12 +211,24 @@ impl CaptionsPane {
                 }
             }
             CaptionsMsg::Cancel => {
+                if let Some(subject) = self.subject.take() {
+                    subject
+                        .cancelled
+                        .store(true, std::sync::atomic::Ordering::Release);
+                }
                 studio.host.transcriber.cancel();
                 self.running = false;
                 self.open = false;
             }
-            CaptionsMsg::Progress(stage) => self.pace.report(stage),
-            CaptionsMsg::Finished(result) => {
+            CaptionsMsg::Progress(token, stage) => {
+                if self.subject.as_ref().is_some_and(|s| s.token == token) {
+                    self.pace.report(stage);
+                }
+            }
+            CaptionsMsg::Finished(token, result) => {
+                if self.subject.as_ref().is_none_or(|s| s.token != token) {
+                    return;
+                }
                 self.running = false;
                 let subject = self.subject.take();
                 if let (Ok(_), Some(subject)) = (&result, &subject) {
@@ -225,21 +242,21 @@ impl CaptionsPane {
                         };
                         let look = subject.look;
                         let base = studio.prefs.title_style.clone();
-                        let groups = voice_groups(segments, subject.format);
+                        if studio.timeline().id != subject.timeline {
+                            self.message = t("captions.timelineChanged");
+                            return;
+                        }
+                        let groups = segments;
                         let commands: Vec<Command> = groups
                             .into_iter()
                             .flat_map(|(segment, starts)| {
                                 let command = caption_clip(
                                     segment.text,
-                                    subject.start + segment.start / subject.speed,
-                                    (segment.end - segment.start) / subject.speed,
+                                    segment.start,
+                                    segment.end - segment.start,
                                     look,
                                     base.as_ref(),
                                 );
-                                let starts: Vec<f64> = starts
-                                    .into_iter()
-                                    .map(|at| subject.start + at / subject.speed)
-                                    .collect();
                                 concat_project::caption_templates::apply(
                                     command,
                                     subject.template,
@@ -312,7 +329,6 @@ impl CaptionsPane {
                     text: c.text,
                 })
                 .collect(),
-            self.format,
         )
         .into_iter()
         .map(|s| srt::Cue {
@@ -326,7 +342,7 @@ impl CaptionsPane {
             self.message = t("captions.noSubtitlesInFile");
             return;
         }
-        let commands = social_style(commands, self.format, self.template);
+        let commands = social_style(commands, self.template);
         let count = commands.len();
         self.open = false;
         studio.apply(Command::Batch { commands });
@@ -452,16 +468,17 @@ impl CaptionsPane {
         let model = installed.iter().position(|model| model.active).unwrap_or(0);
         let sources = sources(studio);
         let sounding = clip.filter(|id| sources.iter().any(|source| &source.id == id));
-        let from_voice = voice || sounding.is_some();
-        let clip = sounding.or_else(|| {
-            from_voice
-                .then(|| sources.first().map(|source| source.id.clone()))
-                .flatten()
-        });
+        let track = sounding
+            .as_ref()
+            .and_then(|id| studio.clip(id))
+            .map(|c| c.track_id.clone())
+            .or_else(|| tracks(studio).into_iter().next());
         *self = CaptionsPane {
             open: true,
-            from_voice,
-            clip,
+            from_voice: voice || track.is_some(),
+            whole: sounding.is_none(),
+            track,
+            clip: sounding,
             chosen_with: studio.sole_selection(),
             model,
             // A code the list no longer has is heard instead.
@@ -472,7 +489,6 @@ impl CaptionsPane {
                 .filter(|code| language_row(Some(code)) > 0),
             placement: 0,
             size: 1,
-            format: 2,
             template: 1,
             timings: std::mem::take(&mut self.timings),
             ..CaptionsPane::default()
@@ -518,7 +534,7 @@ impl CaptionsPane {
                 }
             })
             .collect();
-        let lines: Vec<_> = split_segments(segments, self.format)
+        let lines: Vec<_> = split_segments(segments)
             .into_iter()
             .map(|s| (s.text, s.end - s.start))
             .collect();
@@ -537,7 +553,7 @@ impl CaptionsPane {
                 command
             })
             .collect();
-        let commands = social_style(commands, self.format, self.template);
+        let commands = social_style(commands, self.template);
         let count = commands.len();
         self.open = false;
         studio.apply(Command::Batch { commands });
@@ -547,19 +563,17 @@ impl CaptionsPane {
     /// The sheet's clip through the transcriber on a worker, reporting into
     /// the sheet as it goes.
     fn run_sound(&mut self, studio: &mut Studio) {
-        // The clip the panel shows, and no other: see `subject_clip`.
-        let Some(clip) = self
-            .subject_clip(studio, &sources(studio))
-            .and_then(|id| studio.clip(&id))
-            .cloned()
-        else {
-            self.message = t("captions.clipNoLongerTimeline");
+        let available = self.track_sources(studio);
+        let picked = self.subject_clip(studio, &available);
+        let clips: Vec<_> = available
+            .iter()
+            .filter(|s| self.whole || picked.as_ref() == Some(&s.id))
+            .filter_map(|s| studio.clip(&s.id))
+            .collect();
+        if clips.is_empty() {
+            self.message = t("captions.noVoiceOnTimeline");
             return;
-        };
-        let Some(media) = studio.project().media_by_id(&clip.media_id).cloned() else {
-            self.message = t("captions.clipHasNoFile");
-            return;
-        };
+        }
         let Some((model, megabytes)) = installed(&studio.settings.transcribers)
             .get(self.model)
             .map(|model| (model.id.clone(), model.megabytes))
@@ -567,24 +581,36 @@ impl CaptionsPane {
             self.message = t("captions.downloadTranscriberModelFirst");
             return;
         };
-        let request = concat_speech::transcribe::TranscribeRequest {
-            word_timestamps: self.format > 0,
-            path: media.path.clone(),
-            audio_stream: clip.audio_stream,
-            source_start: clip.source_start,
-            window: clip.duration * clip.speed,
-            model_id: model.clone(),
-            language: (!concat_speech::transcribe::english_only(&model))
-                .then(|| self.language.clone())
-                .flatten(),
-        };
+        let mut jobs = Vec::new();
+        for clip in clips {
+            let Some(media) = studio.project().media_by_id(&clip.media_id) else {
+                self.message = t("captions.clipHasNoFile");
+                return;
+            };
+            let request = concat_speech::transcribe::TranscribeRequest {
+                word_timestamps: true,
+                path: media.path.clone(),
+                audio_stream: clip.audio_stream,
+                source_start: clip.source_start,
+                window: clip.duration * clip.speed,
+                model_id: model.clone(),
+                language: (!concat_speech::transcribe::english_only(&model))
+                    .then(|| self.language.clone())
+                    .flatten(),
+            };
+            jobs.push((clip.start, clip.duration, clip.speed, request));
+        }
         let dirs = studio.host.dirs.clone();
         let transcriber = Arc::clone(&studio.host.transcriber);
         // The run as the bar lays it out: the sound read in at a few
         // hundred times its length, the model loaded unless it still is,
         // and whisper a window at a time - at the pace the last run on
         // this model measured, or the estimate by its size.
-        let windows = (request.window / 30.0).ceil().max(1.0) as f32;
+        let seconds: f64 = jobs.iter().map(|(_, _, _, request)| request.window).sum();
+        let windows = jobs
+            .iter()
+            .map(|(_, _, _, r)| (r.window / 30.0).ceil().max(1.0) as f32)
+            .sum::<f32>();
         let learned = self.timings.get(&model);
         let loaded = studio.host.transcriber.loaded_model().as_deref() == Some(model.as_str());
         let load = if loaded {
@@ -596,15 +622,19 @@ impl CaptionsPane {
             .per_unit
             .unwrap_or(0.3 + megabytes * WINDOW_SECONDS_PER_MB);
         self.pace = Pace::new(vec![
-            (Stage::Reading, 0.2 + request.window as f32 / 400.0),
+            (Stage::Reading, 0.2 + seconds as f32 / 400.0),
             (Stage::Loading, load),
             (Stage::Working, windows * per_window),
         ]);
+        use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+        static NEXT: AtomicU64 = AtomicU64::new(1);
+        let token = NEXT.fetch_add(1, Ordering::Relaxed);
+        let cancelled = Arc::new(AtomicBool::new(false));
         self.subject = Some(Subject {
-            start: clip.start,
-            speed: clip.speed,
+            timeline: studio.timeline().id.clone(),
+            token,
+            cancelled: cancelled.clone(),
             look: self.look(),
-            format: self.format,
             template: self.template,
             model,
             windows,
@@ -614,13 +644,31 @@ impl CaptionsPane {
         let epoch = crate::host::project_epoch();
         spawn_in_project(
             move || {
-                transcriber.transcribe(&dirs, &request, move |stage| {
-                    on_ui_in_project(epoch, move |studio, _, _| {
-                        studio.handle(Msg::Captions(CaptionsMsg::Progress(stage)));
-                    });
-                })
+                let mut result = Vec::new();
+                for (start, duration, speed, request) in jobs {
+                    if cancelled.load(Ordering::Acquire) {
+                        return Err("cancelled".into());
+                    }
+                    let segments = transcriber.transcribe(&dirs, &request, move |stage| {
+                        on_ui_in_project(epoch, move |studio, _, _| {
+                            studio.handle(Msg::Captions(CaptionsMsg::Progress(token, stage)));
+                        });
+                    })?;
+                    let placed = segments
+                        .into_iter()
+                        .map(|s| Segment {
+                            text: s.text,
+                            start: start + (s.start / speed).clamp(0.0, duration),
+                            end: start + (s.end / speed).clamp(0.0, duration),
+                        })
+                        .collect();
+                    result.extend(voice_groups(placed));
+                }
+                Ok(result)
             },
-            |studio, _, _, result| studio.handle(Msg::Captions(CaptionsMsg::Finished(result))),
+            move |studio, _, _, result| {
+                studio.handle(Msg::Captions(CaptionsMsg::Finished(token, result)))
+            },
         );
     }
 
@@ -652,9 +700,20 @@ impl CaptionsPane {
     }
 
     /// The sheet as Slint shows it.
+    fn track_sources(&self, studio: &Studio) -> Vec<Source> {
+        sources(studio)
+            .into_iter()
+            .filter(|s| {
+                studio
+                    .clip(&s.id)
+                    .is_some_and(|c| Some(&c.track_id) == self.track.as_ref())
+            })
+            .collect()
+    }
+
     pub fn data(&self, studio: &Studio) -> CaptionsSheetData {
         let sources = if self.open {
-            sources(studio)
+            self.track_sources(studio)
         } else {
             Vec::new()
         };
@@ -662,16 +721,40 @@ impl CaptionsPane {
             .subject_clip(studio, &sources)
             .and_then(|id| sources.iter().position(|source| source.id == id))
             .map_or(-1, |index| index as i32);
-        let labels: Vec<slint::SharedString> = sources
+        let mut labels: Vec<slint::SharedString> = sources
             .into_iter()
             .map(|source| source.label.into())
+            .collect();
+        labels.insert(0, t("captions.wholeTrack").into());
+        let tracks = if self.open {
+            tracks(studio)
+        } else {
+            Vec::new()
+        };
+        let track = tracks
+            .iter()
+            .position(|id| Some(id) == self.track.as_ref())
+            .map_or(-1, |i| i as i32);
+        let track_labels: Vec<slint::SharedString> = tracks
+            .iter()
+            .map(|id| tf("captions.trackLabel", &[id]).into())
             .collect();
         let english_only = self.english_only(studio);
         CaptionsSheetData {
             open: self.open,
             from_voice: self.from_voice,
             sources: std::rc::Rc::new(slint::VecModel::from(labels)).into(),
-            source,
+            source: if tracks.is_empty() {
+                -1
+            } else if self.whole {
+                0
+            } else if source >= 0 {
+                source + 1
+            } else {
+                -1
+            },
+            tracks: std::rc::Rc::new(slint::VecModel::from(track_labels)).into(),
+            track,
             text: self.text.as_str().into(),
             model: self.model as i32,
             language: if english_only {
@@ -682,7 +765,6 @@ impl CaptionsPane {
             language_fixed: english_only,
             placement: self.placement as i32,
             size: self.size as i32,
-            format: self.format as i32,
             template: self.template as i32,
             running: self.running,
             progress: self.pace.floor,
@@ -843,6 +925,24 @@ struct Source {
 
 /// The clips on the current timeline that have sound, in the order they
 /// play: an audio clip, or a video whose file has an audio stream.
+fn tracks(studio: &Studio) -> Vec<String> {
+    let timeline = studio.timeline();
+    let mut rows = Vec::new();
+    for track in &timeline.tracks {
+        let mut clips = timeline
+            .clips
+            .iter()
+            .filter(|c| c.track_id == track.id && studio.clip_has_sound(c))
+            .peekable();
+        if clips.peek().is_some() {
+            let video = clips.any(|c| c.kind == ClipKind::Video);
+            rows.push((!video, track.id.clone()));
+        }
+    }
+    rows.sort_by_key(|(audio_only, _)| *audio_only);
+    rows.into_iter().map(|(_, id)| id).collect()
+}
+
 fn sources(studio: &Studio) -> Vec<Source> {
     let project = studio.project();
     let mut clips: Vec<_> = studio
@@ -1143,20 +1243,15 @@ mod tests {
     }
 }
 
-fn split_segments(segments: Vec<Segment>, format: usize) -> Vec<Segment> {
-    let words = [usize::MAX, 1, 3, 5][format.min(3)];
+fn split_segments(segments: Vec<Segment>) -> Vec<Segment> {
     segments
         .into_iter()
-        .flat_map(|s| {
-            caption_chunks::split(&s.text, s.start, s.end, words)
-                .into_iter()
-                .map(|(text, start, end)| Segment { text, start, end })
-        })
+        .flat_map(|s| voice_groups(vec![s]).into_iter().map(|(s, _)| s))
         .collect()
 }
 
 /// Style script/SRT cues with estimated word timings.
-fn social_style(commands: Vec<Command>, _format: usize, template: usize) -> Vec<Command> {
+fn social_style(commands: Vec<Command>, template: usize) -> Vec<Command> {
     commands
         .into_iter()
         .flat_map(|command| concat_project::caption_templates::apply(command, template, &[]))
@@ -1165,38 +1260,28 @@ fn social_style(commands: Vec<Command>, _format: usize, template: usize) -> Vec<
 
 /// Reassemble Whisper's word-sized segments into short phrases, retaining
 /// word starts. Scripts and imported SRT instead use proportional timing.
-fn voice_groups(segments: Vec<Segment>, format: usize) -> Vec<(Segment, Vec<f64>)> {
-    if format == 0 {
-        return segments.into_iter().map(|s| (s, Vec::new())).collect();
-    }
-    let limit = [usize::MAX, 1, 3, 5][format.min(3)];
-    let mut groups: Vec<(Segment, Vec<f64>)> = Vec::new();
-    for segment in segments {
-        for (word, start, end) in
-            caption_chunks::split(&segment.text, segment.start, segment.end, 1)
-        {
-            let append = groups.last().is_some_and(|(last, starts)| {
-                starts.len() < limit
-                    && start - last.end < 0.5
-                    && !last.text.ends_with(['.', '!', '?', '。', '！', '？'])
-            });
-            if append {
-                let (last, starts) = groups.last_mut().unwrap();
-                last.text.push(' ');
-                last.text.push_str(&word);
-                last.end = end;
-                starts.push(start);
-            } else {
-                groups.push((
-                    Segment {
-                        text: word,
-                        start,
-                        end,
-                    },
-                    vec![start],
-                ));
-            }
-        }
-    }
-    groups
+fn voice_groups(segments: Vec<Segment>) -> Vec<(Segment, Vec<f64>)> {
+    let words: Vec<_> = segments
+        .into_iter()
+        .flat_map(|s| caption_chunks::split(&s.text, s.start, s.end, 1))
+        .collect();
+    caption_chunks::phrases(&words)
+        .into_iter()
+        .map(|range| {
+            let group = &words[range];
+            let text = group
+                .iter()
+                .map(|w| w.0.as_str())
+                .collect::<Vec<_>>()
+                .join(" ");
+            (
+                Segment {
+                    text,
+                    start: group[0].1,
+                    end: group[group.len() - 1].2,
+                },
+                group.iter().map(|w| w.1).collect(),
+            )
+        })
+        .collect()
 }

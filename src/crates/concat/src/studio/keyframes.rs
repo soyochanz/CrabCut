@@ -1556,9 +1556,9 @@ impl Studio {
         app.set_project_name(self.project_name.as_str().into());
         app.set_project_status(
             if self.dirty {
-                "unsaved changes"
+                t("common.unsavedChanges")
             } else {
-                "saved"
+                t("common.saved")
             }
             .into(),
         );

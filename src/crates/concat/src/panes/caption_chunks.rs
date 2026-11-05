@@ -44,6 +44,63 @@ pub fn split(text: &str, start: f64, end: f64, limit: usize) -> Vec<(String, f64
         .collect()
 }
 
+/// Partition timed words into readable phrases. Pauses and sentence endings
+/// are hard boundaries. Within each phrase, balance reading time and line
+/// width across the entire run so the last word needn't flash on its own.
+pub fn phrases(words: &[(String, f64, f64)]) -> Vec<std::ops::Range<usize>> {
+    let mut ranges = Vec::new();
+    let mut begin = 0;
+    while begin < words.len() {
+        let mut stop = begin + 1;
+        while stop < words.len()
+            && words[stop].1 - words[stop - 1].2 < 0.42
+            && !words[stop - 1]
+                .0
+                .ends_with(['.', '!', '?', ';', '。', '！', '？'])
+        {
+            stop += 1;
+        }
+        let n = stop - begin;
+        let mut costs = vec![0.0; n + 1];
+        let mut next = vec![0; n];
+        for i in (0..n).rev() {
+            let mut width = 0;
+            costs[i] = f64::INFINITY;
+            for j in i..(i + 6).min(n) {
+                let last = &words[begin + j];
+                width += last.0.chars().count() + usize::from(j > i);
+                if width > 34 && j > i {
+                    break;
+                }
+                let count = (j - i + 1) as f64;
+                let seconds = last.2 - words[begin + i].1;
+                let mut cost = 1.0
+                    + (seconds - 1.45).powi(2)
+                    + 0.10 * (count - 4.0).powi(2)
+                    + 6.0 * (0.70 - seconds).max(0.0).powi(2);
+                if j + 1 < n && last.0.ends_with([',', ':', '—']) {
+                    cost -= 0.9;
+                }
+                if count == 1.0 && n > 1 {
+                    cost += 2.5;
+                }
+                cost += costs[j + 1];
+                if cost < costs[i] {
+                    costs[i] = cost;
+                    next[i] = j + 1;
+                }
+            }
+        }
+        let mut i = 0;
+        while i < n {
+            ranges.push(begin + i..begin + next[i]);
+            i = next[i];
+        }
+        begin = stop;
+    }
+    ranges
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -86,5 +143,38 @@ mod tests {
         let cues = split("你好 世界 café 🦀", 0.0, 0.1, 1);
         assert_eq!(cues.len(), 4);
         assert_eq!(cues.last().unwrap().2, 0.1);
+    }
+}
+
+#[cfg(test)]
+mod adaptive_tests {
+    use super::phrases;
+
+    #[test]
+    fn groups_more_words_when_spoken_faster() {
+        let words = |step: f64| {
+            (0..12)
+                .map(|i| ("ya".into(), i as f64 * step, (i + 1) as f64 * step))
+                .collect::<Vec<_>>()
+        };
+        let fast = phrases(&words(0.16));
+        let slow = phrases(&words(0.60));
+        assert!(fast.len() < slow.len());
+        assert_eq!(
+            fast.iter().cloned().flatten().collect::<Vec<_>>(),
+            (0..12).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn respects_pauses_and_sentence_endings() {
+        let words = [
+            ("hola", 0.0, 0.3),
+            ("amigos.", 0.3, 0.6),
+            ("sí", 0.6, 0.9),
+            ("vamos", 1.5, 1.8),
+        ]
+        .map(|(w, s, e)| (w.into(), s, e));
+        assert_eq!(phrases(&words), vec![0..2, 2..3, 3..4]);
     }
 }

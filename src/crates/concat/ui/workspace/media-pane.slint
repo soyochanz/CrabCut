@@ -1720,6 +1720,8 @@ component Empty inherits VerticalLayout {
 }
 
 export component MediaPane inherits Rectangle {
+    in property <bool> captions-open;
+    callback captions();
     /// The bin, already narrowed to `filter`. Filtering happens on the Rust
     /// side because a Slint model cannot be filtered in the language, and
     /// filtering inside the `for` would leave holes in the grid's indices.
@@ -1964,6 +1966,12 @@ export component MediaPane inherits Rectangle {
                             label: I18n.t("common.audio");
                             current: root.tab == 8;
                             clicked => { root.tab = 8; }
+                        }
+                        LibraryTab {
+                            glyph: Glyph.text-mark;
+                            label: I18n.t("captions.captions");
+                            current: root.captions-open;
+                            clicked => { root.captions(); }
                         }
                         LibraryTab {
                             glyph: Glyph.text-mark;

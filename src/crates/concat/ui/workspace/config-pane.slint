@@ -710,7 +710,7 @@ export component ConfigPane inherits Rectangle {
         }
 
         if root.has-selection: Button {
-            label: root.showing == "Text" ? "Aplicar estilo a toda la pista" : "Aplicar efectos a toda la pista";
+            label: root.showing == "Text" ? I18n.t("captions.allStyle") : I18n.t("captions.allEffects");
             clicked => { Editor.apply-track-look(); }
         }
 

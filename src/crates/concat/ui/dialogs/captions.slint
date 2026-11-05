@@ -51,7 +51,8 @@ export struct CaptionsSheetData {
     placement: int,
     /// 0 Small, 1 Medium, 2 Large
     size: int,
-    format: int,
+    tracks: [string],
+    track: int,
     template: int,
     running: bool,
     /// 0..1: where the transcription surely is.
@@ -86,7 +87,7 @@ export component CaptionsDialog inherits Modal {
     callback language-changed(index: int);
     callback placement-changed(index: int);
     callback size-changed(index: int);
-    callback format-changed(index: int);
+    callback track-changed(index: int);
     callback template-changed(index: int);
     callback begin();
     callback cancel();
@@ -208,7 +209,15 @@ export component CaptionsDialog inherits Modal {
             title: I18n.t("common.transcriber");
 
             DialogRow {
-                label: I18n.t("common.audio");
+                label: I18n.t("captions.track");
+                Select {
+                    options: root.data.tracks;
+                    current: root.data.track;
+                    changed(index) => { root.track-changed(index); }
+                }
+            }
+            DialogRow {
+                label: I18n.t("captions.scope");
                 Select {
                     options: root.data.sources;
                     current: root.data.source;
@@ -251,17 +260,9 @@ export component CaptionsDialog inherits Modal {
             title: I18n.t("captions.captions");
 
             DialogRow {
-                label: I18n.t("captions.format");
-                Select {
-                    options: [I18n.t("captions.original"), I18n.t("captions.oneWord"), I18n.t("captions.reels"), I18n.t("captions.shortPhrase")];
-                    current: root.data.format;
-                    changed(index) => { root.format-changed(index); }
-                }
-            }
-            DialogRow {
                 label: I18n.t("captions.template");
                 Select {
-                    options: ["Classic", "Crab Karaoke", "Sunshine", "Electric Blue", "Bubblegum", "Lavender", "Golden Progress", "Coral Progress", "Underline", "Neon", "Paper", "Midnight", "Comic", "Typewriter", "Spotlight", "Mono Pop"];
+                    options: [I18n.t("captions.style0"), I18n.t("captions.style1"), I18n.t("captions.style2"), I18n.t("captions.style3"), I18n.t("captions.style4"), I18n.t("captions.style5"), I18n.t("captions.style6"), I18n.t("captions.style7"), I18n.t("captions.style8"), I18n.t("captions.style9"), I18n.t("captions.style10"), I18n.t("captions.style11"), I18n.t("captions.style12"), I18n.t("captions.style13"), I18n.t("captions.style14"), I18n.t("captions.style15")];
                     current: root.data.template;
                     changed(index) => { root.template-changed(index); }
                 }
@@ -273,8 +274,8 @@ export component CaptionsDialog inherits Modal {
                 HorizontalLayout {
                     alignment: center;
                     spacing: 7px;
-                    for word[index] in ["Create", "with", "CrabCut"]: Text {
-                        text: root.data.template == 12 ? ["CREATE", "WITH", "CRABCUT"][index] : word;
+                    for word[index] in [I18n.t("captions.demo0"), I18n.t("captions.demo1"), I18n.t("captions.demo2")]: Text {
+                        text: root.data.template == 12 ? [I18n.t("captions.demoUpper0"), I18n.t("captions.demoUpper1"), I18n.t("captions.demoUpper2")][index] : word;
                         color: root.data.template == 0 ? #ffffff : (index == root.preview-word || ((root.data.template == 6 || root.data.template == 7 || root.data.template == 13) && index <= root.preview-word)) ? root.template-colors[root.data.template] : root.data.template == 10 ? #29201b : #a1a8b5;
                         opacity: (root.data.template == 13 && index > root.preview-word) || (root.data.template == 15 && index != root.preview-word) ? 0 : 1;
                         font-size: 23px;

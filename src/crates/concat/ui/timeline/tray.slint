@@ -413,7 +413,7 @@ export component TimelineTray inherits Rectangle {
 
         Divider { }
 
-        TrayButton {
+        if root.width < 620px: TrayButton {
             glyph: Glyph.text-mark;
             label: I18n.t("tray.generateCaptions");
             icon-size: 16px;
